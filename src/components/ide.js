@@ -1,15 +1,17 @@
-import React from "react";
+import React from 'react';
 import { UnControlled as CodeMirror } from "react-codemirror2";
-// import useWebSocket, { ReadyState } from "react-use-websocket";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 import { useEffect, useState, useCallback } from "react";
 
 const IDE = () => {
-  // const [socketUrl, setSocketUrl] = useState("ws://localhost:8080");
+ // const [socketUrl, setSocketUrl] = useState("ws://localhost:8080");
   const [ideVal, setIdeVal] = useState("print '2'");
-  // const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(
-  //   socketUrl
-  // );
-  // const handleClickSendMessage = useCallback((val) => sendMessage(val), []);
+ // const [sendMessage, lastMessage, readyState, getWebSocket] = useWebSocket(
+ //   socketUrl
+  //);
+  //const handleClickSendMessage = useCallback((val) => sendMessage(val), []);
+
+  const log = (x) => console.log(x);
 
   function outf(text) {
     setIdeVal(ideVal + text);
