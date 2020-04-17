@@ -1,0 +1,16 @@
+@import "../../node_modules/codemirror/lib/codemirror.css";
+@import "../../node_modules/codemirror/theme/material.css";
+/* purgecss start ignore */
+
+@tailwind base;
+@tailwind components;
+/* purgecss end ignore */
+
+@tailwind utilities;
+
+.terminal-base,
+.sc-EHOje {
+  max-width: none !important;
+  height: auto !important;
+  min-height: 100% !important;
+}
