@@ -3,8 +3,8 @@
 // module.exports = () => ({
 //     plugins: [tailwind('./tailwind.config.js')],
 // })
-const tailwind = require('tailwindcss')
+const tailwind = require("tailwindcss")
 
 module.exports = () => ({
-    plugins: [tailwind('./tailwind.js')],
+  plugins: [tailwind("./tailwind.js")],
 })

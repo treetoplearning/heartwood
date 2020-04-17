@@ -1,8 +1,8 @@
-import React from "react";
+import React from "react"
 
-import Navbar from "../components/navbar";
-import IDE from "../components/ide";
-import Term from "../components/term";
+import Navbar from "../components/navbar"
+import IDE from "../components/ide"
+import Term from "../components/term"
 
 export default () => {
   return (
@@ -27,5 +27,5 @@ export default () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
