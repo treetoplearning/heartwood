@@ -1,38 +1,39 @@
 import React, { useState, useEffect, useContext, useRef } from 'react';
-import { Terminal } from 'xterm';
-import { FitAddon } from 'xterm-addon-fit';
 import "../css/global.css";
 import "xterm/css/xterm.css";
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider";
 
-const pyodideWorker = new Worker('./pyodide/webworker.js');
-pyodideWorker.onerror = (e) => {
-  console.log(`Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`)
-}
-pyodideWorker.onmessage = (e) => {
-  const { results, error } = e.data
-  if (results) {
-    console.log('pyodideWorker return results: ', results);
-  } else if (error) {
-    console.log('pyodideWorker error: ', error)
-  }
-}
-
 const Term = ({ termId, requestCompile }) => {
   const [id, setId] = useState(termId);
-  const [py, setPy] = useState(pyodideWorker);
+  //const [py, setPy] = useState();
 
   const state = useContext(HeartwoodStateContext);
   const dispatch = useContext(HeartwoodDispatchContext);
 
-  const term = new Terminal({ cursorBlink: true });
-
   useEffect(() => {
     // PYODIDE
+    const pyodideWorker = new Worker('./pyodide/webworker.js');
+    pyodideWorker.onerror = (e) => {
+      console.log(`Error in pyodideWorker at ${e.filename}, Line: ${e.lineno}, ${e.message}`)
+    }
+    pyodideWorker.onmessage = (e) => {
+      const { results, error } = e.data
+      if (results) {
+        console.log('pyodideWorker return results: ', results);
+      } else if (error) {
+        console.log('pyodideWorker error: ', error)
+      }
+    }
+    const compile = (body) => {
+      pyodideWorker.postMessage({ python: body})
+    }
   
     // XTERM
+    const xt = require('xterm');
+    const xtf = require('xterm-addon-fit');
+    const term = new xt.Terminal({ cursorBlink: true });
     const terminalContainer = document.getElementById(id);
-    const fitAddon = new FitAddon();
+    const fitAddon = new xtf.FitAddon();
     term.loadAddon(fitAddon);
     term.open(terminalContainer);
     term.write('$ ');
@@ -66,12 +67,10 @@ const Term = ({ termId, requestCompile }) => {
     //console.log("da state changed to: ", state); 
   }, [state]);
 
-  const compile = (body) => {
-    py.postMessage({ python: body})
-  }
+  
 
   return (
-    <div id={id} state={state}></div>
+    <div id={id}></div>
   )
 }
 
