@@ -52,10 +52,11 @@ const Term = ({ termId, requestCompile }) => {
         // Do not delete the prompt
         if (term._core.buffer.x > 2) {
           term.write('\b \b');
-          buffer = buffer.substring(buffer.length - 1);
+          buffer = buffer.substring(0, buffer.le);ngth - 1
         }
       } else if (printable) {
         buffer += e.key;
+        console.log(buffer)
         term.write(e.key);
       }
     });
