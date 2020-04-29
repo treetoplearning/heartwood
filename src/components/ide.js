@@ -13,19 +13,19 @@ const IDE = () => {
   //const handleClickSendMessage = useCallback((val) => sendMessage(val), []);
   const state = useContext(HeartwoodStateContext);
   const dispatch = useContext(HeartwoodDispatchContext);
-
-  const log = (x) => console.log(x);
-
+  
   return (
     <div className="">
       <div>
         <CodeMirror
           value={state.ideBody}
+          
           editorDidMount={(editor) => editor.setSize("100%", "16rem")}
           options={{
             mode: "xml",
             theme: "material",
             lineNumbers: true,
+            
           }}
           onChange={(editor, data, value) => {
             dispatch({type: "WRITE_IDE", body: value})

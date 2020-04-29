@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import "../css/global.css";
 import "xterm/css/xterm.css";
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider";
 
 const Term = ({ termId, requestCompile }) => {
-  const [id, setId] = useState(termId);
+  const [id] = useState(termId);
   //const [py, setPy] = useState();
 
   const state = useContext(HeartwoodStateContext);
@@ -31,14 +31,16 @@ const Term = ({ termId, requestCompile }) => {
     // XTERM
     const xt = require('xterm');
     const xtf = require('xterm-addon-fit');
-    const term = new xt.Terminal({ cursorBlink: true });
+    const term = new xt.Terminal({ cursorBlink: true, fontSize: "17" });
     const terminalContainer = document.getElementById(id);
     const fitAddon = new xtf.FitAddon();
     term.loadAddon(fitAddon);
     term.open(terminalContainer);
-    term.write('$ ');
+    term.write('\r\n ');
+    term.write(' $ ');
     term.prompt = () => {
-      term.write('\r\n$ ');
+      term.write('\r\n ');
+      term.write(' $ ');
     };
     let buffer = ""
     term.onKey(e => {
@@ -51,12 +53,15 @@ const Term = ({ termId, requestCompile }) => {
         term.prompt();
       } else if (e.domEvent.keyCode === 8) {
         // Do not delete the prompt
-        if (term._core.buffer.x > 2) {
-          term.write('\b \b');
-          buffer = buffer.substring(buffer.length - 1);
+        if (term._core.buffer.x > 4) {
+          
+            term.write('\b \b');
+            buffer = buffer.substring(0, buffer.length - 1)
+          
         }
       } else if (printable) {
         buffer += e.key;
+        console.log(buffer)
         term.write(e.key);
       }
     });

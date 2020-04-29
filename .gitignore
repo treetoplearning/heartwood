@@ -74,3 +74,6 @@ yarn-error.log
 .prettierrc
 
 # Pyodide
+
+# Twillio
+.env.template
