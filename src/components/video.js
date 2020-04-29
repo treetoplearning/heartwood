@@ -11,7 +11,7 @@ const Video = () => {
   function call() {
 
     const getParticipantToken = async ({ identity, room }) => {
-      const params = new URLSearchParams();
+      // const params = new URLSearchParams();
       const result = await axios({
         method: 'POST',
         url: 'http://localhost:8080/token',
@@ -38,14 +38,14 @@ const Video = () => {
     // 
   }
 
-  function generateCameraPreview() {
-    const { createLocalVideoTrack } = require("twilio-video")
+  // function generateCameraPreview() {
+  //   const { createLocalVideoTrack } = require("twilio-video")
 
-    createLocalVideoTrack().then(track => {
-      const localMediaContainer = document.getElementById("local-media")
-      localMediaContainer.appendChild(track.attach())
-    })
-  }
+  //   createLocalVideoTrack().then(track => {
+  //     const localMediaContainer = document.getElementById("local-media")
+  //     localMediaContainer.appendChild(track.attach())
+  //   })
+  // }
 
 
 

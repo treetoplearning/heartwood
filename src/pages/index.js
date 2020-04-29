@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import Navbar from "../components/navbar";
 import IDE from "../components/ide";
 import Term from "../components/term";
 import Video from "../components/video";
-import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider";
+import { HeartwoodDispatchContext } from "../state/HeartwoodContextProvider";
 
 export default () => {
-  const state = useContext(HeartwoodStateContext);
   const dispatch = useContext(HeartwoodDispatchContext)
 
   return (
@@ -28,7 +27,7 @@ export default () => {
             <div className="h-64 m-3 overflow-scroll bg-green-200 rounded-lg">
               <IDE />
             </div>
-            <div className="h-48 m-3 overflow-x-hidden bg-yellow-200 rounded-lg">
+            <div className="h-48 m-3 overflow-x-hidden bg-black rounded-lg">
               <Term termId="term" />
             </div>
           </div>
