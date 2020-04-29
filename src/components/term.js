@@ -57,7 +57,6 @@ const Term = ({ termId, requestCompile }) => {
           
             term.write('\b \b');
             buffer = buffer.substring(0, buffer.length - 1)
-         
           
         }
       } else if (printable) {
