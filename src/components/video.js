@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 import axios from "axios"
 
 const Video = () => {
@@ -9,6 +9,13 @@ const Video = () => {
   } = require("twilio-video")
 
   useEffect(() => {}, [])
+  const [test, setTest] = useState(true)
+
+  function work() {
+    setTest(false);
+    call()
+  }
+  
 
   function call() {
     const getParticipantToken = async ({ identity, room }) => {
@@ -53,11 +60,16 @@ const Video = () => {
 
   // need a max height
   return (
-    <div id="local-media">
-      <button className="w-full bg-white" onClick={() => call()}>
-        click me to test
-      </button>
+    <>
+
+    {test && <button className="z-10 w-full bg-white"  onClick={() => work()} >
+      click me to test
+    </button>}
+    <div id="local-media" className="z-0">
+
+      
     </div>
+    </>
   )
 }
 
