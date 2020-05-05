@@ -4,26 +4,25 @@ import axios from "axios"
 const Video = () => {
   const {
     connect,
-    createLocalAudioTrack,
     createLocalVideoTrack,
   } = require("twilio-video")
 
   useEffect(() => {}, [])
   const [test, setTest] = useState(true)
+  const [local, setLocal] = useState(true)
 
   function work() {
-    setTest(false);
+    setTest(false)
     call()
   }
-  
 
   function call() {
-    const getParticipantToken = async ({ identity, room }) => {
+    const getParticipantToken = async ({ identity, room, participants }) => {
       // const params = new URLSearchParams();
       const result = await axios({
         method: "POST",
         url: "http://localhost:8080/token",
-        data: { identity, room },
+        data: { identity, room, participants },
       })
       return result
     }
@@ -34,12 +33,39 @@ const Video = () => {
         connect(data, { name: "Treetop-Testing" }).then(
           room => {
             console.log(`Successfully joined a Room: ${room}`)
+
+            room.participants.forEach(participant => {
+              console.log(
+                `Participant "${participant.identity}" is connected to the Room`
+              )
+            })
+
+            // Attach the Participant's Media to a <div> element.
+            room.on("participantConnected", participant => {
+              console.log(`Participant "${participant.identity}" connected`)
+              setLocal(false)
+              participant.tracks.forEach(publication => {
+                if (publication.isSubscribed) {
+                  const track = publication.track
+                  document
+                    .getElementById("remote-media-div")
+                    .appendChild(track.attach())
+                }
+              })
+
+              participant.on("trackSubscribed", track => {
+            
+                  document
+                  .getElementById("remote-media-div")
+                  .appendChild(track.attach())
+            
+                }
+                )
+            })
+
             createLocalVideoTrack().then(track => {
               const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
-            })
-            room.on("participantConnected", participant => {
-              console.log(`A remote Participant connected: ${participant}`)
             })
           },
           error => {
@@ -49,26 +75,18 @@ const Video = () => {
       })
   }
 
-  // function generateCameraPreview() {
-  //   const { createLocalVideoTrack } = require("twilio-video")
-
-  //   createLocalVideoTrack().then(track => {
-  //     const localMediaContainer = document.getElementById("local-media")
-  //     localMediaContainer.appendChild(track.attach())
-  //   })
-  // }
-
-  // need a max height
   return (
     <>
-
-    {test && <button className="z-10 w-full bg-white"  onClick={() => work()} >
-      click me to test
-    </button>}
-    <div id="local-media" className="z-0">
-
+      {test && (
+        <button className="z-10 w-full bg-white" onClick={() => work()}>
+          click me to test
+        </button>
+      )}
+      <div id="remote-media-div" className="z-0"></div>
+      {
+        local && <div id="local-media" className="z-0"></div>
+      }
       
-    </div>
     </>
   )
 }
