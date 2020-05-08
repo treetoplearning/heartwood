@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react"
 import axios from "axios"
 
 const Video = () => {
-  const {
-    connect,
-    createLocalVideoTrack,
-  } = require("twilio-video")
+  const { connect, createLocalVideoTrack } = require("twilio-video")
 
   useEffect(() => {}, [])
   const [test, setTest] = useState(true)
@@ -21,7 +18,7 @@ const Video = () => {
       // const params = new URLSearchParams();
       const result = await axios({
         method: "POST",
-        url: "http://localhost:8080/token",
+        url: "https://10.0.1.26:8080/token",
         data: { identity, room, participants },
       })
       return result
@@ -34,6 +31,11 @@ const Video = () => {
           room => {
             console.log(`Successfully joined a Room: ${room}`)
 
+            createLocalVideoTrack().then(track => {
+              const localMediaContainer = document.getElementById("local-media")
+              localMediaContainer.appendChild(track.attach())
+            })
+
             room.participants.forEach(participant => {
               console.log(
                 `Participant "${participant.identity}" is connected to the Room`
@@ -43,7 +45,7 @@ const Video = () => {
             // Attach the Participant's Media to a <div> element.
             room.on("participantConnected", participant => {
               console.log(`Participant "${participant.identity}" connected`)
-              setLocal(false)
+
               participant.tracks.forEach(publication => {
                 if (publication.isSubscribed) {
                   const track = publication.track
@@ -54,19 +56,27 @@ const Video = () => {
               })
 
               participant.on("trackSubscribed", track => {
-            
-                  document
+                setLocal(false)
+                document
                   .getElementById("remote-media-div")
                   .appendChild(track.attach())
-            
-                }
-                )
+              })
             })
 
-            createLocalVideoTrack().then(track => {
-              const localMediaContainer = document.getElementById("local-media")
-              localMediaContainer.appendChild(track.attach())
-            })
+            room.participants.forEach(participant => {
+              participant.tracks.forEach(publication => {
+                const track = publication.track
+                if (publication.track) {
+                  document.getElementById('remote-media-div').appendChild(track.attach());
+                }
+              });
+            
+             participant.on('trackSubscribed', track => {
+                document.getElementById('remote-media-div').appendChild(track.attach());
+                setLocal(false)
+              });
+            });
+            
           },
           error => {
             console.error(`Unable to connect to Room: ${error.message}`)
@@ -82,11 +92,12 @@ const Video = () => {
           click me to test
         </button>
       )}
+     
       <div id="remote-media-div" className="z-0"></div>
-      {
-        local && <div id="local-media" className="z-0"></div>
-      }
-      
+
+      {local && 
+      <div id="local-media" className="z-0"></div>
+}
     </>
   )
 }
