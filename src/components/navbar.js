@@ -3,7 +3,7 @@ import { Link } from "gatsby";
 
 import logo from "../assets/logo.svg";
 
-import "../css/global.css";
+import "../styles/global.css";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
