@@ -76,4 +76,5 @@ yarn-error.log
 # Pyodide
 
 # Twillio
-.env.template
+env.template
+
