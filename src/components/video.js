@@ -7,10 +7,16 @@ const Video = () => {
   useEffect(() => {}, [])
   const [test, setTest] = useState(true)
   const [local, setLocal] = useState(true)
+  const [remote, setRemote] = useState(true)
+  const [room, setRoom] = useState()
 
   function work() {
     setTest(false)
     call()
+  }
+
+  function endCall() {
+    room.disconnect()
   }
 
   function call() {
@@ -26,25 +32,31 @@ const Video = () => {
 
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
       .then(res => res.data)
-      .then(data => {
+      .then(data =>
         connect(data, { name: "Treetop-Testing" }).then(
           room => {
+
+            // Store the room for future reference.
+            setRoom(room)
+
             console.log(`Successfully joined a Room: ${room}`)
 
+            // Set up local media
             createLocalVideoTrack().then(track => {
               const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
             })
 
+            // Log new participants
             room.participants.forEach(participant => {
               console.log(
-                `Participant "${participant.identity}" is connected to the Room`
+                `Participant "${participant.identity}" has connected to the Room`
               )
             })
 
-            // Attach the Participant's Media to a <div> element.
+            // Share all participants media with each other
             room.on("participantConnected", participant => {
-              console.log(`Participant "${participant.identity}" connected`)
+              console.log(`Participant "${participant.identity}" connected`);
 
               participant.tracks.forEach(publication => {
                 if (publication.isSubscribed) {
@@ -54,7 +66,7 @@ const Video = () => {
                     .appendChild(track.attach())
                 }
               })
-
+              
               participant.on("trackSubscribed", track => {
                 setLocal(false)
                 document
@@ -63,41 +75,67 @@ const Video = () => {
               })
             })
 
+            // Disconnect user and show local input
+            room.on('disconnected', room => {
+              console.log(`Participant has disconnected.`);
+
+              console.log(room.participants)
+
+              // Detach the local media elements
+              room.localParticipant.tracks.forEach(publication => {
+
+                const attachedElements = publication.track.detach();
+                attachedElements.forEach(element => element.remove());
+
+              });
+              
+              setRemote(false)
+              setLocal(true)
+ 
+            });
+        
             room.participants.forEach(participant => {
               participant.tracks.forEach(publication => {
                 const track = publication.track
                 if (publication.track) {
-                  document.getElementById('remote-media-div').appendChild(track.attach());
+                  document
+                    .getElementById("remote-media-div")
+                    .appendChild(track.attach())
                 }
-              });
-            
-             participant.on('trackSubscribed', track => {
-                document.getElementById('remote-media-div').appendChild(track.attach());
+              })
+
+              participant.on("trackSubscribed", track => {
+                document
+                  .getElementById("remote-media-div")
+                  .appendChild(track.attach())
                 setLocal(false)
-              });
-            });
-            
+                
+              })
+            })
+
           },
           error => {
             console.error(`Unable to connect to Room: ${error.message}`)
           }
         )
-      })
+      )
   }
 
   return (
     <>
       {test && (
         <button className="z-10 w-full bg-white" onClick={() => work()}>
-          click me to test
+          click me to call
         </button>
       )}
-     
-      <div id="remote-media-div" className="z-0"></div>
 
-      {local && 
-      <div id="local-media" className="z-0"></div>
-}
+      <button className="z-10 w-full bg-white" onClick={() => endCall()}>
+        click me to hang up
+      </button>
+
+      {remote && <div id="remote-media-div" className="z-0"></div>}
+
+      {local && <div id="local-media" className="z-0"></div>}
     </>
   )
 }
