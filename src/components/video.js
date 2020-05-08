@@ -1,21 +1,35 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 
+import VideoIcon from "../components/videoicon.js"
+
+import { library } from "@fortawesome/fontawesome-svg-core"
+import {
+  faTv,
+  faMicrophone,
+  faPhoneAlt,
+  faPhoneSlash,
+} from "@fortawesome/free-solid-svg-icons"
+library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash)
+
 const Video = () => {
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
-  useEffect(() => {}, [])
-  const [test, setTest] = useState(true)
+  useEffect(() => {
+    console.log(onCall)
+  }, [onCall])
   const [local, setLocal] = useState(true)
   const [remote, setRemote] = useState(true)
   const [room, setRoom] = useState()
+  const [onCall, setOnCall] = useState(false)
 
-  function work() {
-    setTest(false)
+  function startCall() {
+    setOnCall(true)
     call()
   }
 
   function endCall() {
+    setOnCall(false)
     room.disconnect()
   }
 
@@ -35,7 +49,6 @@ const Video = () => {
       .then(data =>
         connect(data, { name: "Treetop-Testing" }).then(
           room => {
-
             // Store the room for future reference.
             setRoom(room)
 
@@ -56,7 +69,7 @@ const Video = () => {
 
             // Share all participants media with each other
             room.on("participantConnected", participant => {
-              console.log(`Participant "${participant.identity}" connected`);
+              console.log(`Participant "${participant.identity}" connected`)
 
               participant.tracks.forEach(publication => {
                 if (publication.isSubscribed) {
@@ -66,9 +79,10 @@ const Video = () => {
                     .appendChild(track.attach())
                 }
               })
-              
+
               participant.on("trackSubscribed", track => {
                 setLocal(false)
+                setRemote(true)
                 document
                   .getElementById("remote-media-div")
                   .appendChild(track.attach())
@@ -76,24 +90,21 @@ const Video = () => {
             })
 
             // Disconnect user and show local input
-            room.on('disconnected', room => {
-              console.log(`Participant has disconnected.`);
+            room.on("disconnected", room => {
+              console.log(`Participant has disconnected.`)
 
               console.log(room.participants)
 
               // Detach the local media elements
               room.localParticipant.tracks.forEach(publication => {
+                const attachedElements = publication.track.detach()
+                attachedElements.forEach(element => element.remove())
+              })
 
-                const attachedElements = publication.track.detach();
-                attachedElements.forEach(element => element.remove());
-
-              });
-              
               setRemote(false)
               setLocal(true)
- 
-            });
-        
+            })
+
             room.participants.forEach(participant => {
               participant.tracks.forEach(publication => {
                 const track = publication.track
@@ -105,14 +116,13 @@ const Video = () => {
               })
 
               participant.on("trackSubscribed", track => {
+                setLocal(false)
+                setRemote(true)
                 document
                   .getElementById("remote-media-div")
                   .appendChild(track.attach())
-                setLocal(false)
-                
               })
             })
-
           },
           error => {
             console.error(`Unable to connect to Room: ${error.message}`)
@@ -122,21 +132,22 @@ const Video = () => {
   }
 
   return (
-    <>
-      {test && (
-        <button className="z-10 w-full bg-white" onClick={() => work()}>
-          click me to call
-        </button>
-      )}
+    <div className="relative flex flex-col w-full h-full text-md">
+      <div className="">
+        {remote && <div id="remote-media-div" className="z-0"></div>}
 
-      <button className="z-10 w-full bg-white" onClick={() => endCall()}>
-        click me to hang up
-      </button>
+        {local && <div id="local-media" className="z-0"></div>}
+      </div>
 
-      {remote && <div id="remote-media-div" className="z-0"></div>}
-
-      {local && <div id="local-media" className="z-0"></div>}
-    </>
+      <div className="absolute bottom-0 flex-row self-center mb-4 ">
+        <VideoIcon icon={faMicrophone} action={endCall}></VideoIcon>
+        {!onCall && (
+          <VideoIcon icon={faPhoneAlt} action={startCall}></VideoIcon>
+        )}
+        {onCall && <VideoIcon icon={faPhoneSlash} action={endCall}></VideoIcon>}
+        <VideoIcon icon={faTv} onClick={() => endCall()}></VideoIcon>
+      </div>
+    </div>
   )
 }
 
