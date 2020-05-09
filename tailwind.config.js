@@ -4,6 +4,7 @@ module.exports = {
       colors: {
         base: "#38A169",
         bark: "#855D51",
+        ideBase: "263238"
       },
       fontFamily: {
         base: ["Roboto"],
@@ -17,6 +18,9 @@ module.exports = {
       borderRadius: {
         xl: "1rem",
       },
+      padding: {
+        '3/4': "75%",
+      }
     },
   },
   variants: {},
