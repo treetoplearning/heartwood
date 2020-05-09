@@ -7,21 +7,21 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import {
   faTv,
   faMicrophone,
+  faMicrophoneSlash,
   faPhoneAlt,
   faPhoneSlash,
 } from "@fortawesome/free-solid-svg-icons"
-library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash)
+library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
-  useEffect(() => {
-    console.log(onCall)
-  }, [onCall])
+  useEffect(() => {}, [])
   const [local, setLocal] = useState(true)
   const [remote, setRemote] = useState(true)
   const [room, setRoom] = useState()
   const [onCall, setOnCall] = useState(false)
+  const [mute, setMute] = useState(false)
 
   function startCall() {
     setOnCall(true)
@@ -31,6 +31,10 @@ const Video = () => {
   function endCall() {
     setOnCall(false)
     room.disconnect()
+  }
+
+  function toggleMute() {
+    setMute(!mute)
   }
 
   function call() {
@@ -55,6 +59,8 @@ const Video = () => {
             console.log(`Successfully joined a Room: ${room}`)
 
             // Set up local media
+
+            setLocal(true)
             createLocalVideoTrack().then(track => {
               const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
@@ -93,12 +99,18 @@ const Video = () => {
             room.on("disconnected", room => {
               console.log(`Participant has disconnected.`)
 
-              console.log(room.participants)
+              console.log("People left in the room are:", room.participants)
 
               // Detach the local media elements
               room.localParticipant.tracks.forEach(publication => {
                 const attachedElements = publication.track.detach()
                 attachedElements.forEach(element => element.remove())
+              })
+
+              room.on("disconnected", participant => {
+                setLocal(true)
+                setRemote(false)
+                
               })
 
               setRemote(false)
@@ -140,12 +152,33 @@ const Video = () => {
       </div>
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
-        <VideoIcon icon={faMicrophone} action={endCall}></VideoIcon>
-        {!onCall && (
-          <VideoIcon icon={faPhoneAlt} action={startCall}></VideoIcon>
+        {!mute && (
+          <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>
         )}
-        {onCall && <VideoIcon icon={faPhoneSlash} action={endCall}></VideoIcon>}
-        <VideoIcon icon={faTv} onClick={() => endCall()}></VideoIcon>
+        {mute && (
+          <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>
+        )}
+
+        {!onCall && (
+          <VideoIcon
+            icon={faPhoneAlt}
+            alert={true}
+            onCall={onCall}
+            action={startCall}
+          ></VideoIcon>
+        )}
+        {onCall && (
+          <VideoIcon
+            icon={faPhoneSlash}
+            alert={true}
+            onCall={onCall}
+            action={endCall}
+          ></VideoIcon>
+        )}
+        <VideoIcon
+          icon={faTv}
+          action={() => console.log("share screen")}
+        ></VideoIcon>
       </div>
     </div>
   )
