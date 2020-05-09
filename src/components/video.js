@@ -34,7 +34,28 @@ const Video = () => {
   }
 
   function toggleMute() {
-    setMute(!mute)
+    if (room) {
+      if (mute === false) {
+        muteAudio()
+      } else {
+        unmuteAudio()
+      }
+      setMute(!mute)
+    }
+  }
+
+  // Mute all of the local user's tracks.
+  function muteAudio() {
+    room.localParticipant.audioTracks.forEach(publication => {
+      publication.track.disable()
+    })
+  }
+
+  // Unmute all of the local user's tracks.
+  function unmuteAudio() {
+    room.localParticipant.audioTracks.forEach(publication => {
+      publication.track.enable()
+    })
   }
 
   function call() {
@@ -59,11 +80,12 @@ const Video = () => {
             console.log(`Successfully joined a Room: ${room}`)
 
             // Set up local media
-
-            setLocal(true)
             createLocalVideoTrack().then(track => {
+              setLocal(true)
+              setRemote(false)
               const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
+              console.log("People left in the room are:", room.participants)
             })
 
             // Log new participants
@@ -80,6 +102,7 @@ const Video = () => {
               participant.tracks.forEach(publication => {
                 if (publication.isSubscribed) {
                   const track = publication.track
+                  setLocal(false)
                   document
                     .getElementById("remote-media-div")
                     .appendChild(track.attach())
@@ -101,20 +124,35 @@ const Video = () => {
 
               console.log("People left in the room are:", room.participants)
 
+              room.participants.forEach(participant => {
+                participant.tracks.forEach(publication => {
+                  const track = publication.track
+                  if (
+                    publication.track &&
+                    participant !== room.localParticipant
+                  ) {
+                    console.log("hello")
+                    document.getElementById("local-media").removeChild(track)
+                    document
+                      .getElementById("remote-media-div")
+                      .removeChild(track)
+                  }
+                })
+              })
+
               // Detach the local media elements
               room.localParticipant.tracks.forEach(publication => {
                 const attachedElements = publication.track.detach()
                 attachedElements.forEach(element => element.remove())
               })
 
-              room.on("disconnected", participant => {
+              console.log("People left in the room are:", room.participants)
+              if (room.participants.size === 0) {
+                setLocal(false)
+              } else {
                 setLocal(true)
-                setRemote(false)
-                
-              })
-
+              }
               setRemote(false)
-              setLocal(true)
             })
 
             room.participants.forEach(participant => {
