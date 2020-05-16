@@ -30,8 +30,14 @@ const Navbar = () => {
           </div>
           <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
+              <Link to="/">
+              
+              
               <img className="block w-auto h-8 bg-white rounded-full lg:hidden" src={logo} alt="" />
+              </Link>
+              <Link to="/">
               <img className="hidden w-auto h-8 bg-white rounded-full lg:block" src={logo} alt="" />
+              </Link>
             </div>
             <div className="hidden sm:block sm:ml-6">
               <div className="flex">
