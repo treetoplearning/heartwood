@@ -1,13 +1,27 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import Navbar from "../components/navbar";
+import { navigate } from "@reach/router";
 
+import {
+  HeartwoodStateContext,
+  HeartwoodDispatchContext,
+} from "../state/HeartwoodContextProvider";
+import ProfilePage from "../components/profilepage";
 
+import SignIn from "./signin";
 
-export default () => {
+const IndexPage = () => {
+  const state = useContext(HeartwoodStateContext);
+  const dispatch = useContext(HeartwoodDispatchContext);
 
   return (
-    <div className="flex flex-col w-full h-screen bg-base">
-      <Navbar/>
+    <div className="flex flex-col w-full h-auto pb-40 bg-base">
+      <Navbar />
+
+      {!state.user ? console.log('user is valid') : console.log("user is null")}
+      {state.user ? console.log('user is valid'): console.log("user is null")}
     </div>
-  )
-}
+  );
+};
+
+export default IndexPage;
