@@ -5,6 +5,13 @@ import { auth } from "../firebase/firebase";
 
 import { navigate } from "@reach/router"
 
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+
+library.add(faGoogle, faGithub);
+
 const SignIn = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,20 +83,28 @@ const SignIn = () => {
         </form>
         <p className="my-3 text-center">or</p>
         <button
-          className="w-full py-2 text-white transition duration-100 ease-in-out bg-blue-500 rounded-md focus:shadow-outline-red hover:bg-blue-600"
+          className="relative flex items-center w-full py-2 text-white transition duration-100 ease-in-out bg-blue-500 rounded-md focus:shadow-outline-red hover:bg-blue-600"
           onClick={() => signInWithGoogle()}
         >
-          Sign in with Google
+          <FontAwesomeIcon
+                icon={faGoogle}
+                className="absolute left-0 ml-3 text-lg align-baseline"
+              />
+          <p className="w-full"> Sign in with Google </p>
         </button>
         <button
-          className="w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
+          className="relative flex items-center w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
           onClick={() => signInWithGoogle() }
         >
-          Sign in with GitHub
+          <FontAwesomeIcon
+                icon={faGithub}
+                className="absolute left-0 ml-3 text-lg align-baseline"
+              />
+          <p className="w-full"> Sign in with GitHub </p>
         </button>
         <p className="my-3 text-center">
           Don't have an account?{" "}
-          <Link to="signUp" className="text-blue-500 hover:text-blue-600">
+          <Link to="signup" className="text-blue-500 hover:text-blue-600">
             Sign up here
           </Link>{" "}
           <br />{" "}
