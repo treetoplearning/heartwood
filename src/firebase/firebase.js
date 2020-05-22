@@ -3,7 +3,9 @@ import "firebase/auth";
 import "firebase/firestore";
 import { navigate } from "@reach/router"
 
-const provider = new firebase.auth.GoogleAuthProvider();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+const githubProvider = new firebase.auth.GithubAuthProvider();
+
 
 var firebaseConfig = {
     apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
@@ -62,7 +64,10 @@ const getUserDocument = async uid => {
 
 // determine how users will sign in
 export const signInWithGoogle = () => {
-    
-    auth.signInWithRedirect(provider)
-  };
+    auth.signInWithRedirect(googleProvider)
+};
 
+// determine how users will sign in
+export const signInWithGitHub = () => {
+  auth.signInWithRedirect(githubProvider)
+};

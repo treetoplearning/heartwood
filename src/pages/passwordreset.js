@@ -15,11 +15,13 @@ const PasswordReset = () => {
     event.preventDefault();
   };
   return (
-    <div className="mt-8">
+    <div className="w-screen h-screen overflow-visible bg-base">
+    <div className="pt-24 font-mono">
+    <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-2 ">
       <h1 className="mb-3 text-xl font-bold text-center">
         Reset your Password
       </h1>
-      <div className="w-11/12 px-4 py-8 mx-auto border border-blue-300 rounded md:w-2/4 md:px-8">
+      <div className="w-11/12 px-4 py-8 mx-auto rounded-xl md:w-3/4 md:px-8">
         <form action="">
           {emailHasBeenSent && (
             <div className="w-full py-3 mb-3 text-center text-white bg-green-400">
@@ -50,12 +52,14 @@ const PasswordReset = () => {
           </button>
         </form>
         <Link
-         to ="/"
+         to ="signin"
           className="block my-2 text-center text-blue-700 hover:text-blue-800"
         >
           &larr; back to sign in page
         </Link>
       </div>
+    </div>
+    </div>
     </div>
   );
 };

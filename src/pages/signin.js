@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "gatsby";
+import firebase from "firebase/app";
 import { signInWithGoogle } from "../firebase/firebase";
 import { auth } from "../firebase/firebase";
 
 import { navigate } from "@reach/router"
 
+import {
+  HeartwoodStateContext,
+  HeartwoodDispatchContext,
+} from "../state/HeartwoodContextProvider";
+
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+
+import ProfilePage from "../components/profilepage"
 
 library.add(faGoogle, faGithub);
 
@@ -17,11 +25,14 @@ const SignIn = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
+  const state = useContext(HeartwoodStateContext);
+  const dispatch = useContext(HeartwoodDispatchContext);
+
   // deal with an already registered user
   const signInWithEmailAndPasswordHandler = (event, email, password) => {
     event.preventDefault();
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
-      setError("Error signing in with password and email!");
+      setError("Error signing in with password and email");
       console.error("Error signing in with password and email", error);
     });
    
@@ -37,13 +48,22 @@ const SignIn = () => {
     }
   };
 
+  useEffect(() => {
+    firebase.auth().getRedirectResult().then(result => {
+      if (result.user) {
+        dispatch({ type: "LOGIN", user: result.user });
+        navigate('/');
+      }
+     });
+  }, [])
+
   return (
     <div className="w-screen h-screen overflow-visible bg-base">
     <div className="pt-24 font-mono">
       <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-2/4 md:px-12">
         <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
         {error !== null && (
-          <div className="w-full py-4 mb-3 text-center text-white bg-red-600">
+          <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-xl">
             {error}
           </div>
         )}

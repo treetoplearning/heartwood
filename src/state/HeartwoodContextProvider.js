@@ -22,6 +22,7 @@ function reducer(state, action) {
         ideBody: action.body,
       };
     case "LOGIN":
+      console.log('user is', action.user)
       return {
         ...state,
         user: action.user

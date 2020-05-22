@@ -55,7 +55,7 @@ const SignUp = () => {
         <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded rounded-xl md:w-2/4 md:px-12">
           <h1 className="mb-2 text-3xl font-bold text-center">Sign Up</h1>
           {error !== null && (
-            <div className="w-full py-4 mb-3 text-center text-white bg-red-600">
+            <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
               {error}
             </div>
           )}
