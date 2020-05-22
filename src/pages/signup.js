@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-
 import { navigate } from "gatsby";
 import { Link } from "@reach/router";
 import { signInWithGoogle, generateUserDocument } from "../firebase/firebase";
@@ -45,16 +44,14 @@ const SignUp = () => {
       // To add more fields just input them into the genUserDoc object parameter.
       generateUserDocument(user, { displayName, photoURL });
 
-      user
-        .updateProfile({
+      user.updateProfile({
           displayName: displayName,
           photoURL: photoURL
-        })
-      
-      dispatch({ type: "LOGIN", user: user })
-
-      navigate("/");
-      
+      }).then(res =>  {
+          console.log(res, user);
+          dispatch({ type: "LOGIN", user: user });
+          navigate("/");
+      });
     } catch (error) {
       setError("Error Signing up with email and password");
     }
@@ -72,6 +69,8 @@ const SignUp = () => {
   };
   return (
     <div className="w-screen h-screen overflow-visible bg-base">
+          
+
       <div className="pt-24 font-mono">
         <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded rounded-xl md:w-2/4 md:px-12">
           <h1 className="mb-2 text-3xl font-bold text-center">Sign Up</h1>
