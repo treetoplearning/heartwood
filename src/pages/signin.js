@@ -1,10 +1,10 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link } from "gatsby";
 import firebase from "firebase/app";
-import { signInWithGoogle } from "../firebase/firebase";
+import { signInWithGoogle, signInWithEmailAndPassword } from "../firebase/firebase";
 import { auth } from "../firebase/firebase";
 
-import { navigate } from "@reach/router"
+import { navigate } from "gatsby"
 
 import {
   HeartwoodStateContext,
@@ -34,8 +34,12 @@ const SignIn = () => {
     auth.signInWithEmailAndPassword(email, password).catch((error) => {
       setError("Error signing in with password and email");
       console.error("Error signing in with password and email", error);
+    // set the current logged in user to the returning user
+    }).then(result => {
+      
+        dispatch({ type: "LOGIN", user: result.user }).then(navigate("/"))
+      
     });
-   
   };
 
   const onChangeHandler = (event) => {
@@ -55,6 +59,7 @@ const SignIn = () => {
         navigate('/');
       }
      });
+
   }, [])
 
   return (
@@ -63,7 +68,7 @@ const SignIn = () => {
       <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-2/4 md:px-12">
         <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
         {error !== null && (
-          <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-xl">
+          <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
             {error}
           </div>
         )}
@@ -94,9 +99,8 @@ const SignIn = () => {
           />
           <button
             className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-            onClick={(event) => {
-              signInWithEmailAndPasswordHandler(event, email, password);
-            }}
+            onClick = {(event) => {signInWithEmailAndPasswordHandler(event, email, password)}}
+            
           >
             Sign in
           </button>

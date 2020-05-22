@@ -1,11 +1,9 @@
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
-import { navigate } from "@reach/router"
 
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const githubProvider = new firebase.auth.GithubAuthProvider();
-
 
 var firebaseConfig = {
     apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
@@ -20,7 +18,6 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-
 // link to remote firebase application
 export const auth = firebase.auth();
 export const firestore = firebase.firestore();
@@ -34,7 +31,7 @@ export const generateUserDocument = async (user, additionalData) => {
 
   // if there is data then get it, otherwise write new data
   if (!snapshot.exists) {
-    const { email, displayName, photoURL } = user;
+    var { email, displayName, photoURL } = user;
     try {
       await userRef.set({
         displayName,
@@ -61,6 +58,19 @@ const getUserDocument = async uid => {
     console.error("Error fetching user", error);
   }
 };
+
+export const signOut = () => {
+  try {
+
+    const loggedInUser = firebase.auth().currentUser
+    console.log("The current logged in user is", loggedInUser)
+    firebase.auth().signOut();
+    console.log("After logout the current user is", loggedInUser)
+    
+  } catch (e){
+   console.log('sign out did not work')
+  } 
+}
 
 // determine how users will sign in
 export const signInWithGoogle = () => {

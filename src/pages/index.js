@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import Navbar from "../components/navbar";
-import { navigate } from "@reach/router";
+import { navigate } from "gatsby"
 
 import {auth} from "../firebase/firebase";
 
@@ -21,12 +21,15 @@ const IndexPage = () => {
       const {photoURL, displayName, email} = state.user;
     }
   }, [])
+
   
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
       <Navbar />
+      
+      {state.user ? console.log('on index the user is', state.user): navigate('/signin')}
       {state.user ? console.log('user is valid'): console.log("user is null")}
-      {state.user ? console.log('user is valid'): console.log("user is null")}
+      {console.log('after logout user is', state.user)}
     </div>
   );
 };

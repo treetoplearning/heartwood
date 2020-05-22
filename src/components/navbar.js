@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link } from "gatsby";
 
+import { signOut } from "../firebase/firebase";
+
 import {
   HeartwoodStateContext,
   HeartwoodDispatchContext,
@@ -18,14 +20,17 @@ const Navbar = () => {
   const dispatch = useContext(HeartwoodDispatchContext);
 
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")
-  const [displayName, setDisplayName] = useState("Treetop User")
+  const [displayName, setDisplayName] = useState("Treetop Guest")
 
 useEffect(() => {
-    if (state.user !== null) {
+  console.log('in useEffect state.user is', state.user)
+    if (state.user && state.user.displayName) {
+      console.log('in useEffect and entered the setting function')
       setPhotoUrl(state.user.photoURL)
+      console.log("When attempting to setDisplayName the displayName is", state.user.displayName)
       setDisplayName(state.user.displayName)
     }
-  }, [])
+  },[])
   
   return (
     <nav className="bg-transparent">
@@ -92,7 +97,7 @@ useEffect(() => {
                 <div className="py-1 bg-white rounded-md shadow-xs">
                   <Link to="/" className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100">Your Profile</Link>
                   <Link to="/" className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100">Settings</Link>
-                  <Link to="/" className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100">Sign out</Link>
+                  <Link to="/" className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100" >Sign out</Link>
                 </div>
               </div>
             </div>

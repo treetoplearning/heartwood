@@ -17,11 +17,11 @@ const PasswordReset = () => {
   return (
     <div className="w-screen h-screen overflow-visible bg-base">
     <div className="pt-24 font-mono">
-    <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-2 ">
-      <h1 className="mb-3 text-xl font-bold text-center">
+    <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12 ">
+      <h1 className="pt-4 mb-3 text-3xl font-bold text-center">
         Reset your Password
       </h1>
-      <div className="w-11/12 px-4 py-8 mx-auto rounded-xl md:w-3/4 md:px-8">
+      <div className="w-11/12 py-8 mx-auto rounded-xl md:w-3/4 ">
         <form action="">
           {emailHasBeenSent && (
             <div className="w-full py-3 mb-3 text-center text-white bg-green-400">
@@ -46,7 +46,7 @@ const PasswordReset = () => {
             className="w-full px-1 py-2 mb-3"
           />
           <button
-            className="w-full py-3 text-white bg-blue-400"
+            className="w-full py-3 text-white duration-100 ease-in-out bg-blue-500 rounded-lg hover:bg-blue-400"
           >
             Send me a reset link
           </button>
