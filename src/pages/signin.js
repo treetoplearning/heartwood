@@ -37,8 +37,9 @@ const SignIn = () => {
     // set the current logged in user to the returning user
     }).then(result => {
       
-        dispatch({ type: "LOGIN", user: result.user }).then(navigate("/"))
-      
+        dispatch({ type: "LOGIN", user: result.user });
+        navigate("/");
+
     });
   };
 
