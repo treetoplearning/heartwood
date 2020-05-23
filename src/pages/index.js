@@ -29,7 +29,6 @@ const IndexPage = () => {
       
       {state.user ? console.log('on index the user is', state.user): navigate('/signin')}
       {state.user ? console.log('user is valid'): console.log("user is null")}
-      {console.log('after logout user is', state.user)}
     </div>
   );
 };

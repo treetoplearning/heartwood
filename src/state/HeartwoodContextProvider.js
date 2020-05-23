@@ -5,8 +5,8 @@ export const HeartwoodDispatchContext = React.createContext();
 
 const initialState = {
   ideBody: '# code here\nprint("Hello Jacob")',
-  termBuff: '',
-  user: null
+  termBuff: "",
+  user: null,
 };
 
 function reducer(state, action) {
@@ -17,15 +17,21 @@ function reducer(state, action) {
         ...state,
       };
     case "WRITE_IDE":
-      return { 
+      return {
         ...state,
         ideBody: action.body,
       };
-    case "LOGIN": 
+    case "LOGIN":
       return {
         ...state,
-        user: action.user
-      }
+        user: action.user,
+      };
+    case "LOGOUT":
+      return {
+        ...state,
+        user: null,
+      };
+     
     default:
       throw new Error("Bad Action Type");
   }
@@ -33,11 +39,11 @@ function reducer(state, action) {
 
 const HeartwoodContextProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
-  
+
   return (
     <HeartwoodStateContext.Provider value={state}>
       <HeartwoodDispatchContext.Provider value={dispatch}>
-          {children}
+        {children}
       </HeartwoodDispatchContext.Provider>
     </HeartwoodStateContext.Provider>
   );

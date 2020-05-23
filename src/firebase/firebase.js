@@ -65,16 +65,14 @@ const getUserDocument = async uid => {
 };
 
 export const signOut = () => {
-  try {
 
-    const loggedInUser = firebase.auth().currentUser
-    console.log("The current logged in user is", loggedInUser)
-    firebase.auth().signOut();
-    console.log("After logout the current user is", loggedInUser)
+    firebase.auth().signOut().then(function() {
+      console.log('Signed Out');
+    }, function(error) {
+      console.error('Sign Out Error', error);
+    });
     
-  } catch (e){
-   console.log('sign out did not work')
-  } 
+  
 }
 
 // determine how users will sign in with each platform
