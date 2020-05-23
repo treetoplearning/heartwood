@@ -91,7 +91,7 @@ const SignIn = () => {
               className="w-full p-1 my-1"
               name="userEmail"
               value={email}
-              placeholder="E.g: faruq123@gmail.com"
+              placeholder="E.g: treetoplearner@gmail.com"
               id="userEmail"
               onChange={(event) => onChangeHandler(event)}
             />

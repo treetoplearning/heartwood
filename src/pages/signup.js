@@ -1,8 +1,13 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { navigate } from "gatsby";
 import { Link } from "@reach/router";
-import { signInWithGoogle, signInWithGitHub, generateUserDocument } from "../firebase/firebase";
+import {
+  signInWithGoogle,
+  signInWithGitHub,
+  generateUserDocument,
+} from "../firebase/firebase";
 import { auth } from "../firebase/firebase";
+import firebase from "firebase/app";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -38,20 +43,36 @@ const SignUp = () => {
         password
       );
 
-     const  photoURL = "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60"
+      // manage the data to save to the documents
+      const photoURL =
+        "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60";
 
-      // Ensure that the user is intialized with all fields before saving in context.
-      // To add more fields just input them into the genUserDoc object parameter.
-      generateUserDocument(user, { displayName, photoURL });
+      const splitNames = displayName.split(" ");
+      const firstName = splitNames[0];
+      const lastName = String(splitNames.slice(1, splitNames.length)).replace(
+        /,/g,
+        " "
+      );
 
-      user.updateProfile({
+      // to add more fields just input them into the genUserDoc object parameter.
+      generateUserDocument(user, {
+        displayName,
+        photoURL,
+        firstName,
+        lastName,
+      });
+
+      // update the user that will be stored in state
+      user
+        .updateProfile({
           displayName: displayName,
-          photoURL: photoURL
-      }).then(res =>  {
+          photoURL: photoURL,
+        })
+        .then((res) => {
           console.log(res, user);
           dispatch({ type: "LOGIN", user: user });
           navigate("/");
-      });
+        });
     } catch (error) {
       setError("Error signing up with email and password");
     }
@@ -67,10 +88,54 @@ const SignUp = () => {
       setDisplayName(value);
     }
   };
+
+  useEffect(() => {
+    firebase
+      .auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.user) {
+          console.log("logged in user is", firebase.auth().currentUser);
+
+          // reference to logged in user
+          const currentUser = firebase.auth().currentUser
+
+          // manage the user information from the provider log-in
+          const displayName = currentUser.displayName  
+          const splitNames = currentUser.displayName.split(" ");
+          console.log('split names is', splitNames)
+          const firstName = splitNames[0];
+          console.log('first name is', firstName)
+        
+          const lastName = String(
+            splitNames.slice(1, splitNames.length)
+          ).replace(/,/g, " ");
+
+
+          generateUserDocument(currentUser, {
+            displayName,
+            firstName,
+            lastName,
+          });
+
+          // update the user that will be stored in state
+          currentUser
+          .updateProfile({
+            firstName: firstName,
+            lastname: lastName
+          })
+          .then((res) => {
+        
+            dispatch({ type: "LOGIN", user: result.user });
+            navigate("/");
+          });
+      
+        }
+      });
+  }, []);
+
   return (
     <div className="w-screen h-screen overflow-visible bg-base">
-          
-
       <div className="pt-24 font-mono">
         <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl md:w-1/2 md:px-12">
           <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
@@ -88,7 +153,7 @@ const SignUp = () => {
               className="w-full p-1 my-1 "
               name="displayName"
               value={displayName}
-              placeholder="E.g: jseanpatel"
+              placeholder="E.g: treetoplearner"
               id="displayName"
               onChange={(event) => onChangeHandler(event)}
             />
@@ -100,7 +165,7 @@ const SignUp = () => {
               className="w-full p-1 my-1"
               name="userEmail"
               value={email}
-              placeholder="E.g: jacob@treetopeducation.org"
+              placeholder="E.g: treetoplearner@gmail.com"
               id="userEmail"
               onChange={(event) => onChangeHandler(event)}
             />

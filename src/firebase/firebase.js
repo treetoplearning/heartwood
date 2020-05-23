@@ -9,6 +9,10 @@ const githubProvider = new firebase.auth.GithubAuthProvider();
 githubProvider.addScope('repo');
 githubProvider.addScope('user');
 
+googleProvider.setCustomParameters({
+  'login_hint': 'user@example.com'
+});
+
 var firebaseConfig = {
     apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
     authDomain: "treetop-learning-1589657684780.firebaseapp.com",
