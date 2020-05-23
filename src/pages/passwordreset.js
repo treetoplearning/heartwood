@@ -7,6 +7,7 @@ const PasswordReset = () => {
   const [email, setEmail] = useState("");
   const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
   const [error, setError] = useState(null);
+
   const onChangeHandler = event => {
     const { name, value } = event.currentTarget;
     if (name === "userEmail") {
@@ -16,12 +17,13 @@ const PasswordReset = () => {
 
   
   const sendResetEmail = event => {
+    setError(null)
     event.preventDefault();
     auth
       .sendPasswordResetEmail(email)
       .then(() => {
         setEmailHasBeenSent(true);
-        setTimeout(() => {setEmailHasBeenSent(false)}, 3000);
+        setTimeout(() => {setEmailHasBeenSent(false)}, 4000);
       })
       .catch(() => {
         setError("Error resetting password");
@@ -38,12 +40,12 @@ const PasswordReset = () => {
       <div className="w-full py-4 rounded-xl">
         <form action="">
           {emailHasBeenSent && (
-            <div className="w-full py-3 mb-3 text-center text-white bg-green-400">
+            <div className="w-full py-3 mb-3 text-center text-white bg-green-500 rounded-lg">
               An email has been sent to you!
             </div>
           )}
           {error !== null && (
-            <div className="w-full py-3 mb-3 text-center text-white bg-red-600">
+            <div className="w-full py-3 mb-3 text-center text-white bg-red-600 rounded-lg">
               {error}
             </div>
           )}
