@@ -5,6 +5,10 @@ import "firebase/firestore";
 const googleProvider = new firebase.auth.GoogleAuthProvider();
 const githubProvider = new firebase.auth.GithubAuthProvider();
 
+// add scopes to the githubProvider for account creation
+githubProvider.addScope('repo');
+githubProvider.addScope('user');
+
 var firebaseConfig = {
     apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
     authDomain: "treetop-learning-1589657684780.firebaseapp.com",
@@ -46,6 +50,7 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid);
 };
 
+// access a Treetop account that has already been created
 const getUserDocument = async uid => {
   if (!uid) return null;
   try {
@@ -72,12 +77,12 @@ export const signOut = () => {
   } 
 }
 
-// determine how users will sign in
+// determine how users will sign in with each platform
+
 export const signInWithGoogle = () => {
     auth.signInWithRedirect(googleProvider)
 };
 
-// determine how users will sign in
 export const signInWithGitHub = () => {
-  auth.signInWithRedirect(githubProvider)
+    auth.signInWithRedirect(githubProvider);
 };

@@ -17,12 +17,17 @@ const PasswordReset = () => {
 
   
   const sendResetEmail = event => {
+
     setError(null)
     event.preventDefault();
     auth
       .sendPasswordResetEmail(email)
       .then(() => {
+
+        // notify user of successfully sent
         setEmailHasBeenSent(true);
+
+        // hide the successfully sent notification after 4 seconds
         setTimeout(() => {setEmailHasBeenSent(false)}, 4000);
       })
       .catch(() => {

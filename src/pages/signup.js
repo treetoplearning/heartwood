@@ -1,7 +1,7 @@
 import React, { useState, useContext } from "react";
 import { navigate } from "gatsby";
 import { Link } from "@reach/router";
-import { signInWithGoogle, generateUserDocument } from "../firebase/firebase";
+import { signInWithGoogle, signInWithGitHub, generateUserDocument } from "../firebase/firebase";
 import { auth } from "../firebase/firebase";
 
 import { library } from "@fortawesome/fontawesome-svg-core";
@@ -138,7 +138,7 @@ const SignUp = () => {
           </button>
           <button
             className="relative flex items-center w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
-            onClick={() => signInWithGoogle()}
+            onClick={() => signInWithGitHub()}
           >
             <FontAwesomeIcon
               icon={faGithub}
