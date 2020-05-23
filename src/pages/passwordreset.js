@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "@reach/router";
 
+import { auth } from "../firebase/firebase";
+
 const PasswordReset = () => {
   const [email, setEmail] = useState("");
   const [emailHasBeenSent, setEmailHasBeenSent] = useState(false);
@@ -11,17 +13,29 @@ const PasswordReset = () => {
       setEmail(value);
     }
   };
+
+  
   const sendResetEmail = event => {
     event.preventDefault();
+    auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        setEmailHasBeenSent(true);
+        setTimeout(() => {setEmailHasBeenSent(false)}, 3000);
+      })
+      .catch(() => {
+        setError("Error resetting password");
+      });
   };
+
   return (
-    <div className="w-screen h-screen overflow-visible bg-base">
+    <div className="w-screen h-screen bg-base">
     <div className="pt-24 font-mono">
-    <div className="w-11/12 px-4 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12 ">
-      <h1 className="pt-4 mb-3 text-3xl font-bold text-center">
+    <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12 ">
+      <h1 className="pt-4 mb-2 text-3xl font-bold text-center">
         Reset your Password
       </h1>
-      <div className="w-11/12 py-8 mx-auto rounded-xl md:w-3/4 ">
+      <div className="w-full py-4 rounded-xl">
         <form action="">
           {emailHasBeenSent && (
             <div className="w-full py-3 mb-3 text-center text-white bg-green-400">
@@ -46,7 +60,9 @@ const PasswordReset = () => {
             className="w-full px-1 py-2 mb-3"
           />
           <button
-            className="w-full py-3 text-white duration-100 ease-in-out bg-blue-500 rounded-lg hover:bg-blue-400"
+            className="w-full py-2 text-white duration-100 ease-in-out bg-blue-500 rounded-lg hover:bg-blue-400"  onClick={event => {
+              sendResetEmail(event);
+            }}
           >
             Send me a reset link
           </button>
