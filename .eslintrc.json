@@ -1,0 +1,8 @@
+/*eslint semi: ["error", "never"]*/
+{
+  "extends": "react-app",
+
+  "rules": {
+    "semi": [2, "never"]
+  }
+}

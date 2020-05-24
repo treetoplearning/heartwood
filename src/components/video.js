@@ -46,14 +46,14 @@ const Video = () => {
 
   // Mute all of the local user's tracks.
   function muteAudio() {
-    room.localParticipant.audioTracks.forEach(publication => {
+    room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.disable()
     })
   }
 
   // Unmute all of the local user's tracks.
   function unmuteAudio() {
-    room.localParticipant.audioTracks.forEach(publication => {
+    room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.enable()
     })
   }
@@ -70,36 +70,38 @@ const Video = () => {
     }
 
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
-      .then(res => res.data)
-      .then(data =>
+      .then((res) => res.data)
+      .then((data) =>
         connect(data, { name: "Treetop-Testing" }).then(
-          room => {
+          (room) => {
             // Store the room for future reference.
             setRoom(room)
 
             console.log(`Successfully joined a Room: ${room}`)
 
             // Set up local media
-            createLocalVideoTrack().then(track => {
+            createLocalVideoTrack().then((track) => {
               setLocal(true)
               setRemote(false)
-              const localMediaContainer = document.getElementById("local-media")
+              const localMediaContainer = document.getElementById(
+                "local-media"
+              )
               localMediaContainer.appendChild(track.attach())
               console.log("People left in the room are:", room.participants)
             })
 
             // Log new participants
-            room.participants.forEach(participant => {
+            room.participants.forEach((participant) => {
               console.log(
                 `Participant "${participant.identity}" has connected to the Room`
               )
             })
 
             // Share all participants media with each other
-            room.on("participantConnected", participant => {
+            room.on("participantConnected", (participant) => {
               console.log(`Participant "${participant.identity}" connected`)
 
-              participant.tracks.forEach(publication => {
+              participant.tracks.forEach((publication) => {
                 if (publication.isSubscribed) {
                   const track = publication.track
                   setLocal(false)
@@ -109,7 +111,7 @@ const Video = () => {
                 }
               })
 
-              participant.on("trackSubscribed", track => {
+              participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
                 document
@@ -119,13 +121,13 @@ const Video = () => {
             })
 
             // Disconnect user and show local input
-            room.on("disconnected", room => {
+            room.on("disconnected", (room) => {
               console.log(`Participant has disconnected.`)
 
               console.log("People left in the room are:", room.participants)
 
-              room.participants.forEach(participant => {
-                participant.tracks.forEach(publication => {
+              room.participants.forEach((participant) => {
+                participant.tracks.forEach((publication) => {
                   const track = publication.track
                   if (
                     publication.track &&
@@ -141,9 +143,9 @@ const Video = () => {
               })
 
               // Detach the local media elements
-              room.localParticipant.tracks.forEach(publication => {
+              room.localParticipant.tracks.forEach((publication) => {
                 const attachedElements = publication.track.detach()
-                attachedElements.forEach(element => element.remove())
+                attachedElements.forEach((element) => element.remove())
               })
 
               console.log("People left in the room are:", room.participants)
@@ -155,8 +157,8 @@ const Video = () => {
               setRemote(false)
             })
 
-            room.participants.forEach(participant => {
-              participant.tracks.forEach(publication => {
+            room.participants.forEach((participant) => {
+              participant.tracks.forEach((publication) => {
                 const track = publication.track
                 if (publication.track) {
                   document
@@ -165,7 +167,7 @@ const Video = () => {
                 }
               })
 
-              participant.on("trackSubscribed", track => {
+              participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
                 document
@@ -174,7 +176,7 @@ const Video = () => {
               })
             })
           },
-          error => {
+          (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
           }
         )
@@ -207,6 +209,7 @@ const Video = () => {
         )}
         {onCall && (
           <VideoIcon
+            Icon
             icon={faPhoneSlash}
             alert={true}
             onCall={onCall}

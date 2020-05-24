@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
-import Navbar from "../components/navbar";
-import IDE from "../components/ide";
-import Term from "../components/term";
-import Video from "../components/video";
-import { HeartwoodDispatchContext } from "../state/HeartwoodContextProvider";
+import React, { useContext } from "react"
+import Navbar from "../components/navbar"
+import IDE from "../components/ide"
+import Term from "../components/term"
+import Video from "../components/video"
+import { HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
-import '../styles/video.css'
+import "../styles/video.css"
 
 export default () => {
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -23,14 +23,13 @@ export default () => {
                 </div>
               </div>
             </div>
-            <div className="h-full m-3 bg-blue-300 rounded-lg">
-            </div>
+            <div className="h-full m-3 bg-blue-300 rounded-lg"></div>
           </div>
           <div className="flex flex-col w-3/4">
-            <div className="h-64 m-3 overflow-scroll bg-ideBase rounded-lg">
+            <div className="h-64 m-3 overflow-scroll rounded-lg bg-ideBase">
               <IDE />
             </div>
-            <div className="h-48 m-3 overflow-x-hidden bg-black rounded-lg px-4">
+            <div className="h-48 px-4 m-3 overflow-x-hidden bg-black rounded-lg">
               <Term termId="term" />
             </div>
           </div>

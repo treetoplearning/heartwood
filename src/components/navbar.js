@@ -1,40 +1,40 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link } from "gatsby";
+import React, { useState, useEffect, useContext } from "react"
+import { Link } from "gatsby"
 
-import { signOut } from "../firebase/firebase";
+import { signOut } from "../firebase/firebase"
 
 import {
   HeartwoodStateContext,
   HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider";
+} from "../state/HeartwoodContextProvider"
 
-import logo from "../assets/logo.svg";
-import "../styles/global.css";
+import logo from "../assets/logo.svg"
+import "../styles/global.css"
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggle = () => setIsOpen(!isOpen);
+  const [isOpen, setIsOpen] = useState(false)
+  const toggle = () => setIsOpen(!isOpen)
 
-  const state = useContext(HeartwoodStateContext);
-  const dispatch = useContext(HeartwoodDispatchContext);
+  const state = useContext(HeartwoodStateContext)
+  const dispatch = useContext(HeartwoodDispatchContext)
 
   const [photoUrl, setPhotoUrl] = useState(
     "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  );
-  const [displayName, setDisplayName] = useState("Treetop Guest");
+  )
+  const [displayName, setDisplayName] = useState("Treetop Guest")
 
   function logOutAndClearState() {
     signOut()
-    dispatch({ type: "LOGOUT"});
+    dispatch({ type: "LOGOUT" })
   }
 
   useEffect(() => {
     // only add user preferences if the user has logged in
     if (state.user && state.user.displayName) {
-      setPhotoUrl(state.user.photoURL);
-      setDisplayName(state.user.displayName);
+      setPhotoUrl(state.user.photoURL)
+      setDisplayName(state.user.displayName)
     }
-  }, [state]);
+  }, [state])
 
   return (
     <nav className="bg-transparent">
@@ -42,7 +42,10 @@ const Navbar = () => {
         <div className="relative flex items-center justify-between h-16">
           <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
             {/* <!-- Mobile menu button--> */}
-            <button className="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white">
+            <button
+              type="button"
+              className="inline-flex items-center justify-center p-2 text-gray-400 transition duration-150 ease-in-out rounded-md hover:text-white hover:bg-gray-700 focus:outline-none focus:bg-gray-700 focus:text-white"
+            >
               {/* <!-- Icon when menu is closed. -->
           <!-- Menu open: "hidden", Menu closed: "block" --> */}
               <svg
@@ -93,7 +96,7 @@ const Navbar = () => {
               </Link>
             </div>
             <div className="hidden sm:block sm:ml-6">
-              <div className="flex"></div>
+              <div className="flex" />
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
@@ -104,6 +107,7 @@ const Navbar = () => {
                 : displayName}{" "}
             </p>
             <button
+              type="button"
               className="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
               onClick={() => console.log(state)}
             >
@@ -143,10 +147,9 @@ const Navbar = () => {
               To: "transform opacity-0 scale-95"
           --> */}
               <div
-                className={
-                  (isOpen ? "block" : "hidden") +
-                  " origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg"
-                }
+                className={`${
+                  isOpen ? "block" : "hidden"
+                } origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg`}
               >
                 <div className="py-1 bg-white rounded-md shadow-xs">
                   <Link
@@ -161,7 +164,8 @@ const Navbar = () => {
                   >
                     Settings
                   </Link>
-                  <Link to=""
+                  <Link
+                    to=""
                     className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                     onClick={() => logOutAndClearState()}
                   >
@@ -203,7 +207,7 @@ const Navbar = () => {
         </div>
       </div>
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

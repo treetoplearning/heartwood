@@ -1,108 +1,107 @@
-import React, { useState, useContext, useEffect } from "react";
-import { Link } from "gatsby";
-import firebase from "firebase/app";
+import React, { useState, useContext, useEffect } from "react"
+import { Link } from "gatsby"
+import firebase from "firebase/app"
 import {
   signInWithGoogle,
   signInWithEmailAndPassword,
-} from "../firebase/firebase";
-import { auth, generateUserDocument } from "../firebase/firebase";
+} from "../firebase/firebase"
+import { auth, generateUserDocument } from "../firebase/firebase"
 
-import { navigate } from "gatsby";
+import { navigate } from "gatsby"
 
 import {
   HeartwoodStateContext,
   HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider";
+} from "../state/HeartwoodContextProvider"
 
-import { library } from "@fortawesome/fontawesome-svg-core";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
-import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
 
-import ProfilePage from "../components/profilepage";
+import ProfilePage from "../components/profilepage"
 
-library.add(faGoogle, faGithub);
+library.add(faGoogle, faGithub)
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(null);
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const [error, setError] = useState(null)
 
-  const state = useContext(HeartwoodStateContext);
-  const dispatch = useContext(HeartwoodDispatchContext);
+  const state = useContext(HeartwoodStateContext)
+  const dispatch = useContext(HeartwoodDispatchContext)
 
   // deal with an already registered user
   const signInWithEmailAndPasswordHandler = (event, email, password) => {
-    event.preventDefault();
+    event.preventDefault()
 
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => {
-        setError("Error signing in with password and email");
-        console.error("Error signing in with password and email", error);
+        setError("Error signing in with password and email")
+        console.error("Error signing in with password and email", error)
         // set the current logged in user to the returning user
       })
       .then((result) => {
         if (result) {
-          dispatch({ type: "LOGIN", user: result.user });
-          navigate("/");
+          dispatch({ type: "LOGIN", user: result.user })
+          navigate("/")
         }
-      });
-  };
+      })
+  }
 
   const onChangeHandler = (event) => {
-    const { name, value } = event.currentTarget;
+    const { name, value } = event.currentTarget
 
     if (name === "userEmail") {
-      setEmail(value);
+      setEmail(value)
     } else if (name === "userPassword") {
-      setPassword(value);
+      setPassword(value)
     }
-  };
+  }
 
   useEffect(() => {
     firebase
-    .auth()
-    .getRedirectResult()
-    .then((result) => {
-      if (result.user) {
-        console.log("logged in user is", firebase.auth().currentUser);
+      .auth()
+      .getRedirectResult()
+      .then((result) => {
+        if (result.user) {
+          console.log("logged in user is", firebase.auth().currentUser)
 
-        // reference to logged in user
-        const currentUser = firebase.auth().currentUser
+          // reference to logged in user
+          const currentUser = firebase.auth().currentUser
 
-        // manage the user information from the provider log-in
-        const displayName = currentUser.displayName  
-        const splitNames = currentUser.displayName.split(" ");
-        console.log('split names is', splitNames)
-        const firstName = splitNames[0];
-        console.log('first name is', firstName)
-      
-        const lastName = String(
-          splitNames.slice(1, splitNames.length)
-        ).replace(/,/g, " ");
+          // manage the user information from the provider log-in
+          const displayName = currentUser.displayName
+          const splitNames = currentUser.displayName.split(" ")
+          console.log("split names is", splitNames)
+          const firstName = splitNames[0]
+          console.log("first name is", firstName)
 
-        // create a document in the database with all the provider information
-        generateUserDocument(currentUser, {
-          displayName,
-          firstName,
-          lastName,
-        });
+          const lastName = String(
+            splitNames.slice(1, splitNames.length)
+          ).replace(/,/g, " ")
 
-        // update the user that will be stored in state
-        currentUser
-        .updateProfile({
-          firstName: firstName,
-          lastname: lastName
-        })
-        .then((res) => {
-      
-          dispatch({ type: "LOGIN", user: result.user });
-          navigate("/");
-        });
-      }
-    });
-  }, []);
+          // create a document in the database with all the provider information
+          generateUserDocument(currentUser, {
+            displayName,
+            firstName,
+            lastName,
+          })
+
+          // update the user that will be stored in state
+          currentUser
+            .updateProfile({
+              firstName: firstName,
+              lastname: lastName,
+            })
+            .then((res) => {
+              dispatch({ type: "LOGIN", user: result.user })
+              navigate("/")
+            })
+        }
+      })
+  }, [])
 
   return (
     <div className="w-screen h-screen bg-base">
@@ -142,7 +141,7 @@ const SignIn = () => {
             <button
               className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
               onClick={(event) => {
-                signInWithEmailAndPasswordHandler(event, email, password);
+                signInWithEmailAndPasswordHandler(event, email, password)
               }}
             >
               Sign in
@@ -185,7 +184,7 @@ const SignIn = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SignIn;
+export default SignIn
