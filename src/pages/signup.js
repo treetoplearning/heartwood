@@ -44,9 +44,7 @@ const SignUp = () => {
       );
 
       // manage the data to save to the documents
-      const photoURL =
-        "https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60";
-
+      const photoURL = "https://arbordayblog.org/wp-content/uploads/2018/06/oak-tree-sunset-iStock-477164218.jpg"
       const splitNames = displayName.split(" ");
       const firstName = splitNames[0];
       const lastName = String(splitNames.slice(1, splitNames.length)).replace(
@@ -111,7 +109,7 @@ const SignUp = () => {
             splitNames.slice(1, splitNames.length)
           ).replace(/,/g, " ");
 
-
+          // create a document in the database with all the provider information
           generateUserDocument(currentUser, {
             displayName,
             firstName,
@@ -137,25 +135,26 @@ const SignUp = () => {
   return (
     <div className="w-screen h-screen overflow-visible bg-base">
       <div className="pt-24 font-mono">
-        <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl md:w-1/2 md:px-12">
+        <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-1/2 md:w-3/4 md:px-12">
           <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
           {error !== null && (
             <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
               {error}
             </div>
           )}
-          <form className="">
+          <form className="" required>
             <label htmlFor="displayName" className="block">
-              Display Name:
+              Full Name:
             </label>
             <input
               type="text"
               className="w-full p-1 my-1 "
               name="displayName"
               value={displayName}
-              placeholder="E.g: treetoplearner"
+              placeholder="E.g: Treetop Learner"
               id="displayName"
               onChange={(event) => onChangeHandler(event)}
+              
             />
             <label htmlFor="userEmail" className="block">
               Email:
@@ -168,6 +167,7 @@ const SignUp = () => {
               placeholder="E.g: treetoplearner@gmail.com"
               id="userEmail"
               onChange={(event) => onChangeHandler(event)}
+              
             />
             <label htmlFor="userPassword" className="block">
               Password:

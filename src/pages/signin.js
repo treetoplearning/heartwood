@@ -5,7 +5,7 @@ import {
   signInWithGoogle,
   signInWithEmailAndPassword,
 } from "../firebase/firebase";
-import { auth } from "../firebase/firebase";
+import { auth, generateUserDocument } from "../firebase/firebase";
 
 import { navigate } from "gatsby";
 
@@ -62,20 +62,52 @@ const SignIn = () => {
 
   useEffect(() => {
     firebase
-      .auth()
-      .getRedirectResult()
-      .then((result) => {
-        if (result.user) {
+    .auth()
+    .getRedirectResult()
+    .then((result) => {
+      if (result.user) {
+        console.log("logged in user is", firebase.auth().currentUser);
+
+        // reference to logged in user
+        const currentUser = firebase.auth().currentUser
+
+        // manage the user information from the provider log-in
+        const displayName = currentUser.displayName  
+        const splitNames = currentUser.displayName.split(" ");
+        console.log('split names is', splitNames)
+        const firstName = splitNames[0];
+        console.log('first name is', firstName)
+      
+        const lastName = String(
+          splitNames.slice(1, splitNames.length)
+        ).replace(/,/g, " ");
+
+        // create a document in the database with all the provider information
+        generateUserDocument(currentUser, {
+          displayName,
+          firstName,
+          lastName,
+        });
+
+        // update the user that will be stored in state
+        currentUser
+        .updateProfile({
+          firstName: firstName,
+          lastname: lastName
+        })
+        .then((res) => {
+      
           dispatch({ type: "LOGIN", user: result.user });
           navigate("/");
-        }
-      });
+        });
+      }
+    });
   }, []);
 
   return (
     <div className="w-screen h-screen bg-base">
       <div className="pt-24 font-mono">
-        <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12">
+        <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
           <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
           {error !== null && (
             <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
@@ -155,4 +187,5 @@ const SignIn = () => {
     </div>
   );
 };
+
 export default SignIn;

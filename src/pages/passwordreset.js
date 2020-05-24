@@ -39,18 +39,18 @@ const PasswordReset = () => {
     <div className="w-screen h-screen bg-base">
     <div className="pt-24 font-mono">
     <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12 ">
-      <h1 className="pt-4 mb-2 text-3xl font-bold text-center">
+      <h1 className="pt-4 text-3xl font-bold text-center">
         Reset your Password
       </h1>
-      <div className="w-full py-4 rounded-xl">
+      <div className="w-full pt-2 pb-4 rounded-xl">
         <form action="">
           {emailHasBeenSent && (
-            <div className="w-full py-3 mb-3 text-center text-white bg-green-500 rounded-lg">
+            <div className="w-full py-4 mb-3 text-center text-white bg-green-500 rounded-lg">
               An email has been sent to you!
             </div>
           )}
           {error !== null && (
-            <div className="w-full py-3 mb-3 text-center text-white bg-red-600 rounded-lg">
+            <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
               {error}
             </div>
           )}
