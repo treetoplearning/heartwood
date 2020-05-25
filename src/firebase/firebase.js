@@ -13,8 +13,6 @@ googleProvider.setCustomParameters({
   login_hint: "user@example.com",
 })
 
-
-
 export const generateUserDocument = async (user, additionalData) => {
   if (!user) return
 
@@ -57,13 +55,14 @@ let firebaseAuth = ''
 let firestoreAuth = ''
 
 // link to remote firebase application
-if (typeof window !== `undefined`) {
-  let firebaseAuth = firebase.auth()
-  let firestoreAuth = firebase.firestore()
-}
+// THIS FIXES SOME ERRORS BUT CAUSES SOME OTHERS
+// if (typeof window !== `undefined`) {
+//   let firebaseAuth = firebase.auth()
+//   let firestoreAuth = firebase.firestore()
+// }
 
-export const auth = firebaseAuth
-export const firestore = firestoreAuth
+export const auth = firebase.auth()
+export const firestore = firebase.firestore()
 
 export const signOut = () => {
   firebase

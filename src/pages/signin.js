@@ -9,6 +9,13 @@ import {
   HeartwoodDispatchContext,
 } from "../state/HeartwoodContextProvider"
 
+import {
+  auth,
+  signInWithGoogle,
+  signInWithGitHub,
+  generateUserDocument,
+} from "../firebase/firebase"
+
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
