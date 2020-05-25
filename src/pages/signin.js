@@ -1,11 +1,6 @@
 import React, { useState, useContext, useEffect } from "react"
 import { Link } from "gatsby"
-import firebase from "firebase/app"
-import {
-  signInWithGoogle,
-  signInWithEmailAndPassword,
-} from "../firebase/firebase"
-import { auth, generateUserDocument } from "../firebase/firebase"
+import firebase from "gatsby-plugin-firebase"
 
 import { navigate } from "gatsby"
 
@@ -18,8 +13,6 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
-
-import ProfilePage from "../components/profilepage"
 
 library.add(faGoogle, faGithub)
 
@@ -61,23 +54,19 @@ const SignIn = () => {
   }
 
   useEffect(() => {
+    require("../firebase/firebase")
     firebase
       .auth()
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          console.log("logged in user is", firebase.auth().currentUser)
-
           // reference to logged in user
           const currentUser = firebase.auth().currentUser
 
           // manage the user information from the provider log-in
           const displayName = currentUser.displayName
-          const splitNames = currentUser.displayName.split(" ")
-          console.log("split names is", splitNames)
+          const splitNames = "Jacob Patel".split(" ")
           const firstName = splitNames[0]
-          console.log("first name is", firstName)
-
           const lastName = String(
             splitNames.slice(1, splitNames.length)
           ).replace(/,/g, " ")
@@ -99,6 +88,15 @@ const SignIn = () => {
               dispatch({ type: "LOGIN", user: result.user })
               navigate("/")
             })
+        }
+      })
+      .catch((error) => {
+        if (error.code === "auth/account-exists-with-different-credential") {
+          setError("An account already exists under that email address")
+          console.error(
+            "An account already exists under that email address",
+            error
+          )
         }
       })
   }, [])
@@ -160,7 +158,7 @@ const SignIn = () => {
           </button>
           <button
             className="relative flex items-center w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
-            onClick={() => signInWithGoogle()}
+            onClick={() => signInWithGitHub()}
           >
             <FontAwesomeIcon
               icon={faGithub}

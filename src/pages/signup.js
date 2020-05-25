@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react"
 import { navigate } from "gatsby"
 import { Link } from "@reach/router"
-import firebase from "firebase/app"
+import firebase from "gatsby-plugin-firebase"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -46,7 +46,7 @@ const SignUp = () => {
       // manage the data to save to the documents
       const photoURL =
         "https://arbordayblog.org/wp-content/uploads/2018/06/oak-tree-sunset-iStock-477164218.jpg"
-      const splitNames = displayName.split(" ")
+      const splitNames = "Jacob Patel".split(" ")
       const firstName = splitNames[0]
       const lastName = String(splitNames.slice(1, splitNames.length)).replace(
         /,/g,
@@ -68,12 +68,25 @@ const SignUp = () => {
           photoURL,
         })
         .then((res) => {
-          console.log(res, user)
           dispatch({ type: "LOGIN", user })
           navigate("/")
         })
     } catch (error) {
-      setError("Error signing up with email and password")
+      // handle and display the various error to the user
+
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setError("An account already exists under that email address")
+        console.error(
+          "An account already exists under that email address",
+          error
+        )
+      } else if (error.code === "auth/email-already-in-use") {
+        setError("Email address is already in use by another account")
+        console.log(error)
+      } else {
+        setError("Error signing up with email and password")
+        console.log(error)
+      }
     }
   }
 
@@ -93,32 +106,23 @@ const SignUp = () => {
       .auth()
       .getRedirectResult()
       .then((result) => {
-        if (result.user) {
-          console.log("logged in user is", firebase.auth().currentUser)
+        if (result.user && result.user.displayName) {
 
-          // reference to logged in user
-          const { currentUser } = firebase.auth()
-
-          // manage the user information from the provider log-in
-          const { displayName } = currentUser
-          const splitNames = currentUser.displayName.split(" ")
-          console.log("split names is", splitNames)
+          const splitNames = "Jacob Patel".split(" ")
           const firstName = splitNames[0]
-          console.log("first name is", firstName)
-
           const lastName = String(
             splitNames.slice(1, splitNames.length)
           ).replace(/,/g, " ")
 
           // create a document in the database with all the provider information
-          generateUserDocument(currentUser, {
+          generateUserDocument(result.user, {
             displayName,
             firstName,
             lastName,
           })
 
           // update the user that will be stored in state
-          currentUser
+          result.user
             .updateProfile({
               firstName,
               lastname: lastName,
@@ -127,6 +131,12 @@ const SignUp = () => {
               dispatch({ type: "LOGIN", user: result.user })
               navigate("/")
             })
+        }
+      })
+      .catch((error) => {
+        if (error.code === "auth/account-exists-with-different-credential") {
+          setError("An account already exists under that email address")
+          console.error("Account already exists under email address", error)
         }
       })
   }, [])

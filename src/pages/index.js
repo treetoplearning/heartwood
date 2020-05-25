@@ -8,15 +8,14 @@ import {
   HeartwoodStateContext,
   HeartwoodDispatchContext,
 } from "../state/HeartwoodContextProvider"
-import ProfilePage from "../components/profilepage"
 
-import SignIn from "./signin"
 
 const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
   useEffect(() => {
+    
     if (state.user !== null) {
       const { photoURL, displayName, email } = state.user
     }

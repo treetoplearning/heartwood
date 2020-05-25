@@ -1,4 +1,4 @@
-import firebase from "firebase/app"
+import firebase from "gatsby-plugin-firebase"
 import "firebase/auth"
 import "firebase/firestore"
 
@@ -13,22 +13,7 @@ googleProvider.setCustomParameters({
   login_hint: "user@example.com",
 })
 
-var firebaseConfig = {
-  apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
-  authDomain: "treetop-learning-1589657684780.firebaseapp.com",
-  databaseURL: "https://treetop-learning-1589657684780.firebaseio.com",
-  projectId: "treetop-learning-1589657684780",
-  storageBucket: "treetop-learning-1589657684780.appspot.com",
-  messagingSenderId: "668994241265",
-  appId: "1:668994241265:web:c48ca701a737cd8098df50",
-  measurementId: "G-47T19JXV8Y",
-}
 
-firebase.initializeApp(firebaseConfig)
-
-// link to remote firebase application
-export const auth = firebase.auth()
-export const firestore = firebase.firestore()
 
 export const generateUserDocument = async (user, additionalData) => {
   if (!user) return
@@ -67,6 +52,18 @@ const getUserDocument = async (uid) => {
     console.error("Error fetching user", error)
   }
 }
+
+let firebaseAuth = ''
+let firestoreAuth = ''
+
+// link to remote firebase application
+if (typeof window !== `undefined`) {
+  let firebaseAuth = firebase.auth()
+  let firestoreAuth = firebase.firestore()
+}
+
+export const auth = firebaseAuth
+export const firestore = firestoreAuth
 
 export const signOut = () => {
   firebase
