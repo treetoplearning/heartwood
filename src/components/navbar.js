@@ -8,6 +8,8 @@ import {
   HeartwoodDispatchContext,
 } from "../state/HeartwoodContextProvider"
 
+import { navigate } from "gatsby"
+
 import logo from "../assets/logo.svg"
 import "../styles/global.css"
 
@@ -35,6 +37,13 @@ const Navbar = () => {
       setDisplayName(state.user.displayName)
     }
   }, [state])
+
+  useEffect(() => {
+    
+    if (state.user == null) {
+      navigate('/')
+    }
+  }, [state.user])
 
   return (
     <nav className="bg-transparent">

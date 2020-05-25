@@ -45,7 +45,7 @@ const SignIn = () => {
       .then((result) => {
         if (result) {
           dispatch({ type: "LOGIN", user: result.user })
-          navigate("/")
+        
         }
       })
   }
@@ -61,7 +61,12 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    require("../firebase/firebase")
+   if (state.user && state.user.displayName !== null) {
+     navigate("/")
+   }
+  }, [state.user])
+
+  useEffect(() => {
     firebase
       .auth()
       .getRedirectResult()
@@ -93,7 +98,7 @@ const SignIn = () => {
             })
             .then((res) => {
               dispatch({ type: "LOGIN", user: result.user })
-              navigate("/")
+         
             })
         }
       })

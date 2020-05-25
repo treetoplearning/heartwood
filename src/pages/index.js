@@ -17,17 +17,19 @@ const IndexPage = () => {
   useEffect(() => {
     
     if (state.user !== null) {
+      
       const { photoURL, displayName, email } = state.user
+    } else {
+      navigate("/signin")
     }
-  }, [])
+
+  }, [[], state.user])
 
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
       <Navbar />
 
-      {state.user
-        ? console.log("on index the user is", state.user)
-        : navigate("/signin")}
+    
       {state.user ? console.log("user is valid") : console.log("user is null")}
     </div>
   )

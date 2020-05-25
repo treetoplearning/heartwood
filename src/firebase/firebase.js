@@ -55,14 +55,13 @@ let firebaseAuth = ''
 let firestoreAuth = ''
 
 // link to remote firebase application
-// THIS FIXES SOME ERRORS BUT CAUSES SOME OTHERS
-// if (typeof window !== `undefined`) {
-//   let firebaseAuth = firebase.auth()
-//   let firestoreAuth = firebase.firestore()
-// }
+if (typeof window !== `undefined`) {
+  let firebaseAuth = firebase.auth()
+  let firestoreAuth = firebase.firestore()
+}
 
-export const auth = firebase.auth()
-export const firestore = firebase.firestore()
+export const auth = firebaseAuth
+export const firestore = firestoreAuth
 
 export const signOut = () => {
   firebase
