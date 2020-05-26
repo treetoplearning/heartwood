@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from "react"
 import { Link } from "gatsby"
 
+import { navigate } from "gatsby"
+
 import { signOut } from "../firebase/firebase"
 
 import {
@@ -24,8 +26,9 @@ const Navbar = () => {
   const [displayName, setDisplayName] = useState("Treetop Guest")
 
   function logOutAndClearState() {
-    signOut()
     dispatch({ type: "LOGOUT" })
+    signOut()
+    navigate("/signin")
   }
 
   useEffect(() => {
