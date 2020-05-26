@@ -1,26 +1,37 @@
-import React from "react"
+import React, { useEffect } from "react"
 
 export const HeartwoodStateContext = React.createContext()
 export const HeartwoodDispatchContext = React.createContext()
 
 const initialState = {
-  ideBody: "# code here\nprint(\"Hello Jacob\")",
-  termBuff: ""
+  ideBody: '# code here\nprint("Hello Jacob")',
+  termBuff: "",
+  user: null,
 }
 
 function reducer(state, action) {
   switch (action.type) {
     case "COMPILE":
-      action.cb(state.ideBody);
-      return {
-        ...state
-      }
-    case "WRITE_IDE": {
+      action.cb(state.ideBody)
       return {
         ...state,
-        ideBody: action.body
       }
-    }
+    case "WRITE_IDE":
+      return {
+        ...state,
+        ideBody: action.body,
+      }
+    case "LOGIN":
+      return {
+        ...state,
+        user: action.user,
+      }
+    case "LOGOUT":
+      return {
+        ...state,
+        user: null,
+      }
+
     default:
       throw new Error("Bad Action Type")
   }
@@ -28,6 +39,7 @@ function reducer(state, action) {
 
 const HeartwoodContextProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
+
   return (
     <HeartwoodStateContext.Provider value={state}>
       <HeartwoodDispatchContext.Provider value={dispatch}>
