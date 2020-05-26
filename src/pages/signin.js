@@ -1,13 +1,9 @@
 import React, { useState, useContext, useEffect } from "react"
 import { Link } from "gatsby"
-import firebase from "gatsby-plugin-firebase"
 
 import { navigate } from "gatsby"
 
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext, } from "../state/HeartwoodContextProvider"
 
 import {
   auth,
@@ -45,7 +41,6 @@ const SignIn = () => {
       .then((result) => {
         if (result) {
           dispatch({ type: "LOGIN", user: result.user })
-          navigate("/")
         }
       })
   }
@@ -61,14 +56,12 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-    require("../firebase/firebase")
-    firebase
-      .auth()
+    auth
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
           // reference to logged in user
-          const currentUser = firebase.auth().currentUser
+          const currentUser = auth.currentUser
 
           // manage the user information from the provider log-in
           const displayName = currentUser.displayName

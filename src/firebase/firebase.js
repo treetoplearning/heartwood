@@ -1,6 +1,13 @@
 import firebase from "gatsby-plugin-firebase"
-import "firebase/auth"
-import "firebase/firestore"
+
+let auth, firestore
+
+if (typeof window !== `undefined`) {
+  auth = firebase.auth()
+  firestore = firebase.firestore()
+}
+
+export { auth, firestore }
 
 const googleProvider = new firebase.auth.GoogleAuthProvider()
 const githubProvider = new firebase.auth.GithubAuthProvider()
@@ -8,10 +15,6 @@ const githubProvider = new firebase.auth.GithubAuthProvider()
 // add scopes to the githubProvider for account creation
 githubProvider.addScope("repo")
 githubProvider.addScope("user")
-
-googleProvider.setCustomParameters({
-  login_hint: "user@example.com",
-})
 
 export const generateUserDocument = async (user, additionalData) => {
   if (!user) return
@@ -51,22 +54,9 @@ const getUserDocument = async (uid) => {
   }
 }
 
-let firebaseAuth = ''
-let firestoreAuth = ''
-
-// link to remote firebase application
-// THIS FIXES SOME ERRORS BUT CAUSES SOME OTHERS
-// if (typeof window !== `undefined`) {
-//   let firebaseAuth = firebase.auth()
-//   let firestoreAuth = firebase.firestore()
-// }
-
-export const auth = firebase.auth()
-export const firestore = firebase.firestore()
 
 export const signOut = () => {
-  firebase
-    .auth()
+  auth
     .signOut()
     .then(
       function () {

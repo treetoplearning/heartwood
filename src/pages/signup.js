@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react"
 import { navigate } from "gatsby"
 import { Link } from "@reach/router"
-import firebase from "gatsby-plugin-firebase"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -69,7 +68,7 @@ const SignUp = () => {
         })
         .then((res) => {
           dispatch({ type: "LOGIN", user })
-          navigate("/")
+          navigate('/')
         })
     } catch (error) {
       // handle and display the various error to the user
@@ -102,12 +101,12 @@ const SignUp = () => {
   }
 
   useEffect(() => {
-    firebase
-      .auth()
+    
+    auth
       .getRedirectResult()
       .then((result) => {
+        
         if (result.user && result.user.displayName) {
-
           const splitNames = "Jacob Patel".split(" ")
           const firstName = splitNames[0]
           const lastName = String(
@@ -139,6 +138,7 @@ const SignUp = () => {
           console.error("Account already exists under email address", error)
         }
       })
+    
   }, [])
 
   return (
