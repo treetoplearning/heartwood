@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react"
-import "../styles/global.css"
 import "xterm/css/xterm.css"
 import skulpt from "skulpt"
 import {

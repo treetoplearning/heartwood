@@ -11,7 +11,6 @@ import {
 } from "../state/HeartwoodContextProvider"
 
 import logo from "../assets/logo.svg"
-import "../styles/global.css"
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false)

@@ -9,7 +9,7 @@ const IndexPage = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
 
   useEffect(() => {
-    if (state.user) {
+    if (isLoggedIn(state.user)) {
       const { photoURL, displayName, email } = state.user
     } else {
       navigate("/signin")
@@ -17,9 +17,11 @@ const IndexPage = () => {
   }, [state.user])
 
   return (
+    
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
-      <Navbar />
+     {isLoggedIn(state.user) && <Navbar />} 
     </div>
+    
   )
 }
 
