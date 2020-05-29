@@ -38,13 +38,11 @@ const SignUp = () => {
   const validateInputs = () => {
     if (!passwordStrong) {
       setError("Please select a more complex password")
-      console.log(error)
       return false
     }
 
     if (email === "" || password === "" || displayName === "") {
       setError("Error signing up with email and password")
-      console.log(error)
       return false
     }
 
@@ -95,13 +93,13 @@ const SignUp = () => {
         console.error("An account already exists under that email address", error)
       } else if (error.code === "auth/email-already-in-use") {
         setError("Email address is already in use by another account")
-        console.log(error)
+     
       } else if (error.code === "auth/invalid-email") {
         setError("Email address is badly formatted")
-        console.log(error)
+     
       } else {
         setError(error.message)
-        console.log(error)
+    
       }
     }
   }
@@ -118,12 +116,10 @@ const SignUp = () => {
   }
 
   const checkStrong = (input) => {
-    console.log("the strength is", input)
     if (input === "Strong") {
       setPasswordStrong(true)
       return
     }
-    console.log("setting strength to FALSE")
     setPasswordStrong(false)
   }
 
