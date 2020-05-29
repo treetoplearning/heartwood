@@ -20,9 +20,11 @@
     "gatsby-plugin-manifest": "^2.3.3",
     "gatsby-plugin-offline": "^3.1.2",
     "gatsby-plugin-postcss": "^2.2.2",
+    "gatsby-plugin-sass": "^2.3.2",
     "gatsby-plugin-sharp": "^2.5.3",
     "gatsby-source-filesystem": "^2.2.2",
     "gatsby-transformer-sharp": "^2.4.3",
+    "node-sass": "^4.14.1",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-codemirror2": "^7.1.0",
@@ -32,7 +34,8 @@
     "skulpt": "^0.11.1",
     "twilio-video": "^2.3.0",
     "xterm": "^4.5.0",
-    "xterm-addon-fit": "^0.3.0"
+    "xterm-addon-fit": "^0.3.0",
+    "zxcvbn": "^4.4.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.34.0",

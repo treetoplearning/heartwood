@@ -72,8 +72,7 @@ const Video = () => {
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
       .then((res) => res.data)
       .then((data) =>
-        connect(data, { name: "Treetop-Testing" }).then(
-          (room) => {
+        connect(data, { name: "Treetop-Testing" }).then((room) => {
             // Store the room for future reference.
             setRoom(room)
 
@@ -83,18 +82,14 @@ const Video = () => {
             createLocalVideoTrack().then((track) => {
               setLocal(true)
               setRemote(false)
-              const localMediaContainer = document.getElementById(
-                "local-media"
-              )
+              const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
               console.log("People left in the room are:", room.participants)
             })
 
             // Log new participants
             room.participants.forEach((participant) => {
-              console.log(
-                `Participant "${participant.identity}" has connected to the Room`
-              )
+              console.log(`Participant "${participant.identity}" has connected to the Room`)
             })
 
             // Share all participants media with each other
@@ -105,18 +100,14 @@ const Video = () => {
                 if (publication.isSubscribed) {
                   const track = publication.track
                   setLocal(false)
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
               participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
             })
 
@@ -129,15 +120,10 @@ const Video = () => {
               room.participants.forEach((participant) => {
                 participant.tracks.forEach((publication) => {
                   const track = publication.track
-                  if (
-                    publication.track &&
-                    participant !== room.localParticipant
-                  ) {
+                  if (publication.track && participant !== room.localParticipant) {
                     console.log("hello")
                     document.getElementById("local-media").removeChild(track)
-                    document
-                      .getElementById("remote-media-div")
-                      .removeChild(track)
+                    document.getElementById("remote-media-div").removeChild(track)
                   }
                 })
               })
@@ -161,26 +147,20 @@ const Video = () => {
               participant.tracks.forEach((publication) => {
                 const track = publication.track
                 if (publication.track) {
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
               participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
             })
           },
           (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
-          }
-        )
-      )
+          }))
   }
 
   return (
@@ -192,20 +172,11 @@ const Video = () => {
       </div>
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
-        {!mute && (
-          <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>
-        )}
-        {mute && (
-          <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>
-        )}
+        {!mute && <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>}
+        {mute && <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>}
 
         {!onCall && (
-          <VideoIcon
-            icon={faPhoneAlt}
-            alert={true}
-            onCall={onCall}
-            action={startCall}
-          ></VideoIcon>
+          <VideoIcon icon={faPhoneAlt} alert={true} onCall={onCall} action={startCall}></VideoIcon>
         )}
         {onCall && (
           <VideoIcon
@@ -216,10 +187,7 @@ const Video = () => {
             action={endCall}
           ></VideoIcon>
         )}
-        <VideoIcon
-          icon={faTv}
-          action={() => console.log("share screen")}
-        ></VideoIcon>
+        <VideoIcon icon={faTv} action={() => console.log("share screen")}></VideoIcon>
       </div>
     </div>
   )

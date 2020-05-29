@@ -8,7 +8,7 @@ import { config } from "@fortawesome/fontawesome-svg-core"
 import "@fortawesome/fontawesome-svg-core/styles.css"
 
 import gear from "../assets/gear.svg"
-import PasswordResetMeter from "../components/passwordresetmeter"
+import PasswordStrengthMeter from "../components/passwordstrengthmeter"
 
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
 import {
@@ -18,10 +18,7 @@ import {
   generateUserDocument,
 } from "../firebase/firebase"
 
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
 library.add(faGoogle, faGithub)
 config.autoAddCss = false
@@ -34,81 +31,79 @@ const SignUp = () => {
   const [password, setPassword] = useState("")
   const [displayName, setDisplayName] = useState("")
   const [error, setError] = useState(null)
+  const [passwordStrong, setPasswordStrong] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
   // checks that all user inputs are not empty
   const validateInputs = () => {
-    console.log('ensuring inputs')
+    if (!passwordStrong) {
+      setError("Please select a more complex password")
+      console.log(error)
+      return false
+    }
+
     if (email === "" || password === "" || displayName === "") {
       setError("Error signing up with email and password")
       console.log(error)
       return false
     }
+
     return true
   }
 
   // generate a new document for a new user
-  const createUserWithEmailAndPasswordHandler = async (
-    event,
-    email,
-    password
-  ) => {
+  const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
     // if the user has attempted every input
-    
-      setIsLoading(true)
-      event.preventDefault()
-      try {
-        const { user } = await auth.createUserWithEmailAndPassword(
-          email,
-          password
-        )
 
-        // manage the data to save to the documents
-        const photoURL =
-          "https://arbordayblog.org/wp-content/uploads/2018/06/oak-tree-sunset-iStock-477164218.jpg"
-        const splitNames = "Jacob Patel".split(" ")
-        const firstName = splitNames[0]
-        const lastName = String(splitNames.slice(1, splitNames.length)).replace(
-          /,/g,
-          " "
-        )
+    setIsLoading(true)
+    event.preventDefault()
+    try {
+      const { user } = await auth.createUserWithEmailAndPassword(email, password)
 
-        // to add more fields just input them into the genUserDoc object parameter.
-        generateUserDocument(user, {
+      // manage the data to save to the documents
+      const photoURL =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAA1BMVEX///+nxBvIAAAAR0lEQVR4nO3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBgxUwAAU+n3sIAAAAASUVORK5CYII="
+      const splitNames = displayName.split(" ")
+      const firstName = splitNames[0]
+      const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+
+      // to add more fields just input them into the genUserDoc object parameter.
+      generateUserDocument(user, {
+        displayName,
+        photoURL,
+        firstName,
+        lastName,
+      })
+
+      // update the user that will be stored in state
+      user
+        .updateProfile({
           displayName,
           photoURL,
-          firstName,
-          lastName,
         })
+        .then((res) => {
+          dispatch({ type: "LOGIN", user })
 
-        // update the user that will be stored in state
-        user
-          .updateProfile({
-            displayName,
-            photoURL,
-          })
-          .then((res) => {
-            dispatch({ type: "LOGIN", user })
+          navigate("/")
+        })
+    } catch (error) {
+      setIsLoading(false)
 
-            navigate("/")
-          })
-      } catch (error) {
-        setIsLoading(false)
-        // handle and display the various error to the user
-        if (error.code === "auth/account-exists-with-different-credential") {
-          setError("An account already exists under that email address")
-          console.error(
-            "An account already exists under that email address",
-            error
-          )
-        } else if (error.code === "auth/email-already-in-use") {
-          setError("Email address is already in use by another account")
-          console.log(error)
-        } else {
-          setError(error.message)
-          console.log(error.message)
-        }
+      // handle and display the various errors to the user
+      if (error.code === "auth/account-exists-with-different-credential") {
+        setError("An account already exists under that email address")
+        console.error("An account already exists under that email address", error)
+      } else if (error.code === "auth/email-already-in-use") {
+        setError("Email address is already in use by another account")
+        console.log(error)
+      } else if (error.code === "auth/invalid-email") {
+        setError("Email address is badly formatted")
+        console.log(error)
+      } else {
+        setError(error.message)
+        console.log(error)
       }
+    }
   }
 
   const onChangeHandler = (event) => {
@@ -122,16 +117,24 @@ const SignUp = () => {
     }
   }
 
+  const checkStrong = (input) => {
+    console.log("the strength is", input)
+    if (input === "Strong") {
+      setPasswordStrong(true)
+      return
+    }
+    console.log("setting strength to FALSE")
+    setPasswordStrong(false)
+  }
+
   useEffect(() => {
     auth
       .getRedirectResult()
       .then((result) => {
         if (result.user && result.user.displayName) {
-          const splitNames = "Jacob Patel".split(" ")
+          const splitNames = result.user.displayName.split(" ")
           const firstName = splitNames[0]
-          const lastName = String(
-            splitNames.slice(1, splitNames.length)
-          ).replace(/,/g, " ")
+          const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
 
           // create a document in the database with all the provider information
           generateUserDocument(result.user, {
@@ -174,9 +177,7 @@ const SignUp = () => {
       {!isLoading && (
         <div className="pt-24 font-mono">
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-1/2 md:w-3/4 md:px-12">
-            <h1 className="pt-4 mb-2 text-3xl font-bold text-center">
-              Sign Up
-            </h1>
+            <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
             {error !== null && (
               <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
                 {error}
@@ -222,13 +223,15 @@ const SignUp = () => {
                 id="userPassword"
                 onChange={(event) => onChangeHandler(event)}
               />
-              <PasswordResetMeter password={password}/>
+              <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={password} />
               <button
-              
+                type="button"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => { validateInputs() ?
-                  createUserWithEmailAndPasswordHandler(event, email, password) : console.log("inputs are not valid")
-                  }}
+                onClick={(event) => {
+                  validateInputs()
+                    ? createUserWithEmailAndPasswordHandler(event, email, password)
+                    : console.log("NOT calling createUser")
+                }}
               >
                 Sign up
               </button>

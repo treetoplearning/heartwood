@@ -5,10 +5,7 @@ import { navigate } from "gatsby"
 
 import { signOut } from "../firebase/firebase"
 
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
 import logo from "../assets/logo.svg"
 
@@ -50,12 +47,7 @@ const Navbar = () => {
             >
               {/* <!-- Icon when menu is closed. -->
           <!-- Menu open: "hidden", Menu closed: "block" --> */}
-              <svg
-                className="block w-6 h-6"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
+              <svg className="block w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -65,12 +57,7 @@ const Navbar = () => {
               </svg>
               {/* <!-- Icon when menu is open. -->
           <!-- Menu open: "block", Menu closed: "hidden" --> */}
-              <svg
-                className="hidden w-6 h-6"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
+              <svg className="hidden w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -84,14 +71,14 @@ const Navbar = () => {
             <div className="flex-shrink-0">
               <Link to="/">
                 <img
-                  className="block w-auto h-8 bg-white rounded-full lg:hidden"
+                  className="block w-auto h-8 p-1 bg-white rounded-full lg:hidden"
                   src={logo}
                   alt=""
                 />
               </Link>
               <Link to="/">
                 <img
-                  className="hidden w-auto h-8 bg-white rounded-full lg:block"
+                  className="hidden w-auto h-8 p-1 bg-white rounded-full lg:block"
                   src={logo}
                   alt=""
                 />
@@ -104,21 +91,14 @@ const Navbar = () => {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <p className="hidden px-4 text-sm text-white sm:block ">
               {" "}
-              Welcome back, {state.user
-                ? state.user.displayName
-                : displayName}{" "}
+              Welcome back, {state.user ? state.user.displayName : displayName}{" "}
             </p>
             <button
               type="button"
               className="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
               onClick={() => console.log(state)}
             >
-              <svg
-                className="w-6 h-6"
-                stroke="currentColor"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

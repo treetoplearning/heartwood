@@ -3,10 +3,7 @@ import { Link } from "gatsby"
 
 import { navigate } from "gatsby"
 
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
 import {
   auth,
@@ -67,12 +64,10 @@ const SignIn = () => {
   }
 
   useEffect(() => {
-
     auth
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-
           // reference to logged in user
           const currentUser = auth.currentUser
 
@@ -80,9 +75,7 @@ const SignIn = () => {
           const displayName = currentUser.displayName
           const splitNames = displayName.split(" ")
           const firstName = splitNames[0]
-          const lastName = String(
-            splitNames.slice(1, splitNames.length)
-          ).replace(/,/g, " ")
+          const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
 
           // create a document in the database with all the provider information
           generateUserDocument(currentUser, {
@@ -106,10 +99,7 @@ const SignIn = () => {
       .catch((error) => {
         if (error.code === "auth/account-exists-with-different-credential") {
           setError("An account already exists under that email address")
-          console.error(
-            "An account already exists under that email address",
-            error
-          )
+          console.error("An account already exists under that email address", error)
         }
       })
   }, [])
@@ -125,9 +115,7 @@ const SignIn = () => {
       <div className="pt-24 font-mono">
         {!isLoading && (
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
-            <h1 className="pt-4 mb-2 text-3xl font-bold text-center">
-              Sign in
-            </h1>
+            <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
             {error !== null && (
               <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
                 {error}
@@ -198,10 +186,7 @@ const SignIn = () => {
                 Sign up here
               </Link>{" "}
               <br />{" "}
-              <Link
-                to="/passwordreset"
-                className="text-blue-500 hover:text-blue-600"
-              >
+              <Link to="/passwordreset" className="text-blue-500 hover:text-blue-600">
                 Forgot Password?
               </Link>
             </p>

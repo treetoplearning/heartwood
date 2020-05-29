@@ -3,7 +3,7 @@ import React from "react"
 const LoadingAnimation = ({ data }) => {
   return (
     <object type="image/svg+xml" data={data}>
-            svg-animation
+      svg-animation
     </object>
   )
 }
