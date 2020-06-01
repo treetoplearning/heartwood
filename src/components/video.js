@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 
-import VideoIcon from "../components/videoicon.js"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import {
@@ -11,12 +11,14 @@ import {
   faPhoneAlt,
   faPhoneSlash,
 } from "@fortawesome/free-solid-svg-icons"
+
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
   useEffect(() => {}, [])
+
   const [local, setLocal] = useState(true)
   const [remote, setRemote] = useState(true)
   const [room, setRoom] = useState()
@@ -83,18 +85,14 @@ const Video = () => {
             createLocalVideoTrack().then((track) => {
               setLocal(true)
               setRemote(false)
-              const localMediaContainer = document.getElementById(
-                "local-media"
-              )
+              const localMediaContainer = document.getElementById("local-media")
               localMediaContainer.appendChild(track.attach())
               console.log("People left in the room are:", room.participants)
             })
 
             // Log new participants
             room.participants.forEach((participant) => {
-              console.log(
-                `Participant "${participant.identity}" has connected to the Room`
-              )
+              console.log(`Participant "${participant.identity}" has connected to the Room`)
             })
 
             // Share all participants media with each other
@@ -105,18 +103,14 @@ const Video = () => {
                 if (publication.isSubscribed) {
                   const track = publication.track
                   setLocal(false)
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
               participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
             })
 
@@ -129,15 +123,10 @@ const Video = () => {
               room.participants.forEach((participant) => {
                 participant.tracks.forEach((publication) => {
                   const track = publication.track
-                  if (
-                    publication.track &&
-                    participant !== room.localParticipant
-                  ) {
+                  if (publication.track && participant !== room.localParticipant) {
                     console.log("hello")
                     document.getElementById("local-media").removeChild(track)
-                    document
-                      .getElementById("remote-media-div")
-                      .removeChild(track)
+                    document.getElementById("remote-media-div").removeChild(track)
                   }
                 })
               })
@@ -161,18 +150,14 @@ const Video = () => {
               participant.tracks.forEach((publication) => {
                 const track = publication.track
                 if (publication.track) {
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
               participant.on("trackSubscribed", (track) => {
                 setLocal(false)
                 setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
             })
           },
@@ -193,33 +178,42 @@ const Video = () => {
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
         {!mute && (
-          <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
+          </button>
         )}
         {mute && (
-          <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophoneSlash}></FontAwesomeIcon>
+          </button>
         )}
 
         {!onCall && (
-          <VideoIcon
-            icon={faPhoneAlt}
-            alert={true}
-            onCall={onCall}
-            action={startCall}
-          ></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-green-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => startCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon>
+          </button>
         )}
         {onCall && (
-          <VideoIcon
-            Icon
-            icon={faPhoneSlash}
-            alert={true}
-            onCall={onCall}
-            action={endCall}
-          ></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-red-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => endCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneSlash}></FontAwesomeIcon>
+          </button>
         )}
-        <VideoIcon
-          icon={faTv}
-          action={() => console.log("share screen")}
-        ></VideoIcon>
+
+        <button className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible">
+          <FontAwesomeIcon icon={faTv}></FontAwesomeIcon>
+        </button>
       </div>
     </div>
   )
