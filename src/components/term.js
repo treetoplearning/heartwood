@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react"
-import "../styles/global.css"
 import "xterm/css/xterm.css"
 import skulpt from "skulpt"
 import {
@@ -32,10 +31,7 @@ const Term = ({ termId }) => {
     let buffer = ""
     term.onKey((e) => {
       const printable =
-        !e.domEvent.altKey &&
-        !e.domEvent.altGraphKey &&
-        !e.domEvent.ctrlKey &&
-        !e.domEvent.metaKey
+        !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey
       if (e.domEvent.keyCode === 13) {
         if (buffer === "python3 file.py") {
           dispatch({ type: "COMPILE", cb: compile })
@@ -69,30 +65,24 @@ const Term = ({ termId }) => {
       }
     }
     function builtinRead(x) {
-      if (
-        skulpt.builtinFiles === undefined ||
-        skulpt.builtinFiles.files[x] === undefined
-      )
+      if (skulpt.builtinFiles === undefined || skulpt.builtinFiles.files[x] === undefined)
         throw `File not found: '${x}'`
       return skulpt.builtinFiles.files[x]
     }
 
     const compile = (body) => {
       skulpt.pre = "output"
-      skulpt.configure({ output: outf, read: builtinRead });
-      (skulpt.TurtleGraphics || (skulpt.TurtleGraphics = {})).target =
-        "mycanvas"
+      skulpt.configure({ output: outf, read: builtinRead })
+      ;(skulpt.TurtleGraphics || (skulpt.TurtleGraphics = {})).target = "mycanvas"
       const myPromise = skulpt.misceval.asyncToPromise(function () {
         return skulpt.importMainWithBody("<stdin>", false, body, true)
       })
-      myPromise.then(
-        function (mod) {
+      myPromise.then(function (mod) {
           console.log("success")
         },
         function (err) {
           console.log(err.toString())
-        }
-      )
+        })
     }
   }, [])
 

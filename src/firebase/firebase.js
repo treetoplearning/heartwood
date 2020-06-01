@@ -54,18 +54,13 @@ const getUserDocument = async (uid) => {
   }
 }
 
-
 export const signOut = () => {
-  auth
-    .signOut()
-    .then(
-      function () {
-        console.log("Signed Out")
-      },
-      function (error) {
-        console.error("Sign Out Error", error)
-      }
-    )
+  auth.signOut().then(function () {
+      console.log("Signed Out")
+    },
+    function (error) {
+      console.error("Sign Out Error", error)
+    })
 }
 
 // determine how users will sign in with each platform

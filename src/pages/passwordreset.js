@@ -38,9 +38,7 @@ const PasswordReset = () => {
     <div className="w-screen h-screen bg-base">
       <div className="pt-24 font-mono">
         <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-1/2 md:px-12 ">
-          <h1 className="pt-4 text-3xl font-bold text-center">
-            Reset your Password
-          </h1>
+          <h1 className="pt-4 text-3xl font-bold text-center">Reset your Password</h1>
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
               {emailHasBeenSent && (
@@ -74,10 +72,7 @@ const PasswordReset = () => {
                 Send me a reset link
               </button>
             </form>
-            <Link
-              to="signin"
-              className="block my-2 text-center text-blue-700 hover:text-blue-800"
-            >
+            <Link to="signin" className="block my-2 text-center text-blue-700 hover:text-blue-800">
               &larr; back to sign in page
             </Link>
           </div>

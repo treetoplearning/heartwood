@@ -1,10 +1,7 @@
 import React, { useEffect } from "react"
 import { UnControlled as CodeMirror } from "react-codemirror2"
 import { useContext } from "react"
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import "../styles/ide.css"
 
 const IDE = () => {

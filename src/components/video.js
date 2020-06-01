@@ -74,8 +74,7 @@ const Video = () => {
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
       .then((res) => res.data)
       .then((data) =>
-        connect(data, { name: "Treetop-Testing" }).then(
-          (room) => {
+        connect(data, { name: "Treetop-Testing" }).then((room) => {
             // Store the room for future reference.
             setRoom(room)
 
@@ -163,9 +162,7 @@ const Video = () => {
           },
           (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
-          }
-        )
-      )
+          }))
   }
 
   return (
