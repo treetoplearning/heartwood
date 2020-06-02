@@ -142,8 +142,8 @@ const SignUp = () => {
           // update the user that will be stored in state
           result.user
             .updateProfile({
-              firstName,
-              lastname: lastName,
+              firstName: firstName,
+              lastName: lastName,
             })
             .then((res) => {
               dispatch({ type: "LOGIN", user: result.user })

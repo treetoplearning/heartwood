@@ -16,9 +16,7 @@ const Navbar = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  const [photoUrl, setPhotoUrl] = useState(
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-  )
+  const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")
   const [displayName, setDisplayName] = useState("Treetop Guest")
 
   function logOutAndClearState() {
@@ -140,7 +138,7 @@ const Navbar = () => {
                     Your Profile
                   </Link>
                   <Link
-                    to="/"
+                    to="settings"
                     className="block px-4 py-2 text-sm leading-5 text-gray-700 transition duration-150 ease-in-out hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                   >
                     Settings
