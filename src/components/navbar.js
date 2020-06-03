@@ -17,7 +17,7 @@ const Navbar = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
 
   const [photoUrl, setPhotoUrl] = useState("https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80")
-  const [displayName, setDisplayName] = useState("Treetop Guest")
+  const [userName, setUserName] = useState("Treetop Guest")
 
   function logOutAndClearState() {
     signOut()
@@ -26,9 +26,9 @@ const Navbar = () => {
 
   useEffect(() => {
     // only add user preferences if the user has logged in
-    if (state.user && state.user.displayName) {
+    if (state.user && state.user.userName) {
       setPhotoUrl(state.user.photoURL)
-      setDisplayName(state.user.displayName)
+      setUserName(state.user.userName)
     }
   }, [state])
 
@@ -88,7 +88,7 @@ const Navbar = () => {
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <p className="hidden px-4 text-sm text-white sm:block ">
               {" "}
-              Welcome back, {state.user ? state.user.displayName : displayName}{" "}
+              Welcome back, {state.user ? state.user.userName : userName}{" "}
             </p>
             <button
               type="button"
@@ -112,7 +112,7 @@ const Navbar = () => {
                   className="flex text-sm transition duration-150 ease-in-out border-2 border-transparent rounded-full focus:outline-none focus:border-white"
                   onClick={toggle}
                 >
-                  <img className="w-8 h-8 rounded-full" src={photoUrl} alt="" />
+                  <img className="w-8 h-8 bg-white rounded-full" src={photoUrl} alt="" />
                 </button>
               </div>
               {/* <!--

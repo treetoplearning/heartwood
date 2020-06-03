@@ -9,6 +9,7 @@ import {
   auth,
   signInWithGoogle,
   signInWithGitHub,
+  scrapeUserInformation,
   generateUserDocument,
 } from "../firebase/firebase"
 
@@ -27,7 +28,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -47,7 +48,7 @@ const SignIn = () => {
       })
       .then((result) => {
         if (result) {
-          dispatch({ type: "LOGIN", user: result.user })
+          dispatch({ type: "LOGIN", user: result.user})
           navigate("/")
         }
       })
@@ -63,40 +64,21 @@ const SignIn = () => {
     }
   }
 
+  // the provider sign-in
   useEffect(() => {
     auth
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          // reference to logged in user
-          const currentUser = auth.currentUser
-
-          // manage the user information from the provider log-in
-          const displayName = currentUser.displayName
-          const splitNames = displayName.split(" ")
-          const firstName = splitNames[0]
-          const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
-
-          // create a document in the database with all the provider information
-          generateUserDocument(currentUser, {
-            displayName,
-            firstName,
-            lastName,
-          })
-
-          // update the user that will be stored in state
-          currentUser
-            .updateProfile({
-              firstName: firstName,
-              lastname: lastName,
-            })
-            .then((res) => {
-              dispatch({ type: "LOGIN", user: result.user })
-              navigate("/")
-            })
+          const editedUser = scrapeUserInformation(result.user, '')
+          dispatch({ type: "LOGIN", user: editedUser })
+          navigate("/")
+        } else {
+          setIsLoading(false)
         }
       })
       .catch((error) => {
+        setIsLoading(false)
         if (error.code === "auth/account-exists-with-different-credential") {
           setError("An account already exists under that email address")
           console.error("An account already exists under that email address", error)
@@ -130,7 +112,7 @@ const SignIn = () => {
                 className="w-full p-1 my-1 border rounded-md"
                 name="userEmail"
                 value={email}
-                placeholder="E.g: treetoplearner@gmail.com"
+                placeholder="treetoplearner@gmail.com"
                 id="userEmail"
                 onChange={(event) => onChangeHandler(event)}
               />

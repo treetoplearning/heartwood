@@ -10,7 +10,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
-      const { photoURL, displayName, email } = state.user
+      console.log(state.user)
     } else {
       navigate("/signin")
     }

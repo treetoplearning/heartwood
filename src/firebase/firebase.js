@@ -40,29 +40,37 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid)
 }
 
-export const scrapeUserInformation = (user) => {
+export const scrapeUserInformation = (user, userName) => {
+  let displayName = ""
+  let firstName = ""
+  let lastName = ""
 
-  const displayName = user.displayName
+  // Only parse for first and last names if they are signing with a provider
+  if (user.displayName) {
+    displayName = user.displayName
 
-  const splitNames = displayName.split(" ")
-  const firstName = splitNames[0]
-  const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+    const splitNames = displayName.split(" ")
+    let firstName = splitNames[0]
+    let lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+  }
 
   // create a document in the database with all the provider information
   generateUserDocument(user, {
-    displayName,
+    userName,
     firstName,
     lastName,
   })
 
   // update the user that will be stored in state
-  user
-  .updateProfile({
+  user.updateProfile({
+    userName: userName,
     firstName: firstName,
     lastName: lastName,
   })
 
-  
+  const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: userName }
+
+  return editedUser
 }
 
 // access a Treetop account that has already been created

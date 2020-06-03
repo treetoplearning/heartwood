@@ -16,6 +16,7 @@ import {
   signInWithGoogle,
   signInWithGitHub,
   generateUserDocument,
+  scrapeUserInformation,
 } from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
@@ -29,10 +30,10 @@ const SignUp = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [displayName, setDisplayName] = useState("")
+  const [userName, setUserName] = useState("")
   const [error, setError] = useState(null)
   const [passwordStrong, setPasswordStrong] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   // checks that all user inputs are not empty
   const validateInputs = () => {
@@ -41,7 +42,7 @@ const SignUp = () => {
       return false
     }
 
-    if (email === "" || password === "" || displayName === "") {
+    if (email === "" || password === "" || userName === "") {
       setError("Error signing up with email and password")
       return false
     }
@@ -57,33 +58,10 @@ const SignUp = () => {
     event.preventDefault()
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
-
-      // manage the data to save to the documents
-      const photoURL =
-        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAARMAAAC3CAMAAAAGjUrGAAAAA1BMVEX///+nxBvIAAAAR0lEQVR4nO3BAQ0AAADCoPdPbQ8HFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPBgxUwAAU+n3sIAAAAASUVORK5CYII="
-      const splitNames = displayName.split(" ")
-      const firstName = splitNames[0]
-      const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
-
-      // to add more fields just input them into the genUserDoc object parameter.
-      generateUserDocument(user, {
-        displayName,
-        photoURL,
-        firstName,
-        lastName,
-      })
-
-      // update the user that will be stored in state
-      user
-        .updateProfile({
-          displayName,
-          photoURL,
-        })
-        .then((res) => {
-          dispatch({ type: "LOGIN", user: user, firstName: firstName, lastName: lastName })
-
-          navigate("/")
-        })
+      
+      const editedUser = scrapeUserInformation(user, userName)
+      dispatch({ type: "LOGIN", user: editedUser })
+      navigate("/")
     } catch (error) {
       setIsLoading(false)
 
@@ -93,13 +71,10 @@ const SignUp = () => {
         console.error("An account already exists under that email address", error)
       } else if (error.code === "auth/email-already-in-use") {
         setError("Email address is already in use by another account")
-     
       } else if (error.code === "auth/invalid-email") {
         setError("Email address is badly formatted")
-     
       } else {
         setError(error.message)
-    
       }
     }
   }
@@ -110,8 +85,8 @@ const SignUp = () => {
       setEmail(value)
     } else if (name === "userPassword") {
       setPassword(value)
-    } else if (name === "displayName") {
-      setDisplayName(value)
+    } else if (name === "userName") {
+      setUserName(value)
     }
   }
 
@@ -123,32 +98,17 @@ const SignUp = () => {
     setPasswordStrong(false)
   }
 
+  // the provider sign-in
   useEffect(() => {
     auth
       .getRedirectResult()
       .then((result) => {
         if (result.user && result.user.displayName) {
-          const splitNames = result.user.displayName.split(" ")
-          const firstName = splitNames[0]
-          const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
-
-          // create a document in the database with all the provider information
-          generateUserDocument(result.user, {
-            displayName,
-            firstName,
-            lastName,
-          })
-
-          // update the user that will be stored in state
-          result.user
-            .updateProfile({
-              firstName: firstName,
-              lastName: lastName,
-            })
-            .then((res) => {
-              dispatch({ type: "LOGIN", user: result.user, firstName, lastName })
-              navigate("/")
-            })
+          const editedUser = scrapeUserInformation(result.user)
+          dispatch({ type: "LOGIN", user: editedUser })
+          navigate("/")
+        } else {
+          setIsLoading(false)
         }
       })
       .catch((error) => {
@@ -180,17 +140,17 @@ const SignUp = () => {
               </div>
             )}
             <form className="">
-              <label htmlFor="displayName" className="block">
-                Full Name:
+              <label htmlFor="userName" className="block">
+                Username:
               </label>
               <input
                 required
                 type="text"
                 className="w-full p-1 my-1 border rounded-md"
-                name="displayName"
-                value={displayName}
-                placeholder="E.g: Treetop Learner"
-                id="displayName"
+                name="userName"
+                value={userName}
+                placeholder="treetoplearner"
+                id="userName"
                 onChange={(event) => onChangeHandler(event)}
               />
               <label htmlFor="userEmail" className="block">
@@ -202,7 +162,7 @@ const SignUp = () => {
                 className="w-full p-1 my-1 border rounded-md"
                 name="userEmail"
                 value={email}
-                placeholder="E.g: treetoplearner@gmail.com"
+                placeholder="treetoplearner@gmail.com"
                 id="userEmail"
                 onChange={(event) => onChangeHandler(event)}
               />
