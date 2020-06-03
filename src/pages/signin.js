@@ -70,7 +70,7 @@ const SignIn = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          const editedUser = scrapeUserInformation(result.user, null)
+          const editedUser = scrapeUserInformation(result.user, '')
           dispatch({ type: "LOGIN", user: editedUser })
           navigate("/")
         } else {
@@ -78,6 +78,7 @@ const SignIn = () => {
         }
       })
       .catch((error) => {
+        setIsLoading(false)
         if (error.code === "auth/account-exists-with-different-credential") {
           setError("An account already exists under that email address")
           console.error("An account already exists under that email address", error)

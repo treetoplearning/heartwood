@@ -41,18 +41,12 @@ export const generateUserDocument = async (user, additionalData) => {
 }
 
 export const scrapeUserInformation = (user, userName) => {
-
-  let displayName = ''
-  let firstName = ''
-  let lastName = ''
-
-  if (!userName) {
-    const userName = 'testing'
-  }
+  let displayName = ""
+  let firstName = ""
+  let lastName = ""
 
   // Only parse for first and last names if they are signing with a provider
   if (user.displayName) {
-
     displayName = user.displayName
 
     const splitNames = displayName.split(" ")
@@ -68,14 +62,13 @@ export const scrapeUserInformation = (user, userName) => {
   })
 
   // update the user that will be stored in state
-  user
-  .updateProfile({
+  user.updateProfile({
     userName: userName,
     firstName: firstName,
     lastName: lastName,
   })
 
-  const editedUser = {...user, firstName: firstName, lastName: lastName, userName: userName}
+  const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: userName }
 
   return editedUser
 }
