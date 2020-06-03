@@ -27,7 +27,7 @@ const SignIn = () => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -47,7 +47,8 @@ const SignIn = () => {
       })
       .then((result) => {
         if (result) {
-          dispatch({ type: "LOGIN", user: result.user })
+          let newUser = { ...result.user, firstName: "Jacob"};
+          dispatch({ type: "LOGIN", user: newUser})
           navigate("/")
         }
       })
@@ -94,6 +95,8 @@ const SignIn = () => {
               dispatch({ type: "LOGIN", user: result.user })
               navigate("/")
             })
+        } else {
+          setIsLoading(false)
         }
       })
       .catch((error) => {
