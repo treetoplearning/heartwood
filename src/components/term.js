@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useContext } from "react"
 import "xterm/css/xterm.css"
 import skulpt from "skulpt"
-import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
+import {
+  HeartwoodStateContext,
+  HeartwoodDispatchContext,
+} from "../state/HeartwoodContextProvider"
 
 const Term = ({ termId }) => {
   const [id] = useState(termId)

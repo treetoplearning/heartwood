@@ -25,6 +25,8 @@ function reducer(state, action) {
       return {
         ...state,
         user: action.user,
+        firstName: action.firstName,
+        lastName: action.lastName
       }
     case "LOGOUT":
       return {

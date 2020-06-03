@@ -3,17 +3,14 @@ import zxcvbn from "zxcvbn"
 import "../styles/passwordstrengthmeter.css"
 
 function PasswordStrengthMeter({ password, onStrengthUpdate }) {
+
   const score = useRef(0)
 
   // check if password meets strength requirement and then tell parent
   const onStrengthUpdateHandler = (input) => {
-
-    console.log("the score in the handler is", score.current)
     
     // stop the firing where a different input error causes the score to be reset to 0 on render
-    if (input !== 0) {
       return onStrengthUpdate(createPasswordLabel(input))
-    }
   }
 
   // convert the password strength to an informative label
@@ -35,16 +32,21 @@ function PasswordStrengthMeter({ password, onStrengthUpdate }) {
   }
 
   useEffect(() => {
-    score.current = zxcvbn(password).score
     onStrengthUpdateHandler(score.current)
+    if (password === "") {
+      score.current = 0
+    } else {
+      score.current = zxcvbn(password).score 
+    } 
   }, [password])
 
   return (
 
     <div className="flex flex-col w-full mb-3">
       <progress
-        className={`w-full rounded-lg password-strength-meter-progress strength-${createPasswordLabel(score.current)}`}
+        className={`w-full rounded-lg focus:rounded-lg password-strength-meter-progress strength-${createPasswordLabel(score.current)}`}
         value={score.current}
+        default={0}
         max="4"
       />
       {password && (

@@ -6,6 +6,10 @@ import "firebase/auth"
 import "firebase/firestore"
 import "firebase/functions"
 
+import "firebase/auth"
+import "firebase/firestore"
+import "firebase/functions"
+
 export const wrapRootElement = ({ element }) => {
   return <HeartwoodContextProvider>{element}</HeartwoodContextProvider>
 }

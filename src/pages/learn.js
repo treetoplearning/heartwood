@@ -15,7 +15,8 @@ export default () => {
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
-      console.log(state.user)
+      console.log("user is logged in", state.user)
+      const { photoURL, displayName, email } = state.user
     } else {
       navigate("/signin")
     }

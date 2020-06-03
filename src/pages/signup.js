@@ -58,7 +58,7 @@ const SignUp = () => {
     event.preventDefault()
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
-
+      
       const editedUser = scrapeUserInformation(user, userName)
       dispatch({ type: "LOGIN", user: editedUser })
       navigate("/")

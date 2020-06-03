@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import axios from "axios"
 
-import VideoIcon from "../components/videoicon.js"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import {
@@ -11,12 +11,14 @@ import {
   faPhoneAlt,
   faPhoneSlash,
 } from "@fortawesome/free-solid-svg-icons"
+
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
   useEffect(() => {}, [])
+
   const [local, setLocal] = useState(true)
   const [remote, setRemote] = useState(true)
   const [room, setRoom] = useState()
@@ -172,22 +174,43 @@ const Video = () => {
       </div>
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
-        {!mute && <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>}
-        {mute && <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>}
+        {!mute && (
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
+          </button>
+        )}
+        {mute && (
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophoneSlash}></FontAwesomeIcon>
+          </button>
+        )}
 
         {!onCall && (
-          <VideoIcon icon={faPhoneAlt} alert={true} onCall={onCall} action={startCall}></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-green-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => startCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon>
+          </button>
         )}
         {onCall && (
-          <VideoIcon
-            Icon
-            icon={faPhoneSlash}
-            alert={true}
-            onCall={onCall}
-            action={endCall}
-          ></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-red-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => endCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneSlash}></FontAwesomeIcon>
+          </button>
         )}
-        <VideoIcon icon={faTv} action={() => console.log("share screen")}></VideoIcon>
+
+        <button className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible">
+          <FontAwesomeIcon icon={faTv}></FontAwesomeIcon>
+        </button>
       </div>
     </div>
   )
