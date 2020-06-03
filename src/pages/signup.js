@@ -80,7 +80,7 @@ const SignUp = () => {
           photoURL,
         })
         .then((res) => {
-          dispatch({ type: "LOGIN", user })
+          dispatch({ type: "LOGIN", user: user, firstName: firstName, lastName: lastName })
 
           navigate("/")
         })
@@ -146,7 +146,7 @@ const SignUp = () => {
               lastName: lastName,
             })
             .then((res) => {
-              dispatch({ type: "LOGIN", user: result.user })
+              dispatch({ type: "LOGIN", user: result.user, firstName, lastName })
               navigate("/")
             })
         }

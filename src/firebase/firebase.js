@@ -40,6 +40,31 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid)
 }
 
+export const scrapeUserInformation = (user) => {
+
+  const displayName = user.displayName
+
+  const splitNames = displayName.split(" ")
+  const firstName = splitNames[0]
+  const lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+
+  // create a document in the database with all the provider information
+  generateUserDocument(user, {
+    displayName,
+    firstName,
+    lastName,
+  })
+
+  // update the user that will be stored in state
+  user
+  .updateProfile({
+    firstName: firstName,
+    lastName: lastName,
+  })
+
+  
+}
+
 // access a Treetop account that has already been created
 const getUserDocument = async (uid) => {
   if (!uid) return null

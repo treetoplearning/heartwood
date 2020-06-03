@@ -37,8 +37,7 @@ function PasswordStrengthMeter({ password, onStrengthUpdate }) {
       score.current = 0
     } else {
       score.current = zxcvbn(password).score 
-    }
- 
+    } 
   }, [password])
 
   return (
