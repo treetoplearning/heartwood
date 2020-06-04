@@ -2,7 +2,9 @@ import React, { useContext, useEffect } from "react"
 import Navbar from "../components/navbar"
 import { navigate, Link } from "gatsby"
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
-import { isLoggedIn } from "../utils/utils"
+import { isLoggedIn, signUpComplete } from "../utils/utils"
+
+import CollectInfo from "../components/collectinfo"
 
 const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
@@ -18,13 +20,17 @@ const IndexPage = () => {
 
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
-      {isLoggedIn(state.user) && (
+      {signUpComplete(state.user) ? (
         <>
           <Navbar />
-          <Link to="learn" className="mx-32 font-mono text-3xl text-white underline"> Head to your lesson </Link>
+          <Link to="learn" className="mx-32 font-mono text-3xl text-white underline">
+            {" "}
+            Head to your lesson{" "}
+          </Link>
         </>
+      ) : (
+        <CollectInfo />
       )}
-      {isLoggedIn(state.user) && console.log("firstName is", state.firstName)}
     </div>
   )
 }

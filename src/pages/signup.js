@@ -181,7 +181,7 @@ const SignUp = () => {
               />
               <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={password} />
               <button
-                type="button"
+                type="submit"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
                 onClick={(event) => {
                   validateInputs()

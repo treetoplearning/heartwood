@@ -21,7 +21,7 @@ const Navbar = () => {
 
   function logOutAndClearState() {
     signOut()
-    dispatch({ type: "LOGOUT" })
+    dispatch({ type: "LOGOUT"})
   }
 
   useEffect(() => {

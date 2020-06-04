@@ -49,16 +49,19 @@ export const scrapeUserInformation = (user, userName) => {
   if (user.displayName) {
     displayName = user.displayName
 
+    console.log("WE ARE IN HERE")
+
     const splitNames = displayName.split(" ")
-    let firstName = splitNames[0]
-    let lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+    firstName = splitNames[0]
+    lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+
   }
 
   // create a document in the database with all the provider information
   generateUserDocument(user, {
-    userName,
-    firstName,
-    lastName,
+    userName: userName,
+    firstName: firstName,
+    lastName: lastName,
   })
 
   // update the user that will be stored in state

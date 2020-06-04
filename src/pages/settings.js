@@ -4,9 +4,7 @@ import { navigate } from "gatsby"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import { isLoggedIn } from "../utils/utils"
-import { firestore, generateUserDocument } from "../firebase/firebase"
-
-import "../styles/video.css"
+import { firestore } from "../firebase/firebase"
 
 export default () => {
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -14,8 +12,8 @@ export default () => {
 
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
-  const [displayName, setDisplayName] = useState("")
-  const [error, setError] = useState(null)
+  const [userName, setUserName] = useState("")
+  const [message, setMessage] = useState(null)
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -24,9 +22,9 @@ export default () => {
       setFirstName(value)
     } else if (name === "userLastName") {
       setLastName(value)
-    } else if (name === "userDisplayName") {
-      setDisplayName(value)
-      console.log("displayName is", displayName)
+    } else if (name === "userName") {
+      setUserName(value)
+      console.log("userName is", userName)
     }
   }
 
@@ -37,42 +35,37 @@ export default () => {
       firestore.collection("users").doc(state.user.uid).update({
         firstName: firstName,
         lastName: lastName,
-        displayName: displayName,
+        userName: userName,
       })
 
       // update the user that will be stored in state then save the user
-      state.user
-        .updateProfile({
-          firstName: firstName,
-          lastName: lastName,
-          displayName: displayName,
-        })
-        .then((res) => {
-          dispatch({ type: "LOGIN", user: state.user })
-        })
+      const updatedUser = {...state.user, firstName: firstName, lastName: lastName, userName: userName}
+     
+      dispatch({ type: "UPDATE", user: updatedUser })
+       
 
       // If successful tell the user
-      setError("Your preferences have been updated")
+      setMessage("Your preferences have been updated")
     } catch (error) {
-      setError(error)
+      setMessage(error)
       console.log(error)
     }
 
     // Hide the successfully sent notification after 3 seconds
     setTimeout(() => {
-      setError(null)
+      setMessage(null)
     }, 3000)
   }
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
       // On load, set all the inputs to the user's current preferences
-      generateUserDocument(state.user).then(function (res) {
-        setFirstName(res.firstName)
-        setLastName(res.lastName)
-      })
 
-      setDisplayName(state.user.displayName)
+        setFirstName(state.user.firstName)
+        setLastName(state.user.lastName)
+        setUserName(state.user.userName)
+      
+
     } else {
       navigate("/signin")
     }
@@ -86,16 +79,12 @@ export default () => {
           <div className="pt-24 font-mono">
             <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
               <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
-              {error !== null && error !== "Your preferences have been updated" && (
+              {message && (
                 <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                  {error}
+                  {message}
                 </div>
               )}
-              {error !== null && error === "Your preferences have been updated" && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-green-500 rounded-lg">
-                  {error}
-                </div>
-              )}
+             
               <form className="">
                 <label htmlFor="userFirstName" className="block">
                   First name:
@@ -120,16 +109,16 @@ export default () => {
                   value={lastName}
                   onChange={(event) => onChangeHandler(event)}
                 />
-                <label htmlFor="userDisplayName" className="block">
-                  Display name:
+                <label htmlFor="userName" className="block">
+                  Username:
                 </label>
 
                 <input
                   type="text"
                   className="w-full p-1 mt-1 mb-10 border rounded-md"
-                  name="userDisplayName"
-                  id="userDisplayName"
-                  value={displayName}
+                  name="userName"
+                  id="userName"
+                  value={userName}
                   onChange={(event) => onChangeHandler(event)}
                 />
 
