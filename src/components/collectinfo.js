@@ -13,6 +13,7 @@ export default () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [userName, setUserName] = useState("")
+  const [dateOfBirth, setDateOfBirth] = useState("")
   const [message, setMessage] = useState(null)
 
   const onChangeHandler = (event) => {
@@ -24,7 +25,8 @@ export default () => {
       setLastName(value)
     } else if (name === "userName") {
       setUserName(value)
-      console.log("userName is", userName)
+    } else if (name == "dateOfBirth") {
+      setDateOfBirth(value)
     }
   }
 
@@ -36,6 +38,7 @@ export default () => {
         firstName: firstName,
         lastName: lastName,
         userName: userName,
+        dateOfBirth: dateOfBirth
       })
 
       // update the user that will be stored in state then save the user
@@ -44,10 +47,10 @@ export default () => {
         firstName: firstName,
         lastName: lastName,
         userName: userName,
+        dateOfBirth: dateOfBirth
       }
 
       dispatch({ type: "UPDATE", user: updatedUser })
-
     } catch (error) {
       setMessage(error)
       console.log(error)
@@ -65,6 +68,7 @@ export default () => {
       setFirstName(state.user.firstName)
       setLastName(state.user.lastName)
       setUserName(state.user.userName)
+      setUserName(state.user.dateOfBirth)
     } else {
       navigate("/signin")
     }
@@ -86,7 +90,7 @@ export default () => {
               First name:
             </label>
             <input
-            required
+              required
               type="text"
               className="w-full p-1 my-1 border rounded-md"
               name="userFirstName"
@@ -99,7 +103,7 @@ export default () => {
             </label>
 
             <input
-            required
+              required
               type="text"
               className="w-full p-1 my-1 border rounded-md"
               name="userLastName"
@@ -112,14 +116,27 @@ export default () => {
             </label>
 
             <input
-            required
+              required
               type="text"
-              className="w-full p-1 mt-1 mb-10 border rounded-md"
+              className="w-full p-1 my-1 border rounded-md"
               name="userName"
               id="userName"
               value={userName}
               onChange={(event) => onChangeHandler(event)}
             />
+
+            <label htmlFor="dateOfBirth" className="block">
+                  Date of birth:
+                </label>
+
+                <input
+                  type="date"
+                  className="w-full p-1 mt-1 mb-10 border rounded-md"
+                  name="dateOfBirth"
+                  id="dateOfBirth"
+                  value={dateOfBirth}
+                  onChange={(event) => onChangeHandler(event)}
+                />
 
             <button
               type="submit"

@@ -49,8 +49,6 @@ export const scrapeUserInformation = (user, userName) => {
   if (user.displayName) {
     displayName = user.displayName
 
-    console.log("WE ARE IN HERE")
-
     const splitNames = displayName.split(" ")
     firstName = splitNames[0]
     lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
@@ -62,6 +60,7 @@ export const scrapeUserInformation = (user, userName) => {
     userName: userName,
     firstName: firstName,
     lastName: lastName,
+    dateOfBirth: ""
   })
 
   // update the user that will be stored in state

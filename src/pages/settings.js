@@ -13,6 +13,7 @@ export default () => {
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
   const [userName, setUserName] = useState("")
+  const [dateOfBirth, setDateOfBirth] = useState(null)
   const [message, setMessage] = useState(null)
 
   const onChangeHandler = (event) => {
@@ -24,7 +25,8 @@ export default () => {
       setLastName(value)
     } else if (name === "userName") {
       setUserName(value)
-      console.log("userName is", userName)
+    } else if (name === "dateOfBirth") {
+      setDateOfBirth(value)
     }
   }
 
@@ -36,13 +38,19 @@ export default () => {
         firstName: firstName,
         lastName: lastName,
         userName: userName,
+        dateOfBirth: dateOfBirth,
       })
 
       // update the user that will be stored in state then save the user
-      const updatedUser = {...state.user, firstName: firstName, lastName: lastName, userName: userName}
-     
+      const updatedUser = {
+        ...state.user,
+        firstName: firstName,
+        lastName: lastName,
+        userName: userName,
+        dateOfBirth: dateOfBirth,
+      }
+
       dispatch({ type: "UPDATE", user: updatedUser })
-       
 
       // If successful tell the user
       setMessage("Your preferences have been updated")
@@ -61,11 +69,10 @@ export default () => {
     if (isLoggedIn(state.user)) {
       // On load, set all the inputs to the user's current preferences
 
-        setFirstName(state.user.firstName)
-        setLastName(state.user.lastName)
-        setUserName(state.user.userName)
-      
-
+      setFirstName(state.user.firstName)
+      setLastName(state.user.lastName)
+      setUserName(state.user.userName)
+      setDateOfBirth(state.user.dateOfBirth)
     } else {
       navigate("/signin")
     }
@@ -84,7 +91,7 @@ export default () => {
                   {message}
                 </div>
               )}
-             
+
               <form className="">
                 <label htmlFor="userFirstName" className="block">
                   First name:
@@ -115,10 +122,23 @@ export default () => {
 
                 <input
                   type="text"
-                  className="w-full p-1 mt-1 mb-10 border rounded-md"
+                  className="w-full p-1 my-1 border rounded-md"
                   name="userName"
                   id="userName"
                   value={userName}
+                  onChange={(event) => onChangeHandler(event)}
+                />
+
+                <label htmlFor="dateOfBirth" className="block">
+                  Date of birth:
+                </label>
+
+                <input
+                  type="date"
+                  className="w-full p-1 mt-1 mb-10 border rounded-md"
+                  name="dateOfBirth"
+                  id="dateOfBirth"
+                  value={dateOfBirth}
                   onChange={(event) => onChangeHandler(event)}
                 />
 

@@ -4,7 +4,7 @@ export const isLoggedIn = (condition) => {
 
 export const signUpComplete = (user) => {
   // first ensure the user is signed in
-  if (isLoggedIn(user) && (user.userName !== "" || user.firstName !== "" || user.lastName !== "")) {
+  if (isLoggedIn(user) && (user.userName !== "" && user.firstName !== "" && user.lastName !== "" && user.dateOfBirth !== "")) {
     // then ensure all of their fields are no
     return true
   } 
