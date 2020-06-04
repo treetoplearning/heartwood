@@ -25,7 +25,7 @@ export default () => {
       setLastName(value)
     } else if (name === "userName") {
       setUserName(value)
-    } else if (name == "dateOfBirth") {
+    } else if (name === "dateOfBirth") {
       setDateOfBirth(value)
     }
   }
@@ -53,7 +53,6 @@ export default () => {
       dispatch({ type: "UPDATE", user: updatedUser })
     } catch (error) {
       setMessage(error)
-      console.log(error)
     }
 
     // Hide the successfully sent notification after 3 seconds
@@ -62,8 +61,25 @@ export default () => {
     }, 3000)
   }
 
+  const validateInputs = () => {
+    if (firstName === "" || lastName === "" || userName === "" || dateOfBirth === "") {
+      setMessage("Please fill out all required fields")
+      return false
+    }
+    return true
+  }
+
+  const submitForm = (event) => {
+    if (validateInputs()) {
+      updateProfile()
+    } else {
+      console.log("Inputs are NOT valid")
+    }
+  }
+
   useEffect(() => {
     if (isLoggedIn(state.user)) {
+
       // On load, set all the inputs to the user's current preferences
       setFirstName(state.user.firstName)
       setLastName(state.user.lastName)
@@ -84,6 +100,9 @@ export default () => {
               {message}
             </div>
           )}
+          <h1 className="w-full py-4 mb-3 text-center ">
+            Welcome to Treetop Learning! Before continuing we need a little bit more information...
+          </h1>
 
           <form className="">
             <label htmlFor="userFirstName" className="block">
@@ -130,6 +149,7 @@ export default () => {
                 </label>
 
                 <input
+                required
                   type="date"
                   className="w-full p-1 mt-1 mb-10 border rounded-md"
                   name="dateOfBirth"
@@ -141,7 +161,7 @@ export default () => {
             <button
               type="submit"
               className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-              onClick={() => updateProfile()}
+              onClick={(event) => submitForm(event)}
             >
               Continue
             </button>

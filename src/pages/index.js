@@ -23,7 +23,8 @@ const IndexPage = () => {
       {signUpComplete(state.user) ? (
         <>
           <Navbar />
-          <Link to="learn" className="mx-32 font-mono text-3xl text-white underline">
+          <Link to="learn" className="w-full font-mono text-3xl text-center text-white underline">
+            
             {" "}
             Head to your lesson{" "}
           </Link>

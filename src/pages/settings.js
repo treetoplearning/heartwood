@@ -134,6 +134,7 @@ export default () => {
                 </label>
 
                 <input
+                required
                   type="date"
                   className="w-full p-1 mt-1 mb-10 border rounded-md"
                   name="dateOfBirth"

@@ -35,21 +35,6 @@ const SignUp = () => {
   const [passwordStrong, setPasswordStrong] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
 
-  // checks that all user inputs are not empty
-  const validateInputs = () => {
-    if (!passwordStrong) {
-      setError("Please select a more complex password")
-      return false
-    }
-
-    if (email === "" || password === "" || userName === "") {
-      setError("Error signing up with email and password")
-      return false
-    }
-
-    return true
-  }
-
   // generate a new document for a new user
   const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
     // if the user has attempted every input
@@ -58,7 +43,7 @@ const SignUp = () => {
     event.preventDefault()
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
-      
+
       const editedUser = scrapeUserInformation(user, userName)
       dispatch({ type: "LOGIN", user: editedUser })
       navigate("/")
@@ -96,6 +81,29 @@ const SignUp = () => {
       return
     }
     setPasswordStrong(false)
+  }
+
+  // checks that all user inputs are not empty
+  const validateInputs = () => {
+    if (!passwordStrong) {
+      setError("Please select a more complex password")
+      return false
+    }
+    if (email === "" || password === "" || userName === "") {
+      setError("Error signing up with email and password")
+      return false
+    }
+    return true
+  }
+
+
+  const submitForm = (event) => {
+    event.preventDefault()
+    if (validateInputs()) {
+      createUserWithEmailAndPasswordHandler(event, email, password)
+    } else {
+      console.log("Inputs are NOT valid")
+    }
   }
 
   // the provider sign-in
@@ -183,11 +191,7 @@ const SignUp = () => {
               <button
                 type="submit"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => {
-                  validateInputs()
-                    ? createUserWithEmailAndPasswordHandler(event, email, password)
-                    : console.log("NOT calling createUser")
-                }}
+                onClick={(event) => submitForm(event)}
               >
                 Sign up
               </button>

@@ -64,6 +64,22 @@ const SignIn = () => {
     }
   }
 
+  const validateInputs = () => {
+    if (email === "" || password === "") {
+      setError("Error signing up with email and password")
+      return false
+    }
+    return true
+  }
+
+  const submitForm = (event) => {
+    if (validateInputs()) {
+      signInWithEmailAndPasswordHandler(event, email, password)
+    } else {
+      console.log("Inputs are NOT valid")
+    }
+  }
+
   // the provider sign-in
   useEffect(() => {
     auth
@@ -108,6 +124,7 @@ const SignIn = () => {
                 Email:
               </label>
               <input
+              required
                 type="email"
                 className="w-full p-1 my-1 border rounded-md"
                 name="userEmail"
@@ -121,6 +138,7 @@ const SignIn = () => {
               </label>
 
               <input
+              required
                 type="password"
                 className="w-full p-1 mt-1 mb-3 border rounded-md"
                 name="userPassword"
@@ -131,10 +149,11 @@ const SignIn = () => {
               />
 
               <button
+              type="submit"
                 className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => {
-                  signInWithEmailAndPasswordHandler(event, email, password)
-                }}
+                onClick={(event) => submitForm(event)
+                  
+                }
               >
                 Sign in
               </button>
