@@ -79,15 +79,15 @@ export default () => {
   }, [state.user])
 
   return (
-    <div className="flex flex-col w-full h-screen bg-base">
+    <div className="w-screen min-h-screen bg-base">
       {isLoggedIn(state.user) && (
         <>
           <Navbar />
-          <div className="pt-24 font-mono">
+          <div className="pt-8 font-mono">
             <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
               <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
               {message && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
+                <div className="w-full py-4 mb-3 text-center text-white bg-green-600 rounded-lg">
                   {message}
                 </div>
               )}

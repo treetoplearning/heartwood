@@ -30,7 +30,8 @@ const IndexPage = () => {
           </Link>
         </>
       ) : (
-        <CollectInfo />
+        (isLoggedIn(state.user) &&
+        <CollectInfo /> )
       )}
     </div>
   )
