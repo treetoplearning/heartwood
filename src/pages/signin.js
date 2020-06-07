@@ -48,8 +48,11 @@ const SignIn = () => {
       })
       .then((result) => {
         if (result) {
-          dispatch({ type: "LOGIN", user: result.user})
-          navigate("/")
+          scrapeUserInformation(result.user).then(function(res) {
+            console.log('res is', res)
+            dispatch({ type: "LOGIN", user: res})
+            navigate("/")
+          })
         }
       })
   }
@@ -86,9 +89,11 @@ const SignIn = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          const editedUser = scrapeUserInformation(result.user, '')
-          dispatch({ type: "LOGIN", user: editedUser })
-          navigate("/")
+          scrapeUserInformation(result.user).then(function(res) {
+            console.log('res is', res)
+            dispatch({ type: "LOGIN", user: res})
+            navigate("/")
+          })
         } else {
           setIsLoading(false)
         }

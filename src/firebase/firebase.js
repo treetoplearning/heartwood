@@ -1,5 +1,7 @@
 import firebase from "gatsby-plugin-firebase"
 
+import { signUpComplete } from "../utils/utils"
+
 let auth, firestore
 
 if (typeof window !== `undefined`) {
@@ -40,39 +42,56 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid)
 }
 
-export const scrapeUserInformation = (user, userName) => {
-  let displayName = ""
-  let firstName = ""
-  let lastName = ""
+export const scrapeUserInformation = async (user) => {
 
-  // Only parse for first and last names if they are signing with a provider
-  if (user.displayName) {
-    displayName = user.displayName
+  // link the user to their saved preferencs in firestore
+  const res = await getUserDocument(user.uid)
 
-    const splitNames = displayName.split(" ")
-    firstName = splitNames[0]
-    lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+  if (signUpComplete(res)) {
+    
+    // the account already exists (sign in)
 
+    // update the user that will be stored in state
+    const returningUser = {
+      ...user,
+      firstName: res.firstName,
+      lastName: res.lastName,
+      userName: res.userName,
+      dateOfBirth: res.dateOfBirth,
+    }
+
+    console.log("returningUser is", returningUser)
+
+    return returningUser
+  } else {
+    
+    // the account does not exist (sign up)
+
+    let displayName = ""
+    let firstName = ""
+    let lastName = ""
+
+    if (user.displayName != null) {
+      displayName = user.displayName
+
+      const splitNames = displayName.split(" ")
+      firstName = splitNames[0]
+      lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
+    }
+
+    await generateUserDocument(user, {
+      userName: "",
+      firstName: firstName,
+      lastName: lastName,
+      dateOfBirth: "",
+    })
+
+    const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: "", dateOfBirth: ""}
+
+    console.log("editedUser is", editedUser)
+
+    return editedUser
   }
-
-  // create a document in the database with all the provider information
-  generateUserDocument(user, {
-    userName: userName,
-    firstName: firstName,
-    lastName: lastName,
-    dateOfBirth: ""
-  })
-
-  // update the user that will be stored in state
-  user.updateProfile({
-    userName: userName,
-    firstName: firstName,
-    lastName: lastName,
-  })
-
-  const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: userName }
-
-  return editedUser
 }
 
 // access a Treetop account that has already been created

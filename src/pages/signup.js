@@ -30,7 +30,6 @@ const SignUp = () => {
 
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [userName, setUserName] = useState("")
   const [error, setError] = useState(null)
   const [passwordStrong, setPasswordStrong] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
@@ -44,9 +43,11 @@ const SignUp = () => {
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
 
-      const editedUser = scrapeUserInformation(user, userName)
-      dispatch({ type: "LOGIN", user: editedUser })
-      navigate("/")
+      scrapeUserInformation(user).then(function(res) {
+        console.log('res is', res)
+        dispatch({ type: "LOGIN", user: res})
+        navigate("/")
+      })
     } catch (error) {
       setIsLoading(false)
 
@@ -70,8 +71,6 @@ const SignUp = () => {
       setEmail(value)
     } else if (name === "userPassword") {
       setPassword(value)
-    } else if (name === "userName") {
-      setUserName(value)
     }
   }
 
@@ -89,7 +88,7 @@ const SignUp = () => {
       setError("Please select a more complex password")
       return false
     }
-    if (email === "" || password === "" || userName === "") {
+    if (email === "" || password === "") {
       setError("Error signing up with email and password")
       return false
     }
@@ -111,11 +110,13 @@ const SignUp = () => {
     auth
       .getRedirectResult()
       .then((result) => {
-        if (result.user && result.user.displayName) {
-          const editedUser = scrapeUserInformation(result.user)
-          dispatch({ type: "LOGIN", user: editedUser })
-          navigate("/")
-        } else {
+        if (result.user) {
+          scrapeUserInformation(result.user).then(function(res) {
+            console.log('res is', res)
+            dispatch({ type: "LOGIN", user: res})
+            navigate("/")
+          })
+        }  else {
           setIsLoading(false)
         }
       })
@@ -148,19 +149,7 @@ const SignUp = () => {
               </div>
             )}
             <form className="">
-              <label htmlFor="userName" className="block">
-                Username:
-              </label>
-              <input
-                required
-                type="text"
-                className="w-full p-1 my-1 border rounded-md"
-                name="userName"
-                value={userName}
-                placeholder="treetoplearner"
-                id="userName"
-                onChange={(event) => onChangeHandler(event)}
-              />
+              
               <label htmlFor="userEmail" className="block">
                 Email:
               </label>

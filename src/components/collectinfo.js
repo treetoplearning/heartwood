@@ -34,6 +34,9 @@ export default () => {
   const updateProfile = () => {
     // update the information in firestore
     try {
+
+      console.log('the user in state is', state.user.uid)
+
       firestore.collection("users").doc(state.user.uid).update({
         firstName: firstName,
         lastName: lastName,
@@ -49,6 +52,8 @@ export default () => {
         userName: userName,
         dateOfBirth: dateOfBirth
       }
+
+      console.log("in collectInfo the updated user is", updatedUser)
 
       dispatch({ type: "UPDATE", user: updatedUser })
     } catch (error) {
@@ -84,7 +89,8 @@ export default () => {
       setFirstName(state.user.firstName)
       setLastName(state.user.lastName)
       setUserName(state.user.userName)
-      setUserName(state.user.dateOfBirth)
+      setDateOfBirth(state.user.dateOfBirth)
+    
     } else {
       navigate("/signin")
     }

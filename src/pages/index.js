@@ -12,7 +12,7 @@ const IndexPage = () => {
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
-      console.log(state.user)
+      console.log("on index user is", state.user)
     } else {
       navigate("/signin")
     }
