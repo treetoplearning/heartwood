@@ -9,8 +9,7 @@ import {
   auth,
   signInWithGoogle,
   signInWithGitHub,
-  scrapeUserInformation,
-  generateUserDocument,
+  prepareUserInformation,
 } from "../firebase/firebase"
 
 import gear from "../assets/gear.svg"
@@ -48,10 +47,11 @@ const SignIn = () => {
       })
       .then((result) => {
         if (result) {
-          scrapeUserInformation(result.user).then(function(res) {
-            console.log('res is', res)
-            dispatch({ type: "LOGIN", user: res})
-            navigate("/")
+          prepareUserInformation(result.user).then(function(res) {
+            result.user.getIdToken().then(idToken => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken})
+              navigate("/")
+            })
           })
         }
       })
@@ -89,10 +89,11 @@ const SignIn = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          scrapeUserInformation(result.user).then(function(res) {
-            console.log('res is', res)
-            dispatch({ type: "LOGIN", user: res})
-            navigate("/")
+          prepareUserInformation(result.user).then(function(res) {
+            result.user.getIdToken().then(idToken => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken})
+              navigate("/")
+            })
           })
         } else {
           setIsLoading(false)

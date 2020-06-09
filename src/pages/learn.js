@@ -13,15 +13,6 @@ export default () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  useEffect(() => {
-    if (isLoggedIn(state.user)) {
-      console.log("user is logged in", state.user)
-      const { photoURL, displayName, email } = state.user
-    } else {
-      navigate("/signin")
-    }
-  }, [state.user])
-
   return (
     <div className="flex flex-col w-full h-screen bg-base">
       {isLoggedIn(state.user) && (

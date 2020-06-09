@@ -15,8 +15,7 @@ import {
   auth,
   signInWithGoogle,
   signInWithGitHub,
-  generateUserDocument,
-  scrapeUserInformation,
+  prepareUserInformation,
 } from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
@@ -43,10 +42,11 @@ const SignUp = () => {
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
 
-      scrapeUserInformation(user).then(function(res) {
-        console.log('res is', res)
-        dispatch({ type: "LOGIN", user: res})
-        navigate("/")
+      prepareUserInformation(user).then(res => {
+        res.getIdToken().then(idToken => {
+          dispatch({ type: "LOGIN", user: res, idt: idToken})
+          navigate("/")
+        })
       })
     } catch (error) {
       setIsLoading(false)
@@ -111,10 +111,11 @@ const SignUp = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          scrapeUserInformation(result.user).then(function(res) {
-            console.log('res is', res)
-            dispatch({ type: "LOGIN", user: res})
-            navigate("/")
+          prepareUserInformation(result.user).then(res => {
+            res.getIdToken().then(idToken => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken})
+              navigate("/")
+            })
           })
         }  else {
           setIsLoading(false)

@@ -42,14 +42,17 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid)
 }
 
-export const scrapeUserInformation = async (user) => {
+export const prepareUserInformation = async (user) => {
+
+  console.log('in prepare')
 
   // link the user to their saved preferencs in firestore
   const res = await getUserDocument(user.uid)
-
+  console.log('res is', res)
   if (signUpComplete(res)) {
     
     // the account already exists (sign in)
+    console.log("top")
 
     // update the user that will be stored in state
     const returningUser = {
@@ -58,12 +61,14 @@ export const scrapeUserInformation = async (user) => {
       lastName: res.lastName,
       userName: res.userName,
       dateOfBirth: res.dateOfBirth,
+      email: res.email
     }
 
-    console.log("returningUser is", returningUser)
-
     return returningUser
+
   } else {
+
+    console.log("bot")
     
     // the account does not exist (sign up)
 
@@ -71,24 +76,23 @@ export const scrapeUserInformation = async (user) => {
     let firstName = ""
     let lastName = ""
 
+    // only parse for first/last names if sign-in provider
     if (user.displayName != null) {
-      displayName = user.displayName
-
-      const splitNames = displayName.split(" ")
+      const splitNames = user.displayName.split(" ")
       firstName = splitNames[0]
       lastName = String(splitNames.slice(1, splitNames.length)).replace(/,/g, " ")
     }
 
+    // generate a document with blanks to be filled
     await generateUserDocument(user, {
       userName: "",
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: "",
+      email: user.email
     })
 
-    const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: "", dateOfBirth: ""}
-
-    console.log("editedUser is", editedUser)
+    const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: "", dateOfBirth: "", email: user.email}
 
     return editedUser
   }

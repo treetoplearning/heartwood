@@ -10,14 +10,6 @@ const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  useEffect(() => {
-    if (isLoggedIn(state.user)) {
-      console.log("on index user is", state.user)
-    } else {
-      navigate("/signin")
-    }
-  }, [state.user])
-
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
       {signUpComplete(state.user) ? (
