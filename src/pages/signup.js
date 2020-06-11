@@ -16,6 +16,8 @@ import {
   signInWithGoogle,
   signInWithGitHub,
   prepareUserInformation,
+  getCurrentUser,
+  verifyEmail,
 } from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
@@ -27,40 +29,38 @@ const SignUp = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState(null)
-  const [passwordStrong, setPasswordStrong] = useState(false)
-  const [isLoading, setIsLoading] = useState(true)
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+    error: null,
+    passwordStrong: false,
+    isLoading: true,
+  })
 
   // generate a new document for a new user
   const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
     // if the user has attempted every input
 
-    setIsLoading(true)
+    setForm({ ...form, isLoading: true })
     event.preventDefault()
     try {
+     
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
 
-      prepareUserInformation(user).then(res => {
-        res.getIdToken().then(idToken => {
-          dispatch({ type: "LOGIN", user: res, idt: idToken})
-          navigate("/")
-        })
-      })
+      verifyEmail(form.email, "signup")
+      setForm({ ...form, isLoading: false, error: "Please check your email to complete your signin" })
     } catch (error) {
-      setIsLoading(false)
+      setForm({ ...form, isLoading: false })
 
       // handle and display the various errors to the user
       if (error.code === "auth/account-exists-with-different-credential") {
-        setError("An account already exists under that email address")
-        console.error("An account already exists under that email address", error)
+        setForm({ ...form, error: "An account already exists under that email address" })
       } else if (error.code === "auth/email-already-in-use") {
-        setError("Email address is already in use by another account")
+        setForm({ ...form, error: "Email address is already in use by another account" })
       } else if (error.code === "auth/invalid-email") {
-        setError("Email address is badly formatted")
+        setForm({ ...form, error: "Email address is badly formatted" })
       } else {
-        setError(error.message)
+        setForm({ ...form, error: error.message })
       }
     }
   }
@@ -68,71 +68,99 @@ const SignUp = () => {
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
     if (name === "userEmail") {
-      setEmail(value)
+      setForm({ ...form, email: value })
     } else if (name === "userPassword") {
-      setPassword(value)
+      setForm({ ...form, password: value })
     }
   }
 
   const checkStrong = (input) => {
     if (input === "Strong") {
-      setPasswordStrong(true)
+      setForm({ ...form, passwordStrong: true })
       return
     }
-    setPasswordStrong(false)
+    setForm({ ...form, passwordStrong: false })
   }
 
   // checks that all user inputs are not empty
   const validateInputs = () => {
-    if (!passwordStrong) {
-      setError("Please select a more complex password")
+    if (!form.passwordStrong) {
+      setForm({ ...form, error: "Please select a more complex password" })
       return false
     }
-    if (email === "" || password === "") {
-      setError("Error signing up with email and password")
+    if (form.email === "" || form.password === "") {
+      setForm({ ...form, error: "Error signing up with email and password" })
       return false
     }
     return true
   }
 
-
   const submitForm = (event) => {
     event.preventDefault()
     if (validateInputs()) {
-      createUserWithEmailAndPasswordHandler(event, email, password)
-    } else {
-      console.log("Inputs are NOT valid")
+      createUserWithEmailAndPasswordHandler(event, form.email, form.password)
     }
   }
 
   // the provider sign-in
   useEffect(() => {
+    // Confirm the link is a sign-in with email link.
+    if (auth.isSignInWithEmailLink(window.location.href)) {
+      // Get the email if available. This should be available if the user completes
+      // the flow on the same device where they started it.
+      let email = window.localStorage.getItem("emailForSignIn")
+      if (!email) {
+        // User opened the link on a different device. To prevent session fixation
+        // attacks, ask the user to provide the associated email again. For example:
+        email = window.prompt("Please provide your email for confirmation")
+      }
+      // The client SDK will parse the code from the link for you.
+      auth
+        .signInWithEmailLink(email, window.location.href)
+        .then((result) => {
+          // Clear email from storage.
+          window.localStorage.removeItem("emailForSignIn")
+
+          prepareUserInformation(result.user).then((res) => {
+            getCurrentUser()
+              .getIdToken()
+              .then((idToken) => {
+                dispatch({ type: "LOGIN", user: res, idt: idToken })
+                navigate("/")
+              })
+          })
+        })
+        .catch(function (error) {
+          // Some error occurred, you can inspect the code: error.code
+          // Common errors could be invalid email and invalid or expired OTPs.
+        })
+    }
+
     auth
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          prepareUserInformation(result.user).then(res => {
-            res.getIdToken().then(idToken => {
-              dispatch({ type: "LOGIN", user: res, idt: idToken})
+          prepareUserInformation(result.user).then((res) => {
+            res.getIdToken().then((idToken) => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")
             })
           })
-        }  else {
-          setIsLoading(false)
+        } else {
+          setForm({ ...form, isLoading: false })
         }
       })
       .catch((error) => {
-        setIsLoading(false)
+        setForm({ ...form, isLoading: false })
         if (error.code === "auth/account-exists-with-different-credential") {
-          setError("An account already exists under that email address")
-          console.error("Account already exists under email address", error)
+          setForm({ ...form, error: "An account already exists under that email address" })
         }
       })
   }, [])
 
   return (
     <div className="w-screen min-h-screen pb-20 bg-base">
-      {isLoading && (
+      {form.isLoading && (
         <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
           {" "}
           <object color="white" type="image/svg+xml" data={gear}>
@@ -140,17 +168,16 @@ const SignUp = () => {
           </object>{" "}
         </div>
       )}
-      {!isLoading && (
+      {!form.isLoading && (
         <div className="pt-24 font-mono">
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-1/2 md:w-3/4 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
-            {error !== null && (
+            {form.error !== null && (
               <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                {error}
+                {form.error}
               </div>
             )}
             <form className="">
-              
               <label htmlFor="userEmail" className="block">
                 Email:
               </label>
@@ -159,7 +186,7 @@ const SignUp = () => {
                 type="email"
                 className="w-full p-1 my-1 border rounded-md"
                 name="userEmail"
-                value={email}
+                value={form.email}
                 placeholder="treetoplearner@gmail.com"
                 id="userEmail"
                 onChange={(event) => onChangeHandler(event)}
@@ -172,12 +199,12 @@ const SignUp = () => {
                 type="password"
                 className="w-full p-1 mt-1 mb-3 border rounded-md"
                 name="userPassword"
-                value={password}
+                value={form.password}
                 placeholder="Your Password"
                 id="userPassword"
                 onChange={(event) => onChangeHandler(event)}
               />
-              <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={password} />
+              <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={form.password} />
               <button
                 type="submit"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"

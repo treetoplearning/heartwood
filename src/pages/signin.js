@@ -24,10 +24,7 @@ import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
 library.add(faGoogle, faGithub)
 
 const SignIn = () => {
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [error, setError] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [form, setForm] = useState({ email: "", password: "", error: null, isLoading: true })
 
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -35,21 +32,20 @@ const SignIn = () => {
   // deal with an already registered user
   const signInWithEmailAndPasswordHandler = (event, email, password) => {
     event.preventDefault()
-    setIsLoading(true)
+    setForm({ ...form, isLoading: true })
 
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => {
-        setIsLoading(false)
-        setError("Error signing in with password and email")
-        console.error("Error signing in with password and email", error)
+        setForm({ ...form, isLoading: false })
+        setForm({ ...form, error: "Error signing in with password and email" })
         // set the current logged in user to the returning user
       })
       .then((result) => {
         if (result) {
-          prepareUserInformation(result.user).then(function(res) {
-            result.user.getIdToken().then(idToken => {
-              dispatch({ type: "LOGIN", user: res, idt: idToken})
+          prepareUserInformation(result.user).then(function (res) {
+            result.user.getIdToken().then((idToken) => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")
             })
           })
@@ -61,15 +57,15 @@ const SignIn = () => {
     const { name, value } = event.currentTarget
 
     if (name === "userEmail") {
-      setEmail(value)
+      setForm({ ...form, email: value })
     } else if (name === "userPassword") {
-      setPassword(value)
+      setForm({ ...form, password: value })
     }
   }
 
   const validateInputs = () => {
-    if (email === "" || password === "") {
-      setError("Error signing up with email and password")
+    if (form.email === "" || form.password === "") {
+      setForm({ ...form, error: "Error signing up with email and password" })
       return false
     }
     return true
@@ -77,9 +73,7 @@ const SignIn = () => {
 
   const submitForm = (event) => {
     if (validateInputs()) {
-      signInWithEmailAndPasswordHandler(event, email, password)
-    } else {
-      console.log("Inputs are NOT valid")
+      signInWithEmailAndPasswordHandler(event, form.email, form.password)
     }
   }
 
@@ -89,40 +83,39 @@ const SignIn = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          prepareUserInformation(result.user).then(function(res) {
-            result.user.getIdToken().then(idToken => {
-              dispatch({ type: "LOGIN", user: res, idt: idToken})
+          prepareUserInformation(result.user).then(function (res) {
+            result.user.getIdToken().then((idToken) => {
+              dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")
             })
           })
         } else {
-          setIsLoading(false)
+          setForm({ ...form, isLoading: false })
         }
       })
       .catch((error) => {
-        setIsLoading(false)
+        setForm({ ...form, isLoading: false })
         if (error.code === "auth/account-exists-with-different-credential") {
-          setError("An account already exists under that email address")
-          console.error("An account already exists under that email address", error)
+          setForm({ ...form, error: "An account already exists under that email address" })
         }
       })
   }, [])
 
   return (
     <div className="w-screen min-h-screen pb-20 bg-base">
-      {isLoading && (
+      {form.isLoading && (
         <div className="flex self-center justify-center w-screen h-screen ">
           {" "}
           <LoadingAnimation data={gear} />
         </div>
       )}
       <div className="pt-24 font-mono">
-        {!isLoading && (
+        {!form.isLoading && (
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
-            {error !== null && (
+            {form.error !== null && (
               <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                {error}
+                {form.error}
               </div>
             )}
             <form className="">
@@ -130,11 +123,11 @@ const SignIn = () => {
                 Email:
               </label>
               <input
-              required
+                required
                 type="email"
                 className="w-full p-1 my-1 border rounded-md"
                 name="userEmail"
-                value={email}
+                value={form.email}
                 placeholder="treetoplearner@gmail.com"
                 id="userEmail"
                 onChange={(event) => onChangeHandler(event)}
@@ -144,22 +137,20 @@ const SignIn = () => {
               </label>
 
               <input
-              required
+                required
                 type="password"
                 className="w-full p-1 mt-1 mb-3 border rounded-md"
                 name="userPassword"
-                value={password}
+                value={form.password}
                 placeholder="Your Password"
                 id="userPassword"
                 onChange={(event) => onChangeHandler(event)}
               />
 
               <button
-              type="submit"
+                type="submit"
                 className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => submitForm(event)
-                  
-                }
+                onClick={(event) => submitForm(event)}
               >
                 Sign in
               </button>

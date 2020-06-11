@@ -1,32 +1,33 @@
-import React, { useLayoutEffect, useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import Navbar from "../components/navbar"
-import { navigate } from "gatsby"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import { isLoggedIn } from "../utils/utils"
 import { firestore } from "../firebase/firebase"
 
-export default () => {
+const Settings = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
 
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [userName, setUserName] = useState("")
-  const [dateOfBirth, setDateOfBirth] = useState(null)
-  const [message, setMessage] = useState(null)
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    userName: "",
+    dateOfBirth: null,
+    message: null,
+  })
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
 
     if (name === "userFirstName") {
-      setFirstName(value)
+      setForm({ ...form, firstName: value })
     } else if (name === "userLastName") {
-      setLastName(value)
+      setForm({ ...form, lastName: value })
     } else if (name === "userName") {
-      setUserName(value)
+      setForm({ ...form, userName: value })
     } else if (name === "dateOfBirth") {
-      setDateOfBirth(value)
+      setForm({ ...form, dateOfBirth: value })
     }
   }
 
@@ -35,47 +36,45 @@ export default () => {
     // update the information in firestore
     try {
       firestore.collection("users").doc(state.user.uid).update({
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        dateOfBirth: dateOfBirth,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        userName: form.userName,
+        dateOfBirth: form.dateOfBirth,
       })
 
       // update the user that will be stored in state then save the user
       const updatedUser = {
         ...state.user,
-        firstName: firstName,
-        lastName: lastName,
-        userName: userName,
-        dateOfBirth: dateOfBirth,
+        firstName: form.firstName,
+        lastName: form.lastName,
+        userName: form.userName,
+        dateOfBirth: form.dateOfBirth,
       }
 
       dispatch({ type: "UPDATE", user: updatedUser })
 
       // If successful tell the user
-      setMessage("Your preferences have been updated")
+      setForm({ ...form, message: "Your preferences have been updated" })
     } catch (error) {
-      setMessage(error)
-      console.log(error)
+      setForm({ ...form, message: error })
     }
 
     // Hide the successfully sent notification after 3 seconds
     setTimeout(() => {
-      setMessage(null)
+      setForm({ ...form, message: null })
     }, 3000)
   }
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
-      // On load, set all the inputs to the user's current preferences
 
-      setFirstName(state.user.firstName)
-      setLastName(state.user.lastName)
-      setUserName(state.user.userName)
-      setDateOfBirth(state.user.dateOfBirth)
+      // On load, set all the inputs to the user's current preferences
+      setForm({ ...form, firstName: state.user.firstName, lastName: state.user.lastName, userName: state.user.userName, dateOfBirth: state.user.dateOfBirth })
+     
     } else {
-      navigate("/signin")
+      console.log('not logged in')
     }
+    
   }, [state.user])
 
   return (
@@ -86,9 +85,9 @@ export default () => {
           <div className="pt-8 font-mono">
             <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
               <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
-              {message && (
+              {form.message && (
                 <div className="w-full py-4 mb-3 text-center text-white bg-green-600 rounded-lg">
-                  {message}
+                  {form.message}
                 </div>
               )}
 
@@ -101,7 +100,7 @@ export default () => {
                   className="w-full p-1 my-1 border rounded-md"
                   name="userFirstName"
                   id="userFirstName"
-                  value={firstName}
+                  value={form.firstName}
                   onChange={(event) => onChangeHandler(event)}
                 />
                 <label htmlFor="userLastName" className="block">
@@ -113,7 +112,7 @@ export default () => {
                   className="w-full p-1 my-1 border rounded-md"
                   name="userLastName"
                   id="userLastName"
-                  value={lastName}
+                  value={form.lastName}
                   onChange={(event) => onChangeHandler(event)}
                 />
                 <label htmlFor="userName" className="block">
@@ -125,7 +124,7 @@ export default () => {
                   className="w-full p-1 my-1 border rounded-md"
                   name="userName"
                   id="userName"
-                  value={userName}
+                  value={form.userName}
                   onChange={(event) => onChangeHandler(event)}
                 />
 
@@ -134,12 +133,12 @@ export default () => {
                 </label>
 
                 <input
-                required
+                  required
                   type="date"
                   className="w-full p-1 mt-1 mb-10 border rounded-md"
                   name="dateOfBirth"
                   id="dateOfBirth"
-                  value={dateOfBirth}
+                  value={form.dateOfBirth}
                   onChange={(event) => onChangeHandler(event)}
                 />
 
@@ -158,3 +157,5 @@ export default () => {
     </div>
   )
 }
+
+export default Settings

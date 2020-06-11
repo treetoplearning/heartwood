@@ -42,18 +42,45 @@ export const generateUserDocument = async (user, additionalData) => {
   return getUserDocument(user.uid)
 }
 
+export const getCurrentUser = () => {
+  return firebase.auth().currentUser
+}
+
+export const verifyEmail = (email, page) => {
+
+  // directions for how to send the email verification
+  const actionCodeSettings = {
+    // URL you want to redirect back to. The domain (www.example.com) for this
+    // URL must be whitelisted in the Firebase Console.
+    url: 'https://10.0.1.26:8000/' + page,
+    // This must be true.
+    handleCodeInApp: true,
+    
+    // dynamicLinkDomain: 'example.page.link'
+  }
+
+  firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
+  .then(function() {
+    // The link was successfully sent. Inform the user.
+    // Save the email locally so you don't need to ask the user for it again
+    // if they open the link on the same device.
+    console.log('verification successfully sent')
+    window.localStorage.setItem('emailForSignIn', email)
+  })
+  .catch(function(error) {
+
+    console.log('error in sending email verification')
+    console.log('the error is', error)
+  })
+
+  
+}
+
 export const prepareUserInformation = async (user) => {
-
-  console.log('in prepare')
-
   // link the user to their saved preferencs in firestore
   const res = await getUserDocument(user.uid)
-  console.log('res is', res)
-  if (signUpComplete(res)) {
-    
-    // the account already exists (sign in)
-    console.log("top")
 
+  if (signUpComplete(res)) {
     // update the user that will be stored in state
     const returningUser = {
       ...user,
@@ -61,15 +88,12 @@ export const prepareUserInformation = async (user) => {
       lastName: res.lastName,
       userName: res.userName,
       dateOfBirth: res.dateOfBirth,
-      email: res.email
+      email: res.email,
+      photoURL: res.photoURL,
     }
 
     return returningUser
-
   } else {
-
-    console.log("bot")
-    
     // the account does not exist (sign up)
 
     let displayName = ""
@@ -89,10 +113,21 @@ export const prepareUserInformation = async (user) => {
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: "",
-      email: user.email
+      email: user.email,
+      photoURL:
+        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
     })
 
-    const editedUser = { ...user, firstName: firstName, lastName: lastName, userName: "", dateOfBirth: "", email: user.email}
+    const editedUser = {
+      ...user,
+      firstName: firstName,
+      lastName: lastName,
+      userName: "",
+      dateOfBirth: "",
+      email: user.email,
+      photoURL:
+        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
+    }
 
     return editedUser
   }

@@ -4,33 +4,31 @@ import { Link } from "@reach/router"
 import { auth } from "../firebase/firebase"
 
 const PasswordReset = () => {
-  const [email, setEmail] = useState("")
-  const [emailHasBeenSent, setEmailHasBeenSent] = useState(false)
-  const [error, setError] = useState(null)
+  const [form, setForm] = useState({ email: "", emailHasBeenSent: false, error: null })
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
     if (name === "userEmail") {
-      setEmail(value)
+      setForm({ ...form, email: value })
     }
   }
 
   const sendResetEmail = (event) => {
-    setError(null)
+    setForm({ ...form, error: null })
     event.preventDefault()
     auth
       .sendPasswordResetEmail(email)
       .then(() => {
         // notify user of successfully sent
-        setEmailHasBeenSent(true)
+        setForm({ ...form, setEmailHasBeenSent: true })
 
         // hide the successfully sent notification after 4 seconds
         setTimeout(() => {
-          setEmailHasBeenSent(false)
+          setForm({ ...form, setEmailHasBeenSent: false })
         }, 4000)
       })
       .catch(() => {
-        setError("Error resetting password")
+        setForm({ ...form, error: "Error resetting password" })
       })
   }
 
@@ -41,14 +39,14 @@ const PasswordReset = () => {
           <h1 className="pt-4 text-3xl font-bold text-center">Reset your Password</h1>
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
-              {emailHasBeenSent && (
+              {form.emailHasBeenSent && (
                 <div className="w-full py-4 mb-3 text-center text-white bg-green-500 rounded-lg">
                   An email has been sent to you!
                 </div>
               )}
-              {error !== null && (
+              {form.error !== null && (
                 <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                  {error}
+                  {form.error}
                 </div>
               )}
               <label htmlFor="userEmail" className="block w-full">
@@ -58,7 +56,7 @@ const PasswordReset = () => {
                 type="email"
                 name="userEmail"
                 id="userEmail"
-                value={email}
+                value={form.email}
                 placeholder="Input your email"
                 onChange={onChangeHandler}
                 className="w-full px-1 py-2 mb-3"
