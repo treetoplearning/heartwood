@@ -53,15 +53,14 @@ export const verifyEmail = (email, page) => {
   firebase
     .auth()
     .sendSignInLinkToEmail(email, actionCodeSettings)
-    .then(res => {
+    .then((res) => {
       // The link was successfully sent. Inform the user.
-  
+
       console.log("verification successfully sent")
       window.localStorage.setItem("emailForSignIn", email)
     })
-    .catch(error => {
+    .catch((error) => {
       console.log("error in sending email verification", error)
-
     })
 }
 

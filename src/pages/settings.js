@@ -53,12 +53,12 @@ const Settings = () => {
       // If successful tell the user
       setForm({ ...form, message: { text: "Your preferences have been updated", type: "success" } })
     } catch (error) {
-      setForm({ ...form, message: { text: "", type: "" } })
+      setForm({ ...form, message: { text: "An error occured when updating preferences", type: "error" } })
     }
 
     // Hide the successfully sent notification after 3 seconds
     setTimeout(() => {
-      setForm({ ...form, message: null })
+      setForm({ ...form, message: { text: "", type: "" } })
     }, 3000)
   }
 
@@ -91,55 +91,65 @@ const Settings = () => {
               )}
 
               <form className="">
-                <label htmlFor="userFirstName" className="block">
-                  First name:
-                </label>
-                <input
-                  type="text"
-                  className="w-full p-1 my-1 border rounded-md"
-                  name="userFirstName"
-                  id="userFirstName"
-                  value={form.firstName}
-                  onChange={(event) => onChangeHandler(event)}
-                />
-                <label htmlFor="userLastName" className="block">
-                  Last name:
-                </label>
+                <div className="mb-4">
+                  <label htmlFor="userFirstName" className="block mb-1 font-bold">
+                    First name:
+                  </label>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    name="userFirstName"
+                    id="userFirstName"
+                    value={form.firstName}
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                </div>
 
-                <input
-                  type="text"
-                  className="w-full p-1 my-1 border rounded-md"
-                  name="userLastName"
-                  id="userLastName"
-                  value={form.lastName}
-                  onChange={(event) => onChangeHandler(event)}
-                />
-                <label htmlFor="userName" className="block">
-                  Username:
-                </label>
+                <div className="mb-4">
+                  <label htmlFor="userLastName" className="block mb-1 font-semibold">
+                    Last name:
+                  </label>
 
-                <input
-                  type="text"
-                  className="w-full p-1 my-1 border rounded-md"
-                  name="userName"
-                  id="userName"
-                  value={form.userName}
-                  onChange={(event) => onChangeHandler(event)}
-                />
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    name="userLastName"
+                    id="userLastName"
+                    value={form.lastName}
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                </div>
 
-                <label htmlFor="dateOfBirth" className="block">
-                  Date of birth:
-                </label>
+                <div className="mb-4">
+                  <label htmlFor="userName" className="block mb-1 font-semibold">
+                    Username:
+                  </label>
 
-                <input
-                  required
-                  type="date"
-                  className="w-full p-1 mt-1 mb-10 border rounded-md"
-                  name="dateOfBirth"
-                  id="dateOfBirth"
-                  value={form.dateOfBirth}
-                  onChange={(event) => onChangeHandler(event)}
-                />
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    name="userName"
+                    id="userName"
+                    value={form.userName}
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                </div>
+
+                <div className="mb-10">
+                  <label htmlFor="dateOfBirth" className="block mb-1 font-semibold">
+                    Date of birth:
+                  </label>
+
+                  <input
+                    required
+                    type="date"
+                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                    name="dateOfBirth"
+                    id="dateOfBirth"
+                    value={form.dateOfBirth}
+                    onChange={(event) => onChangeHandler(event)}
+                  />
+                </div>
 
                 <button
                   type="button"

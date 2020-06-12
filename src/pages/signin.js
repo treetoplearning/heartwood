@@ -117,33 +117,38 @@ const SignIn = () => {
               <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
             )}
             <form className="">
-              <label htmlFor="userEmail" className="block">
-                Email:
-              </label>
-              <input
-                required
-                type="email"
-                className="w-full p-1 my-1 border rounded-md"
-                name="userEmail"
-                value={form.email}
-                placeholder="treetoplearner@gmail.com"
-                id="userEmail"
-                onChange={(event) => onChangeHandler(event)}
-              />
-              <label htmlFor="userPassword" className="block">
-                Password:
-              </label>
+              <div className="mb-4">
+                <label htmlFor="userEmail" className="block mb-1 font-semibold">
+                  Email:
+                </label>
+                <input
+                  required
+                  type="email"
+                  className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  name="userEmail"
+                  value={form.email}
+                  placeholder="treetoplearner@gmail.com"
+                  id="userEmail"
+                  onChange={(event) => onChangeHandler(event)}
+                />
+              </div>
 
-              <input
-                required
-                type="password"
-                className="w-full p-1 mt-1 mb-3 border rounded-md"
-                name="userPassword"
-                value={form.password}
-                placeholder="Your Password"
-                id="userPassword"
-                onChange={(event) => onChangeHandler(event)}
-              />
+              <div className="mb-6">
+                <label htmlFor="userPassword" className="block mb-1 font-semibold">
+                  Password:
+                </label>
+
+                <input
+                  required
+                  type="password"
+                  className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  name="userPassword"
+                  value={form.password}
+                  placeholder="****************"
+                  id="userPassword"
+                  onChange={(event) => onChangeHandler(event)}
+                />
+              </div>
 
               <button
                 type="submit"

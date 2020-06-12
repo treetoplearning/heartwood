@@ -73,12 +73,14 @@ const Term = ({ termId }) => {
       const myPromise = skulpt.misceval.asyncToPromise(function () {
         return skulpt.importMainWithBody("<stdin>", false, body, true)
       })
-      myPromise.then(function (mod) {
+      myPromise.then(
+        function (mod) {
           console.log("success")
         },
         function (err) {
           console.log(err.toString())
-        })
+        }
+      )
     }
   }, [])
 

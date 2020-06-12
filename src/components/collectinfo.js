@@ -95,63 +95,73 @@ const CollectInfo = () => {
           {form.message.type === "success" && (
             <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
           )}
-          <h1 className="w-full py-4 mb-3 text-center ">
+          <h1 className="w-full py-2 mb-3 text-center ">
             Welcome to Treetop Learning! Before continuing we need a little bit more information...
           </h1>
 
           <form className="">
-            <label htmlFor="userFirstName" className="block">
-              First name:
-            </label>
-            <input
-              required
-              type="text"
-              className="w-full p-1 my-1 border rounded-md"
-              name="userFirstName"
-              id="userFirstName"
-              value={form.firstName}
-              onChange={(event) => onChangeHandler(event)}
-            />
-            <label htmlFor="userLastName" className="block">
-              Last name:
-            </label>
+            <div className="mb-4">
+              <label htmlFor="userFirstName" className="block mb-1 font-semibold">
+                First name:
+              </label>
+              <input
+                required
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userFirstName"
+                id="userFirstName"
+                value={form.firstName}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
 
-            <input
-              required
-              type="text"
-              className="w-full p-1 my-1 border rounded-md"
-              name="userLastName"
-              id="userLastName"
-              value={form.lastName}
-              onChange={(event) => onChangeHandler(event)}
-            />
-            <label htmlFor="userName" className="block">
-              Username:
-            </label>
+            <div className="mb-4">
+              <label htmlFor="userLastName" className="block mb-1 font-semibold">
+                Last name:
+              </label>
 
-            <input
-              required
-              type="text"
-              className="w-full p-1 my-1 border rounded-md"
-              name="userName"
-              id="userName"
-              value={form.userName}
-              onChange={(event) => onChangeHandler(event)}
-            />
+              <input
+                required
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userLastName"
+                id="userLastName"
+                value={form.lastName}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
 
-            <label htmlFor="dateOfBirth" className="block">
-              Date of birth:
-            </label>
+            <div className="mb-4">
+              <label htmlFor="userName" className="block mb-1 font-semibold">
+                Username:
+              </label>
 
-            <input
-              required
-              type="date"
-              className="w-full p-1 mt-1 mb-10 border rounded-md"
-              name="dateOfBirth"
-              id="dateOfBirth"
-              value={form.dateOfBirth}
-              onChange={(event) => onChangeHandler(event)}
-            />
+              <input
+                required
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userName"
+                id="userName"
+                value={form.userName}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
+
+            <div className="mb-10">
+              <label htmlFor="dateOfBirth" className="block mb-1 font-semibold">
+                Date of birth:
+              </label>
+
+              <input
+                required
+                type="date"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="dateOfBirth"
+                id="dateOfBirth"
+                value={form.dateOfBirth}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
 
             <button
               type="submit"

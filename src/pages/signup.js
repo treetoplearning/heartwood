@@ -124,7 +124,7 @@ const SignUp = () => {
               })
           })
         })
-        .catch(error => {
+        .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
         })
@@ -142,8 +142,7 @@ const SignUp = () => {
               navigate("/")
             })
           })
-        } 
-        
+        }
       })
       .catch((error) => {
         setForm({ ...form, isLoading: false })
@@ -174,33 +173,37 @@ const SignUp = () => {
               <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
             )}
             <form className="">
-              <label htmlFor="userEmail" className="block">
-                Email:
-              </label>
-              <input
-                required
-                type="email"
-                className="w-full p-1 my-1 border rounded-md"
-                name="userEmail"
-                value={form.email}
-                placeholder="treetoplearner@gmail.com"
-                id="userEmail"
-                onChange={(event) => onChangeHandler(event)}
-              />
-              <label htmlFor="userPassword" className="block">
-                Password:
-              </label>
-              <input
-                required
-                type="password"
-                className="w-full p-1 mt-1 mb-3 border rounded-md"
-                name="userPassword"
-                value={form.password}
-                placeholder="Your Password"
-                id="userPassword"
-                onChange={(event) => onChangeHandler(event)}
-              />
-              <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={form.password} />
+              <div className="mb-4">
+                <label htmlFor="userEmail" className="block mb-1 font-semibold">
+                  Email:
+                </label>
+                <input
+                  required
+                  type="email"
+                  className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  name="userEmail"
+                  value={form.email}
+                  placeholder="treetoplearner@gmail.com"
+                  id="userEmail"
+                  onChange={(event) => onChangeHandler(event)}
+                />
+              </div>
+              <div className="mb-6">
+                <label htmlFor="userPassword" className="block mb-1 font-semibold">
+                  Password:
+                </label>
+                <input
+                  required
+                  type="password"
+                  className="w-full px-3 py-2 mb-3 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                  name="userPassword"
+                  value={form.password}
+                  placeholder="****************"
+                  id="userPassword"
+                  onChange={(event) => onChangeHandler(event)}
+                />
+                <PasswordStrengthMeter onStrengthUpdate={checkStrong} password={form.password} />
+              </div>
               <button
                 type="submit"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
