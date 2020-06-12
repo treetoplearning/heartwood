@@ -40,6 +40,7 @@ const SignUp = () => {
     setForm({ ...form, isLoading: true })
     event.preventDefault()
     try {
+      const { user } = await auth.createUserWithEmailAndPassword(email, password)
       verifyEmail(form.email, "signup")
       setForm({ ...form, message: { text: "Please check your email to complete your signup", type: "success" } })
     } catch (error) {

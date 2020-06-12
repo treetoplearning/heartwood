@@ -5,7 +5,7 @@ module.exports = {
       colors: {
         base: "#38A169",
         bark: "#855D51",
-        ideBase: "263238",
+        ideBase: "#263238",
       },
       fontFamily: {
         base: ["Roboto"],
