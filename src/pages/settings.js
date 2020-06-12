@@ -9,13 +9,11 @@ const Settings = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
 
-  const [form, setForm] = useState({
-    firstName: "",
+  const [form, setForm] = useState({firstName: "",
     lastName: "",
     userName: "",
     dateOfBirth: null,
-    message: null,
-  })
+    message: { text: "", type: "" },})
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -35,28 +33,27 @@ const Settings = () => {
   const updateProfile = () => {
     // update the information in firestore
     try {
-      firestore.collection("users").doc(state.user.uid).update({
-        firstName: form.firstName,
-        lastName: form.lastName,
-        userName: form.userName,
-        dateOfBirth: form.dateOfBirth,
-      })
+      firestore
+        .collection("users")
+        .doc(state.user.uid)
+        .update({firstName: form.firstName,
+          lastName: form.lastName,
+          userName: form.userName,
+          dateOfBirth: form.dateOfBirth,})
 
       // update the user that will be stored in state then save the user
-      const updatedUser = {
-        ...state.user,
+      const updatedUser = {...state.user,
         firstName: form.firstName,
         lastName: form.lastName,
         userName: form.userName,
-        dateOfBirth: form.dateOfBirth,
-      }
+        dateOfBirth: form.dateOfBirth,}
 
       dispatch({ type: "UPDATE", user: updatedUser })
 
       // If successful tell the user
-      setForm({ ...form, message: "Your preferences have been updated" })
+      setForm({ ...form, message: { text: "Your preferences have been updated", type: "success" } })
     } catch (error) {
-      setForm({ ...form, message: error })
+      setForm({ ...form, message: { text: "", type: "" } })
     }
 
     // Hide the successfully sent notification after 3 seconds
@@ -67,14 +64,15 @@ const Settings = () => {
 
   useEffect(() => {
     if (isLoggedIn(state.user)) {
-
       // On load, set all the inputs to the user's current preferences
-      setForm({ ...form, firstName: state.user.firstName, lastName: state.user.lastName, userName: state.user.userName, dateOfBirth: state.user.dateOfBirth })
-     
+      setForm({...form,
+        firstName: state.user.firstName,
+        lastName: state.user.lastName,
+        userName: state.user.userName,
+        dateOfBirth: state.user.dateOfBirth,})
     } else {
-      console.log('not logged in')
+      console.log("not logged in")
     }
-    
   }, [state.user])
 
   return (
@@ -85,10 +83,11 @@ const Settings = () => {
           <div className="pt-8 font-mono">
             <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
               <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
-              {form.message && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-green-600 rounded-lg">
-                  {form.message}
-                </div>
+              {form.message.type === "error" && (
+                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+              )}
+              {form.message.type === "success" && (
+                <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
               )}
 
               <form className="">

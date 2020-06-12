@@ -4,6 +4,7 @@
 
   "rules": {
     "semi": [2, "never"],
-    "function-paren-newline": ["error", "never"]
+    "function-paren-newline": ["error", "never"],
+    "object-curly-newline": ["error", "never"]
   }
 }

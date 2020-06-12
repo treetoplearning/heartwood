@@ -5,12 +5,7 @@ import { navigate } from "gatsby"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
-import {
-  auth,
-  signInWithGoogle,
-  signInWithGitHub,
-  prepareUserInformation,
-} from "../firebase/firebase"
+import { auth, signInWithGoogle, signInWithGitHub, prepareUserInformation } from "../firebase/firebase"
 
 import gear from "../assets/gear.svg"
 
@@ -24,7 +19,7 @@ import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
 library.add(faGoogle, faGithub)
 
 const SignIn = () => {
-  const [form, setForm] = useState({ email: "", password: "", error: null, isLoading: true })
+  const [form, setForm] = useState({ email: "", password: "", message: { text: "", type: "" }, isLoading: true })
 
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
@@ -37,8 +32,9 @@ const SignIn = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => {
-        setForm({ ...form, isLoading: false })
-        setForm({ ...form, error: "Error signing in with password and email" })
+        setForm({...form,
+          isLoading: false,
+          message: { text: "Error signing in with password and email", type: "error" },})
         // set the current logged in user to the returning user
       })
       .then((result) => {
@@ -65,7 +61,8 @@ const SignIn = () => {
 
   const validateInputs = () => {
     if (form.email === "" || form.password === "") {
-      setForm({ ...form, error: "Error signing up with email and password" })
+      setForm({ ...form, message: { text: "Error signing in with password and email", type: "error" } })
+
       return false
     }
     return true
@@ -96,7 +93,7 @@ const SignIn = () => {
       .catch((error) => {
         setForm({ ...form, isLoading: false })
         if (error.code === "auth/account-exists-with-different-credential") {
-          setForm({ ...form, error: "An account already exists under that email address" })
+          setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
         }
       })
   }, [])
@@ -113,10 +110,11 @@ const SignIn = () => {
         {!form.isLoading && (
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
-            {form.error !== null && (
-              <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                {form.error}
-              </div>
+            {form.message.type === "error" && (
+              <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+            )}
+            {form.message.type === "success" && (
+              <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
             )}
             <form className="">
               <label htmlFor="userEmail" className="block">
@@ -162,20 +160,14 @@ const SignIn = () => {
                 signInWithGoogle()
               }}
             >
-              <FontAwesomeIcon
-                icon={faGoogle}
-                className="absolute left-0 ml-3 text-lg align-baseline"
-              />
+              <FontAwesomeIcon icon={faGoogle} className="absolute left-0 ml-3 text-lg align-baseline" />
               <p className="w-full"> Sign in with Google </p>
             </button>
             <button
               className="relative flex items-center w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
               onClick={() => signInWithGitHub()}
             >
-              <FontAwesomeIcon
-                icon={faGithub}
-                className="absolute left-0 ml-3 text-lg align-baseline"
-              />
+              <FontAwesomeIcon icon={faGithub} className="absolute left-0 ml-3 text-lg align-baseline" />
               <p className="w-full"> Sign in with GitHub </p>
             </button>
             <p className="my-3 text-center">

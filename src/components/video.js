@@ -4,13 +4,7 @@ import axios from "axios"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
-import {
-  faTv,
-  faMicrophone,
-  faMicrophoneSlash,
-  faPhoneAlt,
-  faPhoneSlash,
-} from "@fortawesome/free-solid-svg-icons"
+import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from "@fortawesome/free-solid-svg-icons"
 
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
@@ -74,7 +68,8 @@ const Video = () => {
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
       .then((res) => res.data)
       .then((data) =>
-        connect(data, { name: "Treetop-Testing" }).then((room) => {
+        connect(data, { name: "Treetop-Testing" }).then(
+          (room) => {
             // Store the room for future reference.
             setRoom(room)
 
@@ -162,7 +157,9 @@ const Video = () => {
           },
           (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
-          }))
+          }
+        )
+      )
   }
 
   return (

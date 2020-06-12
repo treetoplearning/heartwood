@@ -20,9 +20,7 @@ const VideoIcon = ({ icon, alert, action, onCall }) => {
   )
 }
 
-VideoIcon.propTypes = {
-  alert: PropTypes.bool,
-  onCall: PropTypes.bool,
-}
+VideoIcon.propTypes = {alert: PropTypes.bool,
+  onCall: PropTypes.bool,}
 
 export default VideoIcon

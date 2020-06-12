@@ -28,42 +28,30 @@ const getCookie = (name) => {
   return null
 }
 
-const initialState = {
-  ideBody: '# code here\nprint("Hello Jacob")',
+const initialState = {ideBody: '# code here\nprint("Hello Jacob")',
   termBuff: "",
-  user: null,
-}
+  user: null,}
 
 function reducer(state, action) {
   switch (action.type) {
     case "COMPILE":
       action.cb(state.ideBody)
-      return {
-        ...state,
-      }
+      return {...state,}
     case "WRITE_IDE":
-      return {
-        ...state,
-        ideBody: action.body,
-      }
+      return {...state,
+        ideBody: action.body,}
     case "LOGIN":
       // signin cookie is only set when signup is complete
       setCookie("idt", action.idt, 2)
-      return {
-        ...state,
-        user: action.user,
-      }
+      return {...state,
+        user: action.user,}
     case "UPDATE":
-      return {
-        ...state,
-        user: action.user,
-      }
+      return {...state,
+        user: action.user,}
     case "LOGOUT":
       setCookie("idt", "", -1)
-      return {
-        ...state,
-        user: null,
-      }
+      return {...state,
+        user: null,}
     default:
       throw new Error("Bad Action Type")
   }
@@ -77,11 +65,9 @@ const HeartwoodContextProvider = ({ children }) => {
     if (getCookie("idt")) {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
-        fetch("https://10.0.1.26:8080/verify", {
-          method: "POST",
+        fetch("https://10.0.1.26:8080/verify", {method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idt: getCookie("idt") }),
-        })
+          body: JSON.stringify({ idt: getCookie("idt") }),})
           .then((res) => res.json())
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then(function (res) {
@@ -90,7 +76,7 @@ const HeartwoodContextProvider = ({ children }) => {
               })
             })
           })
-      } 
+      }
     } else {
       if (!state.user) {
         navigate("/signin")
@@ -100,9 +86,7 @@ const HeartwoodContextProvider = ({ children }) => {
 
   return (
     <HeartwoodStateContext.Provider value={state}>
-      <HeartwoodDispatchContext.Provider value={dispatch}>
-        {children}
-      </HeartwoodDispatchContext.Provider>
+      <HeartwoodDispatchContext.Provider value={dispatch}>{children}</HeartwoodDispatchContext.Provider>
     </HeartwoodStateContext.Provider>
   )
 }

@@ -4,7 +4,7 @@ import { Link } from "@reach/router"
 import { auth } from "../firebase/firebase"
 
 const PasswordReset = () => {
-  const [form, setForm] = useState({ email: "", emailHasBeenSent: false, error: null })
+  const [form, setForm] = useState({ email: "", message: { text: "", status: "" } })
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -17,18 +17,25 @@ const PasswordReset = () => {
     setForm({ ...form, error: null })
     event.preventDefault()
     auth
-      .sendPasswordResetEmail(email)
+      .sendPasswordResetEmail(form.email)
       .then(() => {
         // notify user of successfully sent
-        setForm({ ...form, setEmailHasBeenSent: true })
+        setForm({ ...form, message: { text: "Password reset instructions have been emailed", type: "success" } })
 
         // hide the successfully sent notification after 4 seconds
         setTimeout(() => {
-          setForm({ ...form, setEmailHasBeenSent: false })
+          setForm({ ...form, message: { text: "", type: "" } })
         }, 4000)
       })
-      .catch(() => {
-        setForm({ ...form, error: "Error resetting password" })
+      .catch((error) => {
+        console.log(error)
+        if (error.code === "auth/invalid-email") {
+          setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
+        } else if (error.code === "auth/user-not-found") {
+          setForm({ ...form, message: { text: "Email address is not in use", type: "error" } })
+        } else {
+          setForm({ ...form, message: { text: "Error resetting password", type: "error" } })
+        }
       })
   }
 
@@ -39,15 +46,11 @@ const PasswordReset = () => {
           <h1 className="pt-4 text-3xl font-bold text-center">Reset your Password</h1>
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
-              {form.emailHasBeenSent && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-green-500 rounded-lg">
-                  An email has been sent to you!
-                </div>
+              {form.message.type === "error" && (
+                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
               )}
-              {form.error !== null && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                  {form.error}
-                </div>
+              {form.message.type === "success" && (
+                <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
               )}
               <label htmlFor="userEmail" className="block w-full">
                 Email:

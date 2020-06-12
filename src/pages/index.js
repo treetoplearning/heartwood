@@ -14,18 +14,12 @@ const IndexPage = () => {
     <div className="flex flex-col w-full h-auto h-screen pb-40 bg-base">
       {signUpComplete(state.user) ? (
         <>
-     
           <Navbar />
-     
+
           <Link to="learn" className="font-mono text-3xl text-center text-white underline ">
             {" "}
             Head to your lesson{" "}
           </Link>
-
-
-
-          
-          
         </>
       ) : (
         isLoggedIn(state.user) && <CollectInfo />

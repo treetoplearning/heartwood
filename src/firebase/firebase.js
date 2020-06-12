@@ -29,12 +29,10 @@ export const generateUserDocument = async (user, additionalData) => {
   if (!snapshot.exists) {
     var { email, displayName, photoURL } = user
     try {
-      await userRef.set({
-        displayName,
+      await userRef.set({displayName,
         email,
         photoURL,
-        ...additionalData,
-      })
+        ...additionalData,})
     } catch (error) {
       console.error("Error creating user document", error)
     }
@@ -47,33 +45,31 @@ export const getCurrentUser = () => {
 }
 
 export const verifyEmail = (email, page) => {
-
   // directions for how to send the email verification
   const actionCodeSettings = {
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
-    url: 'https://10.0.1.26:8000/' + page,
+    url: "https://10.0.1.26:8000/" + page,
     // This must be true.
     handleCodeInApp: true,
-    
+
     // dynamicLinkDomain: 'example.page.link'
   }
 
-  firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings)
-  .then(function() {
-    // The link was successfully sent. Inform the user.
-    // Save the email locally so you don't need to ask the user for it again
-    // if they open the link on the same device.
-    console.log('verification successfully sent')
-    window.localStorage.setItem('emailForSignIn', email)
-  })
-  .catch(function(error) {
-
-    console.log('error in sending email verification')
-    console.log('the error is', error)
-  })
-
-  
+  firebase
+    .auth()
+    .sendSignInLinkToEmail(email, actionCodeSettings)
+    .then(function () {
+      // The link was successfully sent. Inform the user.
+      // Save the email locally so you don't need to ask the user for it again
+      // if they open the link on the same device.
+      console.log("verification successfully sent")
+      window.localStorage.setItem("emailForSignIn", email)
+    })
+    .catch(function (error) {
+      console.log("error in sending email verification")
+      console.log("the error is", error)
+    })
 }
 
 export const prepareUserInformation = async (user) => {
@@ -82,15 +78,13 @@ export const prepareUserInformation = async (user) => {
 
   if (signUpComplete(res)) {
     // update the user that will be stored in state
-    const returningUser = {
-      ...user,
+    const returningUser = {...user,
       firstName: res.firstName,
       lastName: res.lastName,
       userName: res.userName,
       dateOfBirth: res.dateOfBirth,
       email: res.email,
-      photoURL: res.photoURL,
-    }
+      photoURL: res.photoURL,}
 
     return returningUser
   } else {
@@ -108,26 +102,22 @@ export const prepareUserInformation = async (user) => {
     }
 
     // generate a document with blanks to be filled
-    await generateUserDocument(user, {
-      userName: "",
+    await generateUserDocument(user, {userName: "",
       firstName: firstName,
       lastName: lastName,
       dateOfBirth: "",
       email: user.email,
       photoURL:
-        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
-    })
+        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",})
 
-    const editedUser = {
-      ...user,
+    const editedUser = {...user,
       firstName: firstName,
       lastName: lastName,
       userName: "",
       dateOfBirth: "",
       email: user.email,
       photoURL:
-        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",
-    }
+        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60",}
 
     return editedUser
   }
@@ -138,10 +128,8 @@ const getUserDocument = async (uid) => {
   if (!uid) return null
   try {
     const userDocument = await firestore.doc(`users/${uid}`).get()
-    return {
-      uid,
-      ...userDocument.data(),
-    }
+    return {uid,
+      ...userDocument.data(),}
   } catch (error) {
     console.error("Error fetching user", error)
   }

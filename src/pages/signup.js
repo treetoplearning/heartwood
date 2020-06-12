@@ -11,14 +11,12 @@ import gear from "../assets/gear.svg"
 import PasswordStrengthMeter from "../components/passwordstrengthmeter"
 
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
-import {
-  auth,
+import {auth,
   signInWithGoogle,
   signInWithGitHub,
   prepareUserInformation,
   getCurrentUser,
-  verifyEmail,
-} from "../firebase/firebase"
+  verifyEmail,} from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
@@ -29,13 +27,11 @@ const SignUp = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  const [form, setForm] = useState({
-    email: "",
+  const [form, setForm] = useState({email: "",
     password: "",
-    error: null,
+    message: { text: "", type: "" },
     passwordStrong: false,
-    isLoading: true,
-  })
+    isLoading: true,})
 
   // generate a new document for a new user
   const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
@@ -44,23 +40,24 @@ const SignUp = () => {
     setForm({ ...form, isLoading: true })
     event.preventDefault()
     try {
-     
       const { user } = await auth.createUserWithEmailAndPassword(email, password)
 
       verifyEmail(form.email, "signup")
-      setForm({ ...form, isLoading: false, error: "Please check your email to complete your signin" })
+      setForm({...form,
+        isLoading: false,
+        message: { text: "Please check your email to complete your signin", type: "success" },})
     } catch (error) {
       setForm({ ...form, isLoading: false })
 
       // handle and display the various errors to the user
       if (error.code === "auth/account-exists-with-different-credential") {
-        setForm({ ...form, error: "An account already exists under that email address" })
+        setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
       } else if (error.code === "auth/email-already-in-use") {
-        setForm({ ...form, error: "Email address is already in use by another account" })
+        setForm({ ...form, message: { text: "Email address is already in use by another account", type: "error" } })
       } else if (error.code === "auth/invalid-email") {
-        setForm({ ...form, error: "Email address is badly formatted" })
+        setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
       } else {
-        setForm({ ...form, error: error.message })
+        setForm({ ...form, message: { text: error.message, type: "error" } })
       }
     }
   }
@@ -85,11 +82,11 @@ const SignUp = () => {
   // checks that all user inputs are not empty
   const validateInputs = () => {
     if (!form.passwordStrong) {
-      setForm({ ...form, error: "Please select a more complex password" })
+      setForm({ ...form, message: { text: "Please select a more complex password", type: "error" } })
       return false
     }
     if (form.email === "" || form.password === "") {
-      setForm({ ...form, error: "Error signing up with email and password" })
+      setForm({ ...form, message: { text: "Error signing up with email and password", type: "error" } })
       return false
     }
     return true
@@ -153,7 +150,7 @@ const SignUp = () => {
       .catch((error) => {
         setForm({ ...form, isLoading: false })
         if (error.code === "auth/account-exists-with-different-credential") {
-          setForm({ ...form, error: "An account already exists under that email address" })
+          setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
         }
       })
   }, [])
@@ -172,10 +169,11 @@ const SignUp = () => {
         <div className="pt-24 font-mono">
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-1/2 md:w-3/4 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
-            {form.error !== null && (
-              <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                {form.error}
-              </div>
+            {form.message.type === "error" && (
+              <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+            )}
+            {form.message.type === "success" && (
+              <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
             )}
             <form className="">
               <label htmlFor="userEmail" className="block">
@@ -219,20 +217,14 @@ const SignUp = () => {
               className="relative flex items-center w-full py-2 text-white transition duration-100 ease-in-out bg-blue-500 rounded-md focus:shadow-outline-red hover:bg-blue-600"
               onClick={() => signInWithGoogle()}
             >
-              <FontAwesomeIcon
-                icon={faGoogle}
-                className="absolute left-0 ml-3 text-lg align-baseline"
-              />
+              <FontAwesomeIcon icon={faGoogle} className="absolute left-0 ml-3 text-lg align-baseline" />
               <p className="w-full"> Sign up with Google </p>
             </button>
             <button
               className="relative flex items-center w-full py-2 mt-2 text-white transition duration-100 ease-in-out bg-black rounded-md focus:shadow-outline-red hover:bg-gray-800"
               onClick={() => signInWithGitHub()}
             >
-              <FontAwesomeIcon
-                icon={faGithub}
-                className="absolute left-0 ml-3 text-lg align-baseline"
-              />
+              <FontAwesomeIcon icon={faGithub} className="absolute left-0 ml-3 text-lg align-baseline" />
               <p className="w-full"> Sign up with GitHub </p>
             </button>
             <p className="my-3 text-center">

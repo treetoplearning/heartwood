@@ -19,7 +19,7 @@ const Navbar = () => {
 
   function logOutAndClearState() {
     signOut()
-    dispatch({ type: "LOGOUT"})
+    dispatch({ type: "LOGOUT" })
   }
 
   useEffect(() => {
@@ -43,40 +43,22 @@ const Navbar = () => {
               {/* <!-- Icon when menu is closed. -->
           <!-- Menu open: "hidden", Menu closed: "block" --> */}
               <svg className="block w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
               {/* <!-- Icon when menu is open. -->
           <!-- Menu open: "block", Menu closed: "hidden" --> */}
               <svg className="hidden w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
           <div className="flex items-center justify-center flex-1 sm:items-stretch sm:justify-start">
             <div className="flex-shrink-0">
               <Link to="/">
-                <img
-                  className="block w-auto h-8 p-1 bg-white rounded-full lg:hidden"
-                  src={logo}
-                  alt=""
-                />
+                <img className="block w-auto h-8 p-1 bg-white rounded-full lg:hidden" src={logo} alt="" />
               </Link>
               <Link to="/">
-                <img
-                  className="hidden w-auto h-8 p-1 bg-white rounded-full lg:block"
-                  src={logo}
-                  alt=""
-                />
+                <img className="hidden w-auto h-8 p-1 bg-white rounded-full lg:block" src={logo} alt="" />
               </Link>
             </div>
             <div className="hidden sm:block sm:ml-6">

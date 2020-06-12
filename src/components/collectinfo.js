@@ -8,13 +8,11 @@ const CollectInfo = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
 
-  const [form, setForm] = useState({
-    firstName: "",
+  const [form, setForm] = useState({firstName: "",
     lastName: "",
     userName: "",
     dateOfBirth: "",
-    message: null,
-  })
+    message: { text: "", type: "" },})
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -34,41 +32,36 @@ const CollectInfo = () => {
   const updateProfile = () => {
     // update the information in firestore
     try {
-      firestore.collection("users").doc(state.user.uid).update({
-        firstName: form.firstName,
+      firestore.collection("users").doc(state.user.uid).update({firstName: form.firstName,
         lastName: form.lastName,
         userName: form.userName,
-        dateOfBirth: form.dateOfBirth,
-      })
+        dateOfBirth: form.dateOfBirth,})
 
       // update the user that will be stored in state then save the user
-      const updatedUser = {
-        ...state.user,
+      const updatedUser = {...state.user,
         firstName: form.firstName,
         lastName: form.lastName,
         userName: form.userName,
-        dateOfBirth: form.dateOfBirth,
-      }
+        dateOfBirth: form.dateOfBirth,}
 
       dispatch({ type: "UPDATE", user: updatedUser })
     } catch (error) {
-      setForm({ ...form, error: error })
+      setForm({...form,
+        message: { text: error, type: "error" },})
     }
 
     // Hide the successfully sent notification after 3 seconds
     setTimeout(() => {
       setForm({ ...form, message: null })
+      setForm({...form,
+        message: { text: "", type: "" },})
     }, 3000)
   }
 
   const validateInputs = () => {
-    if (
-      form.firstName === "" ||
-      form.lastName === "" ||
-      form.userName === "" ||
-      form.dateOfBirth === ""
-    ) {
-      setForm({ ...form, message: "Please fill out all required fields" })
+    if (form.firstName === "" || form.lastName === "" || form.userName === "" || form.dateOfBirth === "") {
+      setForm({...form,
+        message: { text: "Please fill out all required fields", type: "error" },})
       return false
     }
     return true
@@ -83,13 +76,11 @@ const CollectInfo = () => {
   useEffect(() => {
     if (isLoggedIn(state.user)) {
       // On load, set all the inputs to the user's current preferences
-      setForm({
-        ...form,
+      setForm({...form,
         firstName: state.user.firstName,
         lastName: state.user.lastName,
         userName: state.user.userName,
-        dateOfBirth: state.user.dateOfBirth,
-      })
+        dateOfBirth: state.user.dateOfBirth,})
     }
   }, [state.user])
 
@@ -98,10 +89,11 @@ const CollectInfo = () => {
       <div className="pt-24 font-mono">
         <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
           <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Additional Information</h1>
-          {form.message && (
-            <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-              {form.message}
-            </div>
+          {form.message.type === "error" && (
+            <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+          )}
+          {form.message.type === "success" && (
+            <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
           )}
           <h1 className="w-full py-4 mb-3 text-center ">
             Welcome to Treetop Learning! Before continuing we need a little bit more information...
