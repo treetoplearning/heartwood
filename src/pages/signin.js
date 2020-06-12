@@ -34,7 +34,7 @@ const SignIn = () => {
       .catch((error) => {
         setForm({...form,
           isLoading: false,
-          message: { text: "Error signing in with password and email", type: "error" },})
+          message: { text: "Error signing in with password and email", type: "error" }})
         // set the current logged in user to the returning user
       })
       .then((result) => {

@@ -13,7 +13,7 @@ const Settings = () => {
     lastName: "",
     userName: "",
     dateOfBirth: null,
-    message: { text: "", type: "" },})
+    message: { text: "", type: "" }})
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -39,14 +39,14 @@ const Settings = () => {
         .update({firstName: form.firstName,
           lastName: form.lastName,
           userName: form.userName,
-          dateOfBirth: form.dateOfBirth,})
+          dateOfBirth: form.dateOfBirth})
 
       // update the user that will be stored in state then save the user
       const updatedUser = {...state.user,
         firstName: form.firstName,
         lastName: form.lastName,
         userName: form.userName,
-        dateOfBirth: form.dateOfBirth,}
+        dateOfBirth: form.dateOfBirth}
 
       dispatch({ type: "UPDATE", user: updatedUser })
 
@@ -69,7 +69,7 @@ const Settings = () => {
         firstName: state.user.firstName,
         lastName: state.user.lastName,
         userName: state.user.userName,
-        dateOfBirth: state.user.dateOfBirth,})
+        dateOfBirth: state.user.dateOfBirth})
     } else {
       console.log("not logged in")
     }

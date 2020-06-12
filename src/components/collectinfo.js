@@ -12,7 +12,7 @@ const CollectInfo = () => {
     lastName: "",
     userName: "",
     dateOfBirth: "",
-    message: { text: "", type: "" },})
+    message: { text: "", type: "" }})
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
@@ -32,36 +32,36 @@ const CollectInfo = () => {
   const updateProfile = () => {
     // update the information in firestore
     try {
-      firestore.collection("users").doc(state.user.uid).update({firstName: form.firstName,
-        lastName: form.lastName,
-        userName: form.userName,
-        dateOfBirth: form.dateOfBirth,})
+      firestore
+        .collection("users")
+        .doc(state.user.uid)
+        .update({firstName: form.firstName,
+          lastName: form.lastName,
+          userName: form.userName,
+          dateOfBirth: form.dateOfBirth})
 
       // update the user that will be stored in state then save the user
       const updatedUser = {...state.user,
         firstName: form.firstName,
         lastName: form.lastName,
         userName: form.userName,
-        dateOfBirth: form.dateOfBirth,}
+        dateOfBirth: form.dateOfBirth}
 
       dispatch({ type: "UPDATE", user: updatedUser })
     } catch (error) {
-      setForm({...form,
-        message: { text: error, type: "error" },})
+      setForm({ ...form, message: { text: error, type: "error" } })
     }
 
     // Hide the successfully sent notification after 3 seconds
     setTimeout(() => {
       setForm({ ...form, message: null })
-      setForm({...form,
-        message: { text: "", type: "" },})
+      setForm({ ...form, message: { text: "", type: "" } })
     }, 3000)
   }
 
   const validateInputs = () => {
     if (form.firstName === "" || form.lastName === "" || form.userName === "" || form.dateOfBirth === "") {
-      setForm({...form,
-        message: { text: "Please fill out all required fields", type: "error" },})
+      setForm({ ...form, message: { text: "Please fill out all required fields", type: "error" } })
       return false
     }
     return true
@@ -80,7 +80,7 @@ const CollectInfo = () => {
         firstName: state.user.firstName,
         lastName: state.user.lastName,
         userName: state.user.userName,
-        dateOfBirth: state.user.dateOfBirth,})
+        dateOfBirth: state.user.dateOfBirth})
     }
   }, [state.user])
 

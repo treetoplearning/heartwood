@@ -16,7 +16,7 @@ import {auth,
   signInWithGitHub,
   prepareUserInformation,
   getCurrentUser,
-  verifyEmail,} from "../firebase/firebase"
+  verifyEmail} from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
@@ -31,7 +31,7 @@ const SignUp = () => {
     password: "",
     message: { text: "", type: "" },
     passwordStrong: false,
-    isLoading: true,})
+    isLoading: true})
 
   // generate a new document for a new user
   const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
@@ -40,12 +40,8 @@ const SignUp = () => {
     setForm({ ...form, isLoading: true })
     event.preventDefault()
     try {
-      const { user } = await auth.createUserWithEmailAndPassword(email, password)
-
       verifyEmail(form.email, "signup")
-      setForm({...form,
-        isLoading: false,
-        message: { text: "Please check your email to complete your signin", type: "success" },})
+      setForm({ ...form, message: { text: "Please check your email to complete your signup", type: "success" } })
     } catch (error) {
       setForm({ ...form, isLoading: false })
 
@@ -115,6 +111,7 @@ const SignUp = () => {
       auth
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
+          setForm({ ...form, isLoading: true })
           // Clear email from storage.
           window.localStorage.removeItem("emailForSignIn")
 
@@ -127,10 +124,12 @@ const SignUp = () => {
               })
           })
         })
-        .catch(function (error) {
+        .catch(error => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
         })
+    } else {
+      setForm({ ...form, isLoading: false })
     }
 
     auth
@@ -143,9 +142,8 @@ const SignUp = () => {
               navigate("/")
             })
           })
-        } else {
-          setForm({ ...form, isLoading: false })
-        }
+        } 
+        
       })
       .catch((error) => {
         setForm({ ...form, isLoading: false })

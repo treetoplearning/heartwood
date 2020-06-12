@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react"
 import Navbar from "../components/navbar"
-import { navigate, Link } from "gatsby"
+import { Link } from "gatsby"
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import { isLoggedIn, signUpComplete } from "../utils/utils"
 
