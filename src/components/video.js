@@ -57,19 +57,16 @@ const Video = () => {
   function call() {
     const getParticipantToken = async ({ identity, room, participants }) => {
       // const params = new URLSearchParams();
-      const result = await axios({
-        method: "POST",
-        url: "https://10.0.1.26:8080/token",
-        data: { identity, room, participants },
-      })
+      const result = await axios({method: "POST",
+        url: "http://localhost:5000/token",
+        data: { identity, room, participants }})
       return result
     }
 
     getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
       .then((res) => res.data)
       .then((data) =>
-        connect(data, { name: "Treetop-Testing" }).then(
-          (room) => {
+        connect(data, { name: "Treetop-Testing" }).then((room) => {
             // Store the room for future reference.
             setRoom(room)
 
@@ -157,9 +154,7 @@ const Video = () => {
           },
           (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
-          }
-        )
-      )
+          }))
   }
 
   return (

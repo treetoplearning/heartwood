@@ -43,8 +43,7 @@ function PasswordStrengthMeter({ password, onStrengthUpdate }) {
   return (
     <div className="flex flex-col w-full mb-3">
       <progress
-        style={{ backgroundColor: "light-gray" }}
-        className={`w-full rounded-lg focus:rounded-lg password-strength-meter-progress strength-${createPasswordLabel(score.current)}`}
+        className={`w-full  password-strength-meter-progress rounded-sm strength-${createPasswordLabel(score.current)}`}
         value={score.current}
         default={0}
         max="4"

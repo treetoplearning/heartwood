@@ -80,7 +80,7 @@ const SignIn = () => {
       .getRedirectResult()
       .then((result) => {
         if (result.user) {
-          prepareUserInformation(result.user).then(function (res) {
+          prepareUserInformation(result.user).then(res => {
             result.user.getIdToken().then((idToken) => {
               dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")

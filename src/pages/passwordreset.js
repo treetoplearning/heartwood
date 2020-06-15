@@ -60,7 +60,7 @@ const PasswordReset = () => {
                 name="userEmail"
                 id="userEmail"
                 value={form.email}
-                placeholder="Input your email"
+                placeholder="treetoplearner@gmail.com"
                 onChange={onChangeHandler}
                 className="w-full px-1 py-2 mb-3"
               />

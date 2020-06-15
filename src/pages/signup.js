@@ -31,7 +31,8 @@ const SignUp = () => {
     password: "",
     message: { text: "", type: "" },
     passwordStrong: false,
-    isLoading: true})
+    isLoading: true,
+    onVerifyLink: false})
 
   // generate a new document for a new user
   const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
@@ -98,8 +99,14 @@ const SignUp = () => {
 
   // the provider sign-in
   useEffect(() => {
+
+    // The user will either sign-in with email-link or with provider. Check each conditionally.
+
     // Confirm the link is a sign-in with email link.
     if (auth.isSignInWithEmailLink(window.location.href)) {
+      setForm({ ...form, onVerifyLink: true })
+      console.log("setting onVerifyLink")
+
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
       let email = window.localStorage.getItem("emailForSignIn")
@@ -112,7 +119,6 @@ const SignUp = () => {
       auth
         .signInWithEmailLink(email, window.location.href)
         .then((result) => {
-          setForm({ ...form, isLoading: true })
           // Clear email from storage.
           window.localStorage.removeItem("emailForSignIn")
 
@@ -130,27 +136,33 @@ const SignUp = () => {
           // Common errors could be invalid email and invalid or expired OTPs.
         })
     } else {
-      setForm({ ...form, isLoading: false })
-    }
-
-    auth
-      .getRedirectResult()
-      .then((result) => {
-        if (result.user) {
-          prepareUserInformation(result.user).then((res) => {
-            res.getIdToken().then((idToken) => {
-              dispatch({ type: "LOGIN", user: res, idt: idToken })
-              navigate("/")
+      auth
+        .getRedirectResult()
+        .then((result) => {
+          if (result.user) {
+            prepareUserInformation(result.user).then((res) => {
+              getCurrentUser()
+                .getIdToken()
+                .then((idToken) => {
+                  dispatch({ type: "LOGIN", user: res, idt: idToken })
+                  navigate("/")
+                })
             })
-          })
-        }
-      })
-      .catch((error) => {
-        setForm({ ...form, isLoading: false })
-        if (error.code === "auth/account-exists-with-different-credential") {
-          setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
-        }
-      })
+          } else {
+            // only get rid of the spinner if a provider AND a verify email link sign-in are not being attempted
+            if (!form.onVerifyLink) {
+              console.log("setting isLoading to false")
+              setForm({ ...form, isLoading: false })
+            }
+          }
+        })
+        .catch((error) => {
+          setForm({ ...form, isLoading: false })
+          if (error.code === "auth/account-exists-with-different-credential") {
+            setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
+          }
+        })
+    }
   }, [])
 
   return (

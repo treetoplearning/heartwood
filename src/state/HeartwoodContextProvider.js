@@ -59,7 +59,8 @@ const HeartwoodContextProvider = ({ children }) => {
     if (getCookie("idt")) {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
-        fetch("https://10.0.1.26:8080/verify", {method: "POST",
+        // https://10.0.1.26:8080/verify
+        fetch("http://localhost:5000/verify", {method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idt: getCookie("idt") })})
           .then((res) => res.json())
@@ -70,6 +71,7 @@ const HeartwoodContextProvider = ({ children }) => {
               })
             })
           })
+          .catch((err) => {console.log(err)})
       }
     } else {
       if (!state.user) {
