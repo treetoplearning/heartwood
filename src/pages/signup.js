@@ -122,10 +122,13 @@ const SignUp = () => {
           // Clear email from storage.
           window.localStorage.removeItem("emailForSignIn")
 
+      
+
           prepareUserInformation(result.user).then((res) => {
             getCurrentUser()
               .getIdToken()
               .then((idToken) => {
+                console.log('success getting id token')
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
                 navigate("/")
               })
@@ -134,6 +137,7 @@ const SignUp = () => {
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
+          console.log('error signing in with emailLink', error)
         })
     } else {
       auth

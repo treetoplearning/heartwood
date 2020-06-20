@@ -75,7 +75,12 @@ const HeartwoodContextProvider = ({ children }) => {
       }
     } else {
       if (!state.user) {
-        navigate("/signup")
+
+        // catch the case where the user is redirected back to signup from the email verification
+        let email = window.localStorage.getItem("emailForSignIn")
+        if (!email) {
+          navigate("/signin")
+        }
       }
     }
   }, [state.user])
