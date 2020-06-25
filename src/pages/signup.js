@@ -34,14 +34,12 @@ const SignUp = () => {
     isLoading: true,
     onVerifyLink: false})
 
-  // generate a new document for a new user
-  const createUserWithEmailAndPasswordHandler = async (event, email, password) => {
-    // if the user has attempted every input
-
+  // Generate a new document for a new user
+  const sendUserVerificationEmail = (event) => {
     setForm({ ...form, isLoading: true })
     event.preventDefault()
     try {
-      const { user } = await auth.createUserWithEmailAndPassword(email, password)
+      // Send the verification email and tell the user to check their inbox
       verifyEmail(form.email, "signup")
       setForm({ ...form, message: { text: "Please check your email to complete your signup", type: "success" } })
     } catch (error) {
@@ -55,7 +53,7 @@ const SignUp = () => {
       } else if (error.code === "auth/invalid-email") {
         setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
       } else {
-        setForm({ ...form, message: { text: error.message, type: "error" } })
+        setForm({ ...form, message: { text: "Error signing up with email and password", type: "error" } })
       }
     }
   }
@@ -93,13 +91,12 @@ const SignUp = () => {
   const submitForm = (event) => {
     event.preventDefault()
     if (validateInputs()) {
-      createUserWithEmailAndPasswordHandler(event, form.email, form.password)
+      sendUserVerificationEmail(event)
     }
   }
 
   // the provider sign-in
   useEffect(() => {
-
     // The user will either sign-in with email-link or with provider. Check each conditionally.
 
     // Confirm the link is a sign-in with email link.
@@ -122,13 +119,11 @@ const SignUp = () => {
           // Clear email from storage.
           window.localStorage.removeItem("emailForSignIn")
 
-      
-
           prepareUserInformation(result.user).then((res) => {
             getCurrentUser()
               .getIdToken()
               .then((idToken) => {
-                console.log('success getting id token')
+                console.log("success getting id token")
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
                 navigate("/")
               })
@@ -137,7 +132,7 @@ const SignUp = () => {
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
-          console.log('error signing in with emailLink', error)
+          console.log("error signing in with emailLink", error)
         })
     } else {
       auth

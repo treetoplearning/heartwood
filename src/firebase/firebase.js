@@ -38,17 +38,18 @@ export const generateUserDocument = async (user, additionalData) => {
 }
 
 export const getCurrentUser = () => {
+  console.log('the current user is', firebase.auth().currentUser)
   return firebase.auth().currentUser
+
+  
+  
 }
 
 export const verifyEmail = (email, page) => {
   // directions for how to send the email verification
   const actionCodeSettings = {url: "https://10.0.1.26:8000/" + page,
     // This must be true.
-    handleCodeInApp: true
-
-    // dynamicLinkDomain: 'example.page.link'
-  }
+    handleCodeInApp: true}
 
   firebase
     .auth()
@@ -82,7 +83,6 @@ export const prepareUserInformation = async (user) => {
   } else {
     // the account does not exist (sign up)
 
-    let displayName = ""
     let firstName = ""
     let lastName = ""
 

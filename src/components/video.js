@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import axios from "axios"
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -6,9 +6,15 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from "@fortawesome/free-solid-svg-icons"
 
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
+
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
+
+  const state = useContext(HeartwoodStateContext)
+  const dispatch = useContext(HeartwoodDispatchContext)
+  
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
   useEffect(() => {}, [])
@@ -63,7 +69,7 @@ const Video = () => {
       return result
     }
 
-    getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
+    getParticipantToken({ identity: state.user.uid, room: "Treetop-Testing" })
       .then((res) => res.data)
       .then((data) =>
         connect(data, { name: "Treetop-Testing" }).then((room) => {
@@ -160,6 +166,7 @@ const Video = () => {
   return (
     <div className="relative flex flex-col w-full h-full text-md">
       <div className="">
+       
         {remote && <div id="remote-media-div" className="z-0"></div>}
 
         {local && <div id="local-media" className="z-0"></div>}
@@ -171,6 +178,7 @@ const Video = () => {
             className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
             onClick={() => toggleMute()}
           >
+         
             <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
           </button>
         )}

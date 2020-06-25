@@ -77,92 +77,88 @@ const Settings = () => {
 
   return (
     <div className="w-screen min-h-screen bg-base">
-      {isLoggedIn(state.user) && (
-        <>
-          <Navbar />
-          <div className="pt-8 font-mono">
-            <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
-              <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
-              {form.message.type === "error" && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
-              )}
-              {form.message.type === "success" && (
-                <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
-              )}
+      <Navbar />
+      <div className="pt-8 font-mono">
+        <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
+          <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
+          {form.message.type === "error" && (
+            <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+          )}
+          {form.message.type === "success" && (
+            <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
+          )}
 
-              <form className="">
-                <div className="mb-4">
-                  <label htmlFor="userFirstName" className="block mb-1 font-bold">
-                    First name:
-                  </label>
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    name="userFirstName"
-                    id="userFirstName"
-                    value={form.firstName}
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="userLastName" className="block mb-1 font-semibold">
-                    Last name:
-                  </label>
-
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    name="userLastName"
-                    id="userLastName"
-                    value={form.lastName}
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label htmlFor="userName" className="block mb-1 font-semibold">
-                    Username:
-                  </label>
-
-                  <input
-                    type="text"
-                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    name="userName"
-                    id="userName"
-                    value={form.userName}
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                </div>
-
-                <div className="mb-10">
-                  <label htmlFor="dateOfBirth" className="block mb-1 font-semibold">
-                    Date of birth:
-                  </label>
-
-                  <input
-                    required
-                    type="date"
-                    className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-                    name="dateOfBirth"
-                    id="dateOfBirth"
-                    value={form.dateOfBirth}
-                    onChange={(event) => onChangeHandler(event)}
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                  onClick={() => updateProfile()}
-                >
-                  Update Settings
-                </button>
-              </form>
+          <form className="">
+            <div className="mb-4">
+              <label htmlFor="userFirstName" className="block mb-1 font-bold">
+                First name:
+              </label>
+              <input
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userFirstName"
+                id="userFirstName"
+                value={form.firstName}
+                onChange={(event) => onChangeHandler(event)}
+              />
             </div>
-          </div>
-        </>
-      )}
+
+            <div className="mb-4">
+              <label htmlFor="userLastName" className="block mb-1 font-semibold">
+                Last name:
+              </label>
+
+              <input
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userLastName"
+                id="userLastName"
+                value={form.lastName}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="userName" className="block mb-1 font-semibold">
+                Username:
+              </label>
+
+              <input
+                type="text"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="userName"
+                id="userName"
+                value={form.userName}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
+
+            <div className="mb-10">
+              <label htmlFor="dateOfBirth" className="block mb-1 font-semibold">
+                Date of birth:
+              </label>
+
+              <input
+                required
+                type="date"
+                className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+                name="dateOfBirth"
+                id="dateOfBirth"
+                value={form.dateOfBirth}
+                onChange={(event) => onChangeHandler(event)}
+              />
+            </div>
+
+            <button
+              type="button"
+              className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
+              onClick={() => updateProfile()}
+            >
+              Update Settings
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   )
 }
