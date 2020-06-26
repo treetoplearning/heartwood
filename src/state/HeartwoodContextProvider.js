@@ -54,20 +54,9 @@ function reducer(state, action) {
 const HeartwoodContextProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(reducer, initialState)
 
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      console.log('user is signed in')
-    } else {
-      console.log('user is NOT signed in')
-    }
-  })
-  
-
   useEffect(() => {
     const fb = require("../firebase/firebase")
     if (getCookie("idt")) {
-
-      console.log("cookie exists", getCookie("idt"))
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
         // https://10.0.1.26:8080/verify
@@ -76,27 +65,24 @@ const HeartwoodContextProvider = ({ children }) => {
           body: JSON.stringify({ idt: getCookie("idt") })})
           .then((res) => res.json())
           .then((res) => {
-           
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
-              console.log('the res is', res)
-              console.log('fb auth is', fb.auth)
               fb.auth.currentUser.getIdToken().then((idToken) => {
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
-                console.log('dispatching')
               })
             })
           })
-          .catch((err) => {console.log(err)})
+          .catch((err) => {
+            console.log(err)
+          })
       }
     } else {
       if (!state.user) {
-
         // catch the case where the user is redirected back to signup from the email verification
         let email = window.localStorage.getItem("emailForSignIn")
         if (!email) {
           navigate("/signin")
         } else {
-          console.log('staying here')
+          console.log("staying here")
         }
       }
     }
