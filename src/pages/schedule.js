@@ -1,15 +1,13 @@
 import React, { useState, useContext, useEffect } from "react"
-import {Calendar} from "@fullcalendar/core"
+import { Calendar } from "@fullcalendar/core"
 import dayGridPlugin from "@fullcalendar/daygrid"
-import googleCalendarPlugin from '@fullcalendar/google-calendar'
+import googleCalendarPlugin from "@fullcalendar/google-calendar"
 import interactionPlugin from "@fullcalendar/interaction"
-import config from ""
 
 import Navbar from "../components/navbar"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import { firestore } from "../firebase/firebase"
-import('dotenv').config()
 
 //  onChange={(event) => onChangeHandler(event)}
 // onClick={(event) => submitForm(event)}
@@ -24,15 +22,19 @@ const Schedule = () => {
     setForm({ ...form, date: event.dateStr })
   }
 
-  
-
   useEffect(() => {
-    let calendarElement = document.getElementById("calendarElement")
+    fetch("http://localhost:5000/schedulesetup", { method: "GET" })
+      .then((res) => res.json())
+      .then((res) => {
+        let calendarElement = document.getElementById("calendarElement")
 
-    let calendar = new Calendar(calendarElement, {plugins: [dayGridPlugin, googleCalendarPlugin ],
-       initialView: "dayGridMonth"})
-    
-      calendar.render()
+        let calendar = new Calendar(calendarElement, {plugins: [dayGridPlugin, googleCalendarPlugin],
+          initialView: "dayGridMonth",
+          googleCalendarApiKey: res.api_key,
+          events: { googleCalendarId: res.calendar_id }})
+
+        calendar.render()
+      })
   }, [])
   return (
     <div className="w-screen min-h-screen bg-base">
@@ -80,7 +82,6 @@ const Schedule = () => {
           </form>
           <div className="pb-8">
             <div id="calendarElement"></div>
-           
           </div>
         </div>
       </div>
