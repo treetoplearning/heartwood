@@ -74,6 +74,8 @@ const HeartwoodContextProvider = ({ children }) => {
           .catch((err) => {
             console.log(err)
           })
+      } else {
+        console.log('user is already logged in')
       }
     } else {
       if (!state.user) {
@@ -84,6 +86,8 @@ const HeartwoodContextProvider = ({ children }) => {
         } else {
           console.log("staying here")
         }
+      } else {
+        console.log('state.user exists')
       }
     }
   }, [state.user])
