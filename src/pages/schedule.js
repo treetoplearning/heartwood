@@ -7,31 +7,35 @@ import interactionPlugin from "@fullcalendar/interaction"
 import Navbar from "../components/navbar"
 import LoadingAnimation from "../components/loadinganimation"
 
-import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
-import { firestore } from "../firebase/firebase"
+import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 
 import gear from "../assets/gear.svg"
 
 const Schedule = () => {
-  const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
 
-  const [form, setForm] = useState({message: { text: "", type: "" }, isLoading: true })
+  const [form, setForm] = useState({ message: { text: "", type: "" }, isLoading: true })
 
   // take an input event and book that lesson to the user in state
   const bookLesson = (lessonInfo) => {
     fetch("http://localhost:5000/bookLesson", {method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ uid: state.user.uid, lessonId: lessonInfo.id, email: state.user.email, firstName: state.user.firstName, lastName: state.user.lastName })})
+      body: JSON.stringify({uid: state.user.uid,
+        lessonId: lessonInfo.id,
+        email: state.user.email,
+        firstName: state.user.firstName,
+        lastName: state.user.lastName})})
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
+        setForm({ ...form, isLoading: false })
       })
-      .catch((err) => console.log("error in booking lesson", err))
+      .catch(() =>
+        setForm({...form,
+          isLoading: false,
+          message: { text: "There was an error in booking your lesson", type: "error" }}))
   }
 
   useEffect(() => {
-
     if (state.user) {
       fetch("http://localhost:5000/getUserEvents", {method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -42,29 +46,28 @@ const Schedule = () => {
 
           let calendarElement = document.getElementById("calendarElement")
 
+          // initialize the Calendar object to be rendered to the DOMs
           let calendar = new Calendar(calendarElement, {plugins: [dayGridPlugin, googleCalendarPlugin, interactionPlugin],
             initialView: "dayGridMonth",
-            dateClick: function (info) {
-              setForm({ ...form, date: info.dateStr, isLoading: false })
+            dateClick: function () {
+              setForm({ ...form, isLoading: false })
             },
+            eventMouseover: function () {},
             eventClick: function (info) {
-              
               // ensure that the event is not already booked before booking the lesson
               if (info.event.extendedProps.booked === false) {
-                bookLesson({id: info.event.id})
-              } else {
-                console.log("the event is already booked")
+                setForm({ ...form, isLoading: true })
+                bookLesson({ id: info.event.id })
               }
             },
             weekends: false,
-            header: "",
-            selectable: true,
+            header: false,
             events: res.events})
           calendar.render()
         })
         .catch((err) => console.log("error in fetching events", err))
     }
-  }, [state.user])
+  }, [state.user, form.isLoading])
 
   return (
     <div className="w-screen min-h-screen bg-base">
@@ -86,7 +89,7 @@ const Schedule = () => {
               <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
             )}
             <h1 className="w-full py-2 mb-3 text-center ">
-              To schedule a lesson: select a date and time, then click submit.
+              To schedule a lesson: click on an open time slot, and click confirm.
             </h1>
             <div className="pb-8">
               <div id="calendarElement"></div>
