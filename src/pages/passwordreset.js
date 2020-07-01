@@ -47,10 +47,10 @@ const PasswordReset = () => {
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
               {form.message.type === "error" && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+                <div className="w-full px-2 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">{form.message.text}</div>
               )}
               {form.message.type === "success" && (
-                <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
+                <div className="w-full px-2 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">{form.message.text}</div>
               )}
               <label htmlFor="userEmail" className="block w-full">
                 Email:

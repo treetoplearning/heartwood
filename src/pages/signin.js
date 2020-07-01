@@ -111,10 +111,10 @@ const SignIn = () => {
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
             {form.message.type === "error" && (
-              <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">{form.message.text}</div>
+              <div className="w-full px-2 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">{form.message.text}</div>
             )}
             {form.message.type === "success" && (
-              <div className="w-full py-4 mb-3 text-center text-white rounded-lg bg-base">{form.message.text}</div>
+              <div className="w-full px-2 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">{form.message.text}</div>
             )}
             <form className="">
               <div className="mb-4">
