@@ -36,10 +36,10 @@ const Schedule = () => {
             message: {text:
                 "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
               type: "success"}})
-          resetMessageAfterDelay(4000)
+          resetMessageAfterDelay(8000)
         } else {
           setForm({ ...form, isLoading: false, message: { text: "Your booking was successful", type: "success" } })
-          resetMessageAfterDelay(4000)
+          resetMessageAfterDelay(6000)
         }
       })
       .catch((err) =>
@@ -47,7 +47,7 @@ const Schedule = () => {
           isLoading: false,
           message: { text: "There was an error in booking your lesson", type: "error" }}))
 
-    resetMessageAfterDelay(4000)
+    resetMessageAfterDelay(6000)
   }
 
   const resetMessageAfterDelay = (delay) => {
@@ -70,6 +70,7 @@ const Schedule = () => {
           // initialize the Calendar object to be rendered to the DOMs
           let calendar = new Calendar(calendarElement, {plugins: [dayGridPlugin, googleCalendarPlugin, interactionPlugin],
             initialView: "dayGridMonth",
+            
             eventMouseover: function () {},
             eventClick: function (info) {
               // do not allow the booking of a past event
@@ -81,7 +82,7 @@ const Schedule = () => {
                   isLoading: false,
                   message: { text: "Error in booking lesson - you cannot book a lesson in the past", type: "error" }})
 
-                resetMessageAfterDelay(4000)
+                resetMessageAfterDelay(6000)
 
                 return
               }
@@ -99,7 +100,7 @@ const Schedule = () => {
                     message: {text:
                         "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
                       type: "success"}})
-                      resetMessageAfterDelay(4000)
+                      resetMessageAfterDelay(6000)
                 }
               }
             },
