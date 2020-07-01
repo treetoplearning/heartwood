@@ -28,28 +28,32 @@ const Schedule = () => {
         lastName: state.user.lastName})})
       .then((res) => res.json())
       .then((res) => {
-        console.log(res)
         if (res.message === "maxBooked") {
-          setTimeout(() => {
-            setForm({...form,
-              maxBooked: true,
-              isLoading: false,
-              message: {text:
-                  "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
-                type: "success"}})
-          }, 1250)
+   
+          setForm({...form,
+            maxBooked: true,
+            isLoading: false,
+            message: {text:
+                "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
+              type: "success"}})
+          resetMessageAfterDelay(4000)
         } else {
-          setTimeout(() => {
-            setForm({ ...form, isLoading: false, message: { text: "Your booking was successful", type: "success" } })
-          }, 1250)
+          setForm({ ...form, isLoading: false, message: { text: "Your booking was successful", type: "success" } })
+          resetMessageAfterDelay(4000)
         }
       })
       .catch((err) =>
-        setTimeout(() => {
-          setForm({...form,
-            isLoading: false,
-            message: { text: "There was an error in booking your lesson", type: "error" }})
-        }, 1250))
+        setForm({...form,
+          isLoading: false,
+          message: { text: "There was an error in booking your lesson", type: "error" }}))
+
+    resetMessageAfterDelay(4000)
+  }
+
+  const resetMessageAfterDelay = (delay) => {
+    setTimeout(() => {
+      setForm({ ...form, isLoading: false, message: { text: "", type: "" } })
+    }, delay)
   }
 
   useEffect(() => {
@@ -77,27 +81,25 @@ const Schedule = () => {
                   isLoading: false,
                   message: { text: "Error in booking lesson - you cannot book a lesson in the past", type: "error" }})
 
-                setTimeout(() => {
-                  setForm({...form,
+                resetMessageAfterDelay(4000)
 
-                    message: { text: "", type: "" }})
-                }, 4000)
-                
                 return
               }
 
               // ensure that the event is not already booked before booking the lesson
               if (info.event.extendedProps.booked === false) {
+
                 // ensure that the user hasn't already booked their max amount of lessons
                 if (form.maxBooked === false) {
                   setForm({ ...form, isLoading: true })
                   bookLesson({ id: info.event.id })
                 } else {
+                console.log('here')
                   setForm({...form,
-                    isLoading: false,
                     message: {text:
                         "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
                       type: "success"}})
+                      resetMessageAfterDelay(4000)
                 }
               }
             },
