@@ -10,12 +10,16 @@ import LoadingAnimation from "../components/loadinganimation"
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 
 import gear from "../assets/gear.svg"
-import { text } from "@fortawesome/fontawesome-svg-core"
+
+import "../styles/fullcalendar.css"
 
 const Schedule = () => {
   const state = useContext(HeartwoodStateContext)
 
-  const [form, setForm] = useState({ message: { text: "", type: "" }, isLoading: true, maxBooked: false })
+  const [form, setForm] = useState({message: { text: "", type: "" },
+    isLoading: true,
+    maxBooked: false,
+    bookingConfirmed: false})
 
   // take an input event and book that lesson to the user in state
   const bookLesson = (lessonInfo) => {
@@ -29,7 +33,6 @@ const Schedule = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res.message === "maxBooked") {
-   
           setForm({...form,
             maxBooked: true,
             isLoading: false,
@@ -70,9 +73,17 @@ const Schedule = () => {
           // initialize the Calendar object to be rendered to the DOMs
           let calendar = new Calendar(calendarElement, {plugins: [dayGridPlugin, googleCalendarPlugin, interactionPlugin],
             initialView: "dayGridMonth",
-            
+
             eventMouseover: function () {},
             eventClick: function (info) {
+              setForm({...form,
+                isLoading: false,
+                bookingConfirmed: false,
+                message: {text: "Are you sure you want to confirm this time: " + String(info.event.start),
+                  type: "confirm"}})
+
+              resetMessageAfterDelay(10000)
+
               // do not allow the booking of a past event
               const currentTime = new Date()
               const eventTime = new Date(info.event.start)
@@ -83,24 +94,21 @@ const Schedule = () => {
                   message: { text: "Error in booking lesson - you cannot book a lesson in the past", type: "error" }})
 
                 resetMessageAfterDelay(6000)
-
                 return
               }
 
               // ensure that the event is not already booked before booking the lesson
               if (info.event.extendedProps.booked === false) {
-
                 // ensure that the user hasn't already booked their max amount of lessons
                 if (form.maxBooked === false) {
                   setForm({ ...form, isLoading: true })
                   bookLesson({ id: info.event.id })
                 } else {
-                console.log('here')
                   setForm({...form,
                     message: {text:
                         "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
                       type: "success"}})
-                      resetMessageAfterDelay(6000)
+                  resetMessageAfterDelay(6000)
                 }
               }
             },
@@ -127,19 +135,33 @@ const Schedule = () => {
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-11/12 md:w-3/4 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Schedule</h1>
             {form.message.type === "error" && (
-              <div className="w-full px-2 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">
+              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">
                 {form.message.text}
               </div>
             )}
             {form.message.type === "success" && (
-              <div className="w-full px-2 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">
+              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">
                 {form.message.text}
+              </div>
+            )}
+            {form.message.type === "confirm" && (
+              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">
+                {form.message.text}{" "}
+                <button
+                  onClick={() =>
+                    setForm({ ...form, message: { text: "", type: "" }, isLoading: false, bookingConfirmed: true })
+                  }
+                  className="font-bold text-black text-white underline"
+                >
+                  {" "}
+                  Click here to confirm{" "}
+                </button>
               </div>
             )}
             <h1 className="w-full py-2 mb-3 text-center ">
               To schedule a lesson: click on an open time slot, and click confirm.
             </h1>
-            <div className="pb-8">
+            <div className="w-full pb-8">
               <div id="calendarElement"></div>
             </div>
           </div>
