@@ -22,6 +22,9 @@ module.exports = {
       padding: {
         "3/4": "75%",
       },
+      borderColor: {
+        base: "#38A169",
+      }
     },
   },
   variants: {},

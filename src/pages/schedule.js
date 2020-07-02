@@ -3,6 +3,7 @@ import { Calendar } from "@fullcalendar/core"
 import dayGridPlugin from "@fullcalendar/daygrid"
 import googleCalendarPlugin from "@fullcalendar/google-calendar"
 import interactionPlugin from "@fullcalendar/interaction"
+import { format } from "date-fns"
 
 import Navbar from "../components/navbar"
 import LoadingAnimation from "../components/loadinganimation"
@@ -19,7 +20,8 @@ const Schedule = () => {
   const [form, setForm] = useState({message: { text: "", type: "" },
     isLoading: true,
     maxBooked: false,
-    bookingConfirmed: false})
+    bookingConfirmed: false,
+    targetLessonId: ""})
 
   // take an input event and book that lesson to the user in state
   const bookLesson = (lessonInfo) => {
@@ -39,10 +41,9 @@ const Schedule = () => {
             message: {text:
                 "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
               type: "success"}})
-          resetMessageAfterDelay(8000)
         } else {
           setForm({ ...form, isLoading: false, message: { text: "Your booking was successful", type: "success" } })
-          resetMessageAfterDelay(6000)
+          resetMessageAfterDelay(5000)
         }
       })
       .catch((err) =>
@@ -50,7 +51,7 @@ const Schedule = () => {
           isLoading: false,
           message: { text: "There was an error in booking your lesson", type: "error" }}))
 
-    resetMessageAfterDelay(6000)
+    resetMessageAfterDelay(12000)
   }
 
   const resetMessageAfterDelay = (delay) => {
@@ -60,7 +61,14 @@ const Schedule = () => {
   }
 
   useEffect(() => {
-    if (state.user) {
+    if (form.bookingConfirmed === true) {
+      setForm({ ...form, isLoading: true })
+      bookLesson({ id: form.targetLessonId })
+    }
+  }, [form.bookingConfirmed])
+
+  useEffect(() => {
+    if (state.user ) {
       fetch("http://localhost:5000/getUserEvents", {method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: state.user.uid, firstName: state.user.firstName, lastName: state.user.lastName })})
@@ -76,14 +84,6 @@ const Schedule = () => {
 
             eventMouseover: function () {},
             eventClick: function (info) {
-              setForm({...form,
-                isLoading: false,
-                bookingConfirmed: false,
-                message: {text: "Are you sure you want to confirm this time: " + String(info.event.start),
-                  type: "confirm"}})
-
-              resetMessageAfterDelay(10000)
-
               // do not allow the booking of a past event
               const currentTime = new Date()
               const eventTime = new Date(info.event.start)
@@ -93,23 +93,34 @@ const Schedule = () => {
                   isLoading: false,
                   message: { text: "Error in booking lesson - you cannot book a lesson in the past", type: "error" }})
 
-                resetMessageAfterDelay(6000)
+                resetMessageAfterDelay(12000)
+                return
+              }
+
+              if (info.event.extendedProps.booked === true) {
+                setForm({ ...form, isLoading: false, message: { text: "Error in booking lesson - this lesson has already been booked", type: "error" } })
+                resetMessageAfterDelay(12000)
                 return
               }
 
               // ensure that the event is not already booked before booking the lesson
-              if (info.event.extendedProps.booked === false) {
-                // ensure that the user hasn't already booked their max amount of lessons
-                if (form.maxBooked === false) {
-                  setForm({ ...form, isLoading: true })
-                  bookLesson({ id: info.event.id })
-                } else {
-                  setForm({...form,
-                    message: {text:
-                        "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
-                      type: "success"}})
-                  resetMessageAfterDelay(6000)
-                }
+
+              // ensure that the user hasn't already booked their max amount of lessons
+              if (form.maxBooked === false) {
+                const lessonTime = info.event.start
+                const formattedLessonTime = format(lessonTime, "EEEE, LLLL do, y 'at' h:mm a '(PST)'")
+                setForm({...form,
+                  isLoading: false,
+                  targetLessonId: info.event.id,
+                  bookingConfirmed: false,
+                  message: { text: "Are you sure you want to book this time: " + formattedLessonTime, type: "confirm" }})
+              } else {
+                setForm({...form,
+                  isLoading: false,
+                  targetLessonId: "",
+                  message: {text:
+                      "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
+                    type: "success"}})
               }
             },
             weekends: false,
@@ -119,7 +130,7 @@ const Schedule = () => {
         })
         .catch((err) => console.log("error in fetching events", err))
     }
-  }, [state.user, form.message])
+  }, [state.user, form.isLoading])
 
   return (
     <div className="w-screen min-h-screen bg-base">
@@ -146,21 +157,32 @@ const Schedule = () => {
             )}
             {form.message.type === "confirm" && (
               <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">
-                {form.message.text}{" "}
-                <button
-                  onClick={() =>
-                    setForm({ ...form, message: { text: "", type: "" }, isLoading: false, bookingConfirmed: true })
-                  }
-                  className="font-bold text-black text-white underline"
-                >
-                  {" "}
-                  Click here to confirm{" "}
-                </button>
+                {form.message.text} <br />
               </div>
             )}
             <h1 className="w-full py-2 mb-3 text-center ">
               To schedule a lesson: click on an open time slot, and click confirm.
             </h1>
+            {form.message.type === "confirm" && (
+              <div className="flex justify-center mb-4">
+                <button
+                  onClick={() =>
+                    setForm({ ...form, message: { text: "", type: "" }, isLoading: false, bookingConfirmed: false })
+                  }
+                  className="w-2/5 py-2 mr-4 text-base border rounded-lg md:w-1/3 lg:w-1/4 border-base "
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() =>
+                    setForm({ ...form, message: { text: "", type: "" }, isLoading: false, bookingConfirmed: true })
+                  }
+                  className="w-2/5 py-2 ml-4 text-white rounded-lg md:w-1/3 lg:w-1/4 bg-base"
+                >
+                  Confirm
+                </button>
+              </div>
+            )}
             <div className="w-full pb-8">
               <div id="calendarElement"></div>
             </div>

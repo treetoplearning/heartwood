@@ -19,6 +19,7 @@
     "axios": "^0.19.2",
     "babel-plugin-styled-components": "^1.10.7",
     "codemirror": "^5.52.2",
+    "date-fns": "^2.14.0",
     "firebase": "^7.14.5",
     "gatsby": "^2.21.29",
     "gatsby-image": "^2.3.1",
