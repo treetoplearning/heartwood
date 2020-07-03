@@ -17,7 +17,7 @@ const IndexPage = () => {
   // every second check
   useInterval(() => {
     const currentTime = new Date()
-
+    console.log('form is', form)
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
       setForm({ ...form, showMeetingButton: true })
@@ -31,6 +31,7 @@ const IndexPage = () => {
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
         .then((res) => {
+
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
 

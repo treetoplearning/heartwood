@@ -7,6 +7,7 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from "@fortawesome/free-solid-svg-icons"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
+import { navigate } from "gatsby"
 
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
@@ -17,25 +18,18 @@ const Video = () => {
   
   const { connect, createLocalVideoTrack } = require("twilio-video")
 
-  useEffect(() => {}, [])
-
   const [local, setLocal] = useState(true)
   const [remote, setRemote] = useState(true)
   const [room, setRoom] = useState()
   const [onCall, setOnCall] = useState(false)
   const [mute, setMute] = useState(false)
 
-  function startCall() {
-    setOnCall(true)
-    call()
-  }
-
-  function endCall() {
+  const endCall = () => {
     setOnCall(false)
     room.disconnect()
   }
 
-  function toggleMute() {
+  const toggleMute = () => {
     if (room) {
       if (mute === false) {
         muteAudio()
@@ -47,32 +41,36 @@ const Video = () => {
   }
 
   // Mute all of the local user's tracks.
-  function muteAudio() {
+  const muteAudio = () => {
     room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.disable()
     })
   }
 
   // Unmute all of the local user's tracks.
-  function unmuteAudio() {
+  const unmuteAudio = () => {
     room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.enable()
     })
   }
 
-  function call() {
-    const getParticipantToken = async ({ identity, room, participants }) => {
-      // const params = new URLSearchParams();
-      const result = await axios({method: "POST",
-        url: "http://localhost:5000/token",
-        data: { identity, room, participants }})
-      return result
-    }
+  const getParticipantToken = async ({ identity, room, participants }) => {
+    // const params = new URLSearchParams();
+    const result = await axios({method: "POST",
+      url: "http://localhost:5000/token",
+      data: { identity, room, participants }})
+    return result
+  }
 
-    getParticipantToken({ identity: state.user.uid, room: "Treetop-Testing" })
-      .then((res) => res.data)
-      .then((data) =>
-        connect(data, { name: "Treetop-Testing" }).then((room) => {
+    useEffect (() => {
+      if (state.user) {
+      getParticipantToken({ identity: state.user.uid, room: state.user.uid })
+      .then((res) => 
+
+        connect(res.data.accessToken, { name: res.data.roomName }).then((room) => {
+
+          setOnCall(true)
+          
             // Store the room for future reference.
             setRoom(room)
 
@@ -161,7 +159,12 @@ const Video = () => {
           (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
           }))
-  }
+          .catch((err) => {
+            console.log('There was an error', err)
+          })
+        }
+    }, [state.user])
+  
 
   return (
     <div className="relative flex flex-col w-full h-full text-md">

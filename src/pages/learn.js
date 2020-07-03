@@ -13,7 +13,8 @@ const Learn = ({location}) => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
-  const { showPage } = location.state || false
+  // Jacob, make sure to turn this back to || false when you are done testing
+  const { showPage } = location.state || true
 
   return (
     <div className="flex flex-col w-full h-screen bg-base">
