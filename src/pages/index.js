@@ -20,7 +20,7 @@ const IndexPage = () => {
 
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
-     setForm({...form, showMeetingButton: true})
+      setForm({ ...form, showMeetingButton: true })
     }
   }, 1000)
 
@@ -31,27 +31,28 @@ const IndexPage = () => {
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
         .then((res) => {
-
-            
-          
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
 
             const formattedStartTime = ""
             const formattedStopTime = ""
 
-            setForm({ ...form, startTime: formattedStartTime, stopTime: formattedStopTime, lessonDescription: "You do not have any upcoming lessons scheduled" })
-
+            setForm({...form,
+              startTime: formattedStartTime,
+              stopTime: formattedStopTime,
+              lessonDescription: "You do not have any upcoming lessons scheduled"})
           } else {
             // otherwise handle the case where a next meeting exists
             const formattedStartTime = new Date(res.startTime.dateTime)
             const formattedStopTime = new Date(res.stopTime.dateTime)
 
-            const lessonDescription = format(formattedStartTime, "'Your next lesson is on: ' EEEE, LLLL do, y 'at' h:mm a '(PST)'")
-            setForm({ ...form, startTime: formattedStartTime, stopTime: formattedStopTime, lessonDescription: lessonDescription})
+            const lessonDescription = format(formattedStartTime,
+              "'Your next lesson is on: ' EEEE, LLLL do, y 'at' h:mm a '(PST)'")
+            setForm({...form,
+              startTime: formattedStartTime,
+              stopTime: formattedStopTime,
+              lessonDescription: lessonDescription})
           }
-
-        
         })
     }
   }, [state.user])
@@ -63,18 +64,20 @@ const IndexPage = () => {
           <Navbar />
 
           <div className="flex flex-col">
-
-        
-
-          <div>
-            <p className="mt-10 text-xl text-center text-white"> {form.lessonDescription}</p>
-          </div>
-        {form.showMeetingButton &&
-          <Link to="learn" className="self-center w-1/3 px-4 py-2 mt-10 text-2xl text-center text-black bg-white rounded-xl ">
-            {" "}
-            Head to your lesson{" "}
-          </Link>
-}
+            <div>
+              <p className="mt-10 text-xl text-center text-white"> {form.lessonDescription}</p>
+            </div>
+            {form.showMeetingButton && (
+              <Link
+           
+                to="learn"
+                state={{showPage: true}}
+                className="self-center w-1/3 px-4 py-2 mt-10 text-2xl text-center text-black bg-white rounded-xl "
+              >
+                {" "}
+                Head to your lesson{" "}
+              </Link>
+            )}
           </div>
         </>
       ) : (

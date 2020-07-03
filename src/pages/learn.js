@@ -9,13 +9,15 @@ import { isLoggedIn } from "../utils/utils"
 
 import "../styles/video.css"
 
-export default () => {
+const Learn = ({location}) => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
+  const { showPage } = location.state || false
+
   return (
     <div className="flex flex-col w-full h-screen bg-base">
-      {isLoggedIn(state.user) && (
+      {showPage ?  (
         <>
           <Navbar />
           <div className="flex flex-row items-center justify-center w-full h-full ">
@@ -41,7 +43,9 @@ export default () => {
             </div>
           </div>
         </>
-      )}
+      ) : navigate("/")}
     </div>
   )
 }
+
+export default Learn

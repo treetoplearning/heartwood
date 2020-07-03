@@ -12,7 +12,7 @@ const Settings = () => {
   const [form, setForm] = useState({firstName: "",
     lastName: "",
     userName: "",
-    dateOfBirth: null,
+    dateOfBirth: "",
     message: { text: "", type: "" }})
 
   const onChangeHandler = (event) => {

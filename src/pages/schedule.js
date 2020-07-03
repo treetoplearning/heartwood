@@ -42,8 +42,7 @@ const Schedule = () => {
                 "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
               type: "success"}})
         } else {
-          setForm({ ...form, isLoading: false, message: { text: "Your booking was successful", type: "success" } })
-          resetMessageAfterDelay(5000)
+          setForm({ ...form, message: { text: "Your booking was successful", type: "success" } })
         }
       })
       .catch((err) =>
@@ -68,7 +67,7 @@ const Schedule = () => {
   }, [form.bookingConfirmed])
 
   useEffect(() => {
-    if (state.user ) {
+    if (state.user && !form.maskBooked) {
       fetch("http://localhost:5000/getUserEvents", {method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: state.user.uid, firstName: state.user.firstName, lastName: state.user.lastName })})
