@@ -66,7 +66,7 @@ const HeartwoodContextProvider = ({ children }) => {
           .then((res) => res.json())
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
-              fb.auth.currentUser.getIdToken().then((idToken) => {
+              fb.auth.currentUser.getIdToken(true).then((idToken) => {
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
               })
             })

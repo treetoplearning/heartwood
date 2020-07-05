@@ -4,6 +4,7 @@ import useInterval from "../hooks/useInterval"
 import { Link } from "gatsby"
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 import { isLoggedIn, signUpComplete } from "../utils/utils"
+import gear from "../assets/gear.svg"
 
 import Navbar from "../components/navbar"
 import CollectInfo from "../components/collectinfo"
@@ -12,7 +13,7 @@ import { format, differenceInMinutes } from "date-fns"
 
 const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
-  const [form, setForm] = useState({ startTime: "", stopTime: "", showMeetingButton: false, lessonDescription: "" })
+  const [form, setForm] = useState({ startTime: "", stopTime: "", showMeetingButton: false, lessonDescription: "", isLoading: true})
 
   // every second check
   useInterval(() => {
@@ -20,8 +21,9 @@ const IndexPage = () => {
     console.log('form is', form)
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
-      setForm({ ...form, showMeetingButton: true })
-    }
+      setForm({ ...form, isLoading: false, showMeetingButton: true })
+    } 
+    
   }, 1000)
 
   useEffect(() => {
@@ -34,13 +36,8 @@ const IndexPage = () => {
 
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
-
-            const formattedStartTime = ""
-            const formattedStopTime = ""
-
             setForm({...form,
-              startTime: formattedStartTime,
-              stopTime: formattedStopTime,
+              isLoading: false,
               lessonDescription: "You do not have any upcoming lessons scheduled"})
           } else {
             // otherwise handle the case where a next meeting exists
@@ -50,17 +47,29 @@ const IndexPage = () => {
             const lessonDescription = format(formattedStartTime,
               "'Your next lesson is on: ' EEEE, LLLL do, y 'at' h:mm a '(PST)'")
             setForm({...form,
+              isLoading: false,
               startTime: formattedStartTime,
               stopTime: formattedStopTime,
               lessonDescription: lessonDescription})
           }
+          
         })
     }
-  }, [state.user])
+  }, [state.user, form.lessonDescription])
 
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 font-mono bg-base">
-      {signUpComplete(state.user) ? (
+       {form.isLoading && (
+        <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
+          {" "}
+          <object color="white" type="image/svg+xml" data={gear}>
+            svg-animation
+          </object>{" "}
+        </div>
+      )}
+    
+      {(!form.isLoading && signUpComplete(state.user)) ? (
+       
         <>
           <Navbar />
 
@@ -84,6 +93,7 @@ const IndexPage = () => {
       ) : (
         isLoggedIn(state.user) && <CollectInfo />
       )}
+      
     </div>
   )
 }
