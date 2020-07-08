@@ -18,3 +18,7 @@ export const signUpComplete = (user) => {
   }
   return false
 }
+
+export const doneLoading = (loading) => {
+  loading = false
+}

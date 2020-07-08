@@ -15,16 +15,18 @@ const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
   const [form, setForm] = useState({ startTime: "", stopTime: "", showMeetingButton: false, lessonDescription: "", isLoading: true})
 
-  // every second check
-  useInterval(() => {
+  const setMeetingButton = () => {
     const currentTime = new Date()
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
-      setForm({ ...form, isLoading: false, showMeetingButton: true })
+      setForm({ ...form, showMeetingButton: true, isLoading: false })
     } else {
-      setForm({ ...form, isLoading: false })
+      setForm({ ...form, showMeetingButton: false, isLoading: false })
     }
-    
+  }
+
+  useInterval(() => {
+    setMeetingButton()
   }, 1000)
 
   useEffect(() => {
@@ -34,28 +36,32 @@ const IndexPage = () => {
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
         .then((res) => {
-          
+          console.log("response has arrived", res)
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
             setForm({...form, 
               lessonDescription: "You do not have any upcoming lessons scheduled"})
           } else {
+            console.log("its a meeting")
             // otherwise handle the case where a next meeting exists
             const formattedStartTime = new Date(res.startTime.dateTime)
             const formattedStopTime = new Date(res.stopTime.dateTime)
-
             const lessonDescription = format(formattedStartTime,
               "'Your next lesson is on: ' EEEE, LLLL do, y 'at' h:mm a '(PST)'")
-            setForm({...form,
-              
-              startTime: formattedStartTime,
-              stopTime: formattedStopTime,
-              lessonDescription: lessonDescription})
-          }
-          
+            setForm({...form, startTime: formattedStartTime, stopTime: formattedStopTime, lessonDescription: lessonDescription})
+            }
+        })
+        .catch((res) => {
+          console.error("unable to get next meeting")
         })
     }
-  }, [state.user, form.lessonDescription])
+  }, [state.user])
+
+  useEffect(() => {
+    if (form.lessonDescription !== 'DEFAULT') {
+      setMeetingButton()
+    }
+  }, [form.lessonDescription])
 
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 font-mono bg-base">
