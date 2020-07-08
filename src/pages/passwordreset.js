@@ -1,7 +1,8 @@
 import React, { useState } from "react"
-import { Link } from "@reach/router"
+import { Link } from "gatsby"
 
 import { auth } from "../firebase/firebase"
+import Message from "../components/message"
 
 const PasswordReset = () => {
   const [form, setForm] = useState({ email: "", message: { text: "", status: "" } })
@@ -46,12 +47,11 @@ const PasswordReset = () => {
           <h1 className="pt-4 text-3xl font-bold text-center">Reset your Password</h1>
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
-              {form.message.type === "error" && (
-                <div className="w-full px-3 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">{form.message.text}</div>
-              )}
-              {form.message.type === "success" && (
-                <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">{form.message.text}</div>
-              )}
+            <Message
+              type={form.message.type}
+              text={form.message.text}
+             
+            />
               <label htmlFor="userEmail" className="block w-full">
                 Email:
               </label>
@@ -74,7 +74,7 @@ const PasswordReset = () => {
               </button>
             </form>
             <Link to="signin" className="block my-2 text-center text-blue-700 hover:text-blue-800">
-              &larr; back to sign in page
+              &larr; Return to sign in
             </Link>
           </div>
         </div>

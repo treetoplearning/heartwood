@@ -72,6 +72,7 @@ export const prepareUserInformation = async (user) => {
   if (signUpComplete(res)) {
     // update the user that will be stored in state
     const returningUser = {...user,
+      admin : res.admin,
       firstName: res.firstName,
       lastName: res.lastName,
       userName: res.userName,

@@ -18,11 +18,12 @@ const IndexPage = () => {
   // every second check
   useInterval(() => {
     const currentTime = new Date()
-    console.log('form is', form)
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
       setForm({ ...form, isLoading: false, showMeetingButton: true })
-    } 
+    } else {
+      setForm({ ...form, isLoading: false })
+    }
     
   }, 1000)
 
@@ -33,11 +34,10 @@ const IndexPage = () => {
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
         .then((res) => {
-
+          
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
-            setForm({...form,
-              isLoading: false,
+            setForm({...form, 
               lessonDescription: "You do not have any upcoming lessons scheduled"})
           } else {
             // otherwise handle the case where a next meeting exists
@@ -47,7 +47,7 @@ const IndexPage = () => {
             const lessonDescription = format(formattedStartTime,
               "'Your next lesson is on: ' EEEE, LLLL do, y 'at' h:mm a '(PST)'")
             setForm({...form,
-              isLoading: false,
+              
               startTime: formattedStartTime,
               stopTime: formattedStopTime,
               lessonDescription: lessonDescription})
@@ -72,6 +72,7 @@ const IndexPage = () => {
        
         <>
           <Navbar />
+          
 
           <div className="flex flex-col">
             <div>

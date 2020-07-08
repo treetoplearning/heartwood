@@ -37,6 +37,8 @@ function reducer(state, action) {
       return { ...state }
     case "WRITE_IDE":
       return { ...state, ideBody: action.body }
+    case "WRITE_TERM":
+      return { ...state, termBuff: action.body }
     case "LOGIN":
       // signin cookie is only set when signup is complete
       setCookie("idt", action.idt, 2)
@@ -57,8 +59,10 @@ const HeartwoodContextProvider = ({ children }) => {
   useEffect(() => {
     const fb = require("../firebase/firebase")
     if (getCookie("idt")) {
+     
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
+        
         // https://10.0.1.26:8080/verify
         fetch("http://localhost:5000/verify", {method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -67,6 +71,7 @@ const HeartwoodContextProvider = ({ children }) => {
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
               fb.auth.currentUser.getIdToken(true).then((idToken) => {
+             
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
               })
             })

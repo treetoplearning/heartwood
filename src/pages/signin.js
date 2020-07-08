@@ -10,6 +10,7 @@ import { auth, signInWithGoogle, signInWithGitHub, prepareUserInformation } from
 import gear from "../assets/gear.svg"
 
 import LoadingAnimation from "../components/loadinganimation"
+import Message from "../components/message"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
@@ -40,7 +41,7 @@ const SignIn = () => {
       .then((result) => {
         if (result) {
           prepareUserInformation(result.user).then(function (res) {
-            result.user.getIdToken().then((idToken) => {
+            result.user.getIdToken(true).then((idToken) => {
               dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")
             })
@@ -81,7 +82,7 @@ const SignIn = () => {
       .then((result) => {
         if (result.user) {
           prepareUserInformation(result.user).then(res => {
-            result.user.getIdToken().then((idToken) => {
+            result.user.getIdToken(true).then((idToken) => {
               dispatch({ type: "LOGIN", user: res, idt: idToken })
               navigate("/")
             })
@@ -110,12 +111,11 @@ const SignIn = () => {
         {!form.isLoading && (
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign in</h1>
-            {form.message.type === "error" && (
-              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">{form.message.text}</div>
-            )}
-            {form.message.type === "success" && (
-              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">{form.message.text}</div>
-            )}
+            <Message
+              type={form.message.type}
+              text={form.message.text}
+             
+            />
             <form className="">
               <div className="mb-4">
                 <label htmlFor="userEmail" className="block mb-1 font-semibold">

@@ -121,7 +121,7 @@ const SignUp = () => {
 
           prepareUserInformation(result.user).then((res) => {
             getCurrentUser()
-              .getIdToken()
+              .getIdToken(true)
               .then((idToken) => {
                 console.log("success getting id token")
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
@@ -141,7 +141,7 @@ const SignUp = () => {
           if (result.user) {
             prepareUserInformation(result.user).then((res) => {
               getCurrentUser()
-                .getIdToken()
+                .getIdToken(true)
                 .then((idToken) => {
                   dispatch({ type: "LOGIN", user: res, idt: idToken })
                   navigate("/")
