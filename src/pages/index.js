@@ -24,13 +24,10 @@ const IndexPage = () => {
       setForm({ ...form, showMeetingButton: false, isLoading: false })
     }
   }
-
-  useInterval(() => {
-    setMeetingButton()
-  }, 1000)
-
+  
   useEffect(() => {
     if (state.user) {
+      console.log('in useEffect', form)
       fetch("http://localhost:5000/getNextMeeting", {method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: state.user.uid })})

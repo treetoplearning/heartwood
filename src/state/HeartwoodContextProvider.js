@@ -63,7 +63,6 @@ const HeartwoodContextProvider = ({ children }) => {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
         
-        // https://10.0.1.26:8080/verify
         fetch("http://localhost:5000/verify", {method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idt: getCookie("idt") })})
