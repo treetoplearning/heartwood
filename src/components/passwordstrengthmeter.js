@@ -3,11 +3,13 @@ import zxcvbn from "zxcvbn"
 import "../styles/passwordstrengthmeter.css"
 
 function PasswordStrengthMeter({ password, onStrengthUpdate }) {
+
   const score = useRef(0)
 
   // check if password meets strength requirement and then tell parent
   const onStrengthUpdateHandler = (input) => {
-    // deal with the case that an error in email or username resests the input to 0
+
+   // deal with the case that an error in email or username resests the input to 0
     if (input !== 0) {
       return onStrengthUpdate(createPasswordLabel(input))
     }
