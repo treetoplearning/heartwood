@@ -18,7 +18,7 @@ const Learn = ({location}) => {
 
   return (
     <div className="flex flex-col w-full h-screen bg-base">
-      {showPage ?  (
+      {showPage &&  (
         <>
           <Navbar />
           <div className="flex flex-row items-center justify-center w-full h-full ">
@@ -44,7 +44,7 @@ const Learn = ({location}) => {
             </div>
           </div>
         </>
-      ) : navigate("/")}
+      )}
     </div>
   )
 }
