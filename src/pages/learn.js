@@ -3,22 +3,27 @@ import Navbar from "../components/navbar"
 import IDE from "../components/ide"
 import Term from "../components/term"
 import Video from "../components/video"
-import { navigate } from "gatsby"
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
-import { isLoggedIn } from "../utils/utils"
 
 import "../styles/video.css"
 
-const Learn = ({location}) => {
+const Learn = ({ location }) => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
 
   // Jacob, make sure to turn this back to || false when you are done testing
-  const { showPage } = location.state || true
+  const { showPage } = location.state || false
+
+  useEffect(() => {
+    const gatsby = require("gatsby")
+    if (!showPage) {
+      gatsby.navigate("/")
+    }
+  }, [])
 
   return (
     <div className="flex flex-col w-full h-screen bg-base">
-      {showPage &&  (
+      {showPage && (
         <>
           <Navbar />
           <div className="flex flex-row items-center justify-center w-full h-full ">
