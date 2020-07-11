@@ -2,6 +2,7 @@ import React, { useEffect } from "react"
 import { navigate } from "gatsby"
 import { isLoggedIn } from "../utils/utils"
 
+export const HeartwoodStateContext = React.createContext()
 export const HeartwoodDispatchContext = React.createContext()
 
 const setCookie = (name, value, days) => {
