@@ -6,14 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { library } from "@fortawesome/fontawesome-svg-core"
 import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from "@fortawesome/free-solid-svg-icons"
 
-import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
   const state = useContext(HeartwoodStateContext)
 
-  const {connect, createLocalVideoTrack } = require("twilio-video")
+  const { connect } = require("twilio-video")
 
   const [room, setRoom] = useState()
   const [onCall, setOnCall] = useState(false)
@@ -70,7 +70,6 @@ const Video = () => {
             setRoom(room)
 
             console.log(`Successfully joined a Room: ${room}`)
-            console.log(room)
 
             // Log new participants
             room.participants.forEach((participant) => {
@@ -94,19 +93,16 @@ const Video = () => {
             })
 
             room.on("trackUnsubscribed", (track) => {
-              track.detach().forEach(element => element.remove())
+              track.detach().forEach((element) => element.remove())
             })
 
-            room.on("participantDisconnected",  (room) => {
-
+            room.on("participantDisconnected", (room) => {
               setOnCall(false)
               document.getElementById("remote-media-div").innerHTML = ""
-              
-
             })
 
             // Disconnect user and show local input
-            room.on("disconnected",  (room) => {
+            room.on("disconnected", (room) => {
               console.log(`Participant has disconnected.`)
 
               room.localParticipant.tracks.forEach((publication) => {

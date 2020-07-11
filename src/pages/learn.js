@@ -9,7 +9,6 @@ import "../styles/video.css"
 
 const Learn = ({ location }) => {
   const state = useContext(HeartwoodStateContext)
-  const dispatch = useContext(HeartwoodDispatchContext)
 
   // Jacob, make sure to turn this back to || false when you are done testing
   const { showPage } = location.state || false

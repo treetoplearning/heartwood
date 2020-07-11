@@ -1,10 +1,7 @@
 import React, { useEffect } from "react"
 import { navigate } from "gatsby"
-import { isLoggedIn, signUpComplete } from "../utils/utils"
-import firebase from "gatsby-plugin-firebase"
-import axios from "axios"
+import { isLoggedIn } from "../utils/utils"
 
-export const HeartwoodStateContext = React.createContext()
 export const HeartwoodDispatchContext = React.createContext()
 
 const setCookie = (name, value, days) => {
@@ -59,10 +56,8 @@ const HeartwoodContextProvider = ({ children }) => {
   useEffect(() => {
     const fb = require("../firebase/firebase")
     if (getCookie("idt")) {
-     
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
-        
         fetch("http://localhost:5000/verify", {method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idt: getCookie("idt") })})
@@ -70,7 +65,6 @@ const HeartwoodContextProvider = ({ children }) => {
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
               fb.auth.currentUser.getIdToken(true).then((idToken) => {
-             
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
               })
             })
@@ -79,7 +73,7 @@ const HeartwoodContextProvider = ({ children }) => {
             console.log(err)
           })
       } else {
-        console.log('user is already logged in')
+        console.log("user is already logged in")
       }
     } else {
       if (!state.user) {
@@ -87,11 +81,7 @@ const HeartwoodContextProvider = ({ children }) => {
         let email = window.localStorage.getItem("emailForSignIn")
         if (!email) {
           navigate("/signin")
-        } else {
-          console.log("staying here")
         }
-      } else {
-        console.log('state.user exists')
       }
     }
   }, [state.user])

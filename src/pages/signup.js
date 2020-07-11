@@ -102,7 +102,6 @@ const SignUp = () => {
     // Confirm the link is a sign-in with email link.
     if (auth.isSignInWithEmailLink(window.location.href)) {
       setForm({ ...form, onVerifyLink: true })
-      console.log("setting onVerifyLink")
 
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
@@ -123,7 +122,6 @@ const SignUp = () => {
             getCurrentUser()
               .getIdToken(true)
               .then((idToken) => {
-                console.log("success getting id token")
                 dispatch({ type: "LOGIN", user: res, idt: idToken })
                 navigate("/")
               })
@@ -150,7 +148,6 @@ const SignUp = () => {
           } else {
             // only get rid of the spinner if a provider AND a verify email link sign-in are not being attempted
             if (!form.onVerifyLink) {
-              console.log("setting isLoading to false")
               setForm({ ...form, isLoading: false })
             }
           }
@@ -179,10 +176,14 @@ const SignUp = () => {
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-1/2 md:w-3/4 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Sign Up</h1>
             {form.message.type === "error" && (
-              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">{form.message.text}</div>
+              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words bg-red-600 rounded-lg">
+                {form.message.text}
+              </div>
             )}
             {form.message.type === "success" && (
-              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">{form.message.text}</div>
+              <div className="w-full px-3 py-4 mb-3 text-center text-white break-words rounded-lg bg-base">
+                {form.message.text}
+              </div>
             )}
             <form className="">
               <div className="mb-4">
