@@ -21,11 +21,7 @@ const IDE = () => {
     <CodeMirror
       value={state.ideBody}
       editorDidMount={(editor) => editor.setSize("100%", "16rem")}
-      options={{
-        mode: "python",
-        theme: "material",
-        lineNumbers: true,
-      }}
+      options={{ mode: "python", theme: "material", lineNumbers: true }}
       onChange={(editor, data, value) => {
         dispatch({ type: "WRITE_IDE", body: value })
       }}

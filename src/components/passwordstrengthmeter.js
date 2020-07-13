@@ -8,8 +8,8 @@ function PasswordStrengthMeter({ password, onStrengthUpdate }) {
 
   // check if password meets strength requirement and then tell parent
   const onStrengthUpdateHandler = (input) => {
-    
-    // stop the firing where a different input error causes the score to be reset to 0 on render
+
+   // deal with the case that an error in email or username resests the input to 0
     if (input !== 0) {
       return onStrengthUpdate(createPasswordLabel(input))
     }
@@ -34,16 +34,20 @@ function PasswordStrengthMeter({ password, onStrengthUpdate }) {
   }
 
   useEffect(() => {
-    score.current = zxcvbn(password).score
     onStrengthUpdateHandler(score.current)
+    if (password === "") {
+      score.current = 0
+    } else {
+      score.current = zxcvbn(password).score
+    }
   }, [password])
 
   return (
-
     <div className="flex flex-col w-full mb-3">
       <progress
-        className={`w-full rounded-lg password-strength-meter-progress strength-${createPasswordLabel(score.current)}`}
+        className={`w-full  password-strength-meter-progress rounded-sm strength-${createPasswordLabel(score.current)}`}
         value={score.current}
+        default={0}
         max="4"
       />
       {password && (

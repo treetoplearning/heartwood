@@ -1,36 +1,42 @@
 import React, { useState } from "react"
-import { Link } from "@reach/router"
+import { Link } from "gatsby"
 
 import { auth } from "../firebase/firebase"
+import Message from "../components/message"
 
 const PasswordReset = () => {
-  const [email, setEmail] = useState("")
-  const [emailHasBeenSent, setEmailHasBeenSent] = useState(false)
-  const [error, setError] = useState(null)
+  const [form, setForm] = useState({ email: "", message: { text: "", status: "" } })
 
   const onChangeHandler = (event) => {
     const { name, value } = event.currentTarget
     if (name === "userEmail") {
-      setEmail(value)
+      setForm({ ...form, email: value })
     }
   }
 
   const sendResetEmail = (event) => {
-    setError(null)
+    setForm({ ...form, error: null })
     event.preventDefault()
     auth
-      .sendPasswordResetEmail(email)
+      .sendPasswordResetEmail(form.email)
       .then(() => {
         // notify user of successfully sent
-        setEmailHasBeenSent(true)
+        setForm({ ...form, message: { text: "Password reset instructions have been emailed", type: "success" } })
 
         // hide the successfully sent notification after 4 seconds
         setTimeout(() => {
-          setEmailHasBeenSent(false)
+          setForm({ ...form, message: { text: "", type: "" } })
         }, 4000)
       })
-      .catch(() => {
-        setError("Error resetting password")
+      .catch((error) => {
+        console.log(error)
+        if (error.code === "auth/invalid-email") {
+          setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
+        } else if (error.code === "auth/user-not-found") {
+          setForm({ ...form, message: { text: "Email address is not in use", type: "error" } })
+        } else {
+          setForm({ ...form, message: { text: "Error resetting password", type: "error" } })
+        }
       })
   }
 
@@ -41,16 +47,11 @@ const PasswordReset = () => {
           <h1 className="pt-4 text-3xl font-bold text-center">Reset your Password</h1>
           <div className="w-full pt-2 pb-4 rounded-xl">
             <form action="">
-              {emailHasBeenSent && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-green-500 rounded-lg">
-                  An email has been sent to you!
-                </div>
-              )}
-              {error !== null && (
-                <div className="w-full py-4 mb-3 text-center text-white bg-red-600 rounded-lg">
-                  {error}
-                </div>
-              )}
+            <Message
+              type={form.message.type}
+              text={form.message.text}
+             
+            />
               <label htmlFor="userEmail" className="block w-full">
                 Email:
               </label>
@@ -58,8 +59,8 @@ const PasswordReset = () => {
                 type="email"
                 name="userEmail"
                 id="userEmail"
-                value={email}
-                placeholder="Input your email"
+                value={form.email}
+                placeholder="treetoplearner@gmail.com"
                 onChange={onChangeHandler}
                 className="w-full px-1 py-2 mb-3"
               />
@@ -73,7 +74,7 @@ const PasswordReset = () => {
               </button>
             </form>
             <Link to="signin" className="block my-2 text-center text-blue-700 hover:text-blue-800">
-              &larr; back to sign in page
+              &larr; Return to sign in
             </Link>
           </div>
         </div>

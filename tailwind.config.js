@@ -1,10 +1,11 @@
+/* eslint-disable */
 module.exports = {
   theme: {
     extend: {
       colors: {
         base: "#38A169",
         bark: "#855D51",
-        ideBase: "263238",
+        ideBase: "#263238",
       },
       fontFamily: {
         base: ["Roboto"],
@@ -21,6 +22,9 @@ module.exports = {
       padding: {
         "3/4": "75%",
       },
+      borderColor: {
+        base: "#38A169",
+      }
     },
   },
   variants: {},

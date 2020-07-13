@@ -1,10 +1,7 @@
 import React, { useState, useEffect, useContext } from "react"
 import "xterm/css/xterm.css"
 import skulpt from "skulpt"
-import {
-  HeartwoodStateContext,
-  HeartwoodDispatchContext,
-} from "../state/HeartwoodContextProvider"
+import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
 const Term = ({ termId }) => {
   const [id] = useState(termId)
@@ -30,8 +27,7 @@ const Term = ({ termId }) => {
     }
     let buffer = ""
     term.onKey((e) => {
-      const printable =
-        !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey
+      const printable = !e.domEvent.altKey && !e.domEvent.altGraphKey && !e.domEvent.ctrlKey && !e.domEvent.metaKey
       if (e.domEvent.keyCode === 13) {
         if (buffer === "python3 file.py") {
           dispatch({ type: "COMPILE", cb: compile })
