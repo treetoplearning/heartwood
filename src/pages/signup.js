@@ -98,7 +98,9 @@ const SignUp = () => {
   // the provider sign-in
   useEffect(() => {
     // The user will either sign-in with email-link or with provider. Check each conditionally.
-
+    console.log("The current mode is", process.env.GATSBY_MODE)
+    console.log("The current endpoint is", process.env.GATSBY_PHLOEM_ENDPOINT)
+    
     // Confirm the link is a sign-in with email link.
     if (auth.isSignInWithEmailLink(window.location.href)) {
       setForm({ ...form, onVerifyLink: true })
