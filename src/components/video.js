@@ -8,6 +8,8 @@ import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from 
 
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 
+import {getEndpointPrefix} from "../utils/utils"
+
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
@@ -55,8 +57,9 @@ const Video = () => {
 
   const getParticipantToken = async ({ identity, room, participants }) => {
     // const params = new URLSearchParams();
+    const endpoint = getEndpointPrefix() + "/token"
     const result = await axios({method: "POST",
-      url: "http://localhost:5000/token",
+      url: endpoint,
       data: { identity, room, participants }})
     return result
   }

@@ -22,3 +22,10 @@ export const signUpComplete = (user) => {
 export const doneLoading = (loading) => {
   loading = false
 }
+
+export const getEndpointPrefix = () => {
+  if (typeof process.env.GATSBY_MODE === 'undefined') {
+    return "http://localhost:5000"
+  }
+  return process.env.GATSBY_PHLOEM_ENDPOINT
+}

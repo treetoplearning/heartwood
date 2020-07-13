@@ -1,6 +1,6 @@
 import React, { useEffect } from "react"
 import { navigate } from "gatsby"
-import { isLoggedIn } from "../utils/utils"
+import { isLoggedIn, getEndpointPrefix } from "../utils/utils"
 
 export const HeartwoodStateContext = React.createContext()
 export const HeartwoodDispatchContext = React.createContext()
@@ -59,7 +59,8 @@ const HeartwoodContextProvider = ({ children }) => {
     if (getCookie("idt")) {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
-        fetch("http://localhost:5000/verify", {method: "POST",
+        const endpoint = getEndpointPrefix() + "/verify"
+        fetch(endpoint, {method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ idt: getCookie("idt") })})
           .then((res) => res.json())

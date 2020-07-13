@@ -15,6 +15,8 @@ import gear from "../assets/gear.svg"
 
 import "../styles/fullcalendar.css"
 
+import {getEndpointPrefix} from "../utils/utils"
+
 const LessonCalendar = () => {
   const state = useContext(HeartwoodStateContext)
 
@@ -25,7 +27,8 @@ const LessonCalendar = () => {
 
   // take an input event and book that lesson to the user in state
   const bookLesson = (lessonInfo) => {
-    fetch("http://localhost:5000/bookLesson", {method: "POST",
+    const endpoint = getEndpointPrefix() + "/bookLesson"
+    fetch(endpoint, {method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({uid: state.user.uid,
         lessonId: lessonInfo.id,
@@ -64,7 +67,8 @@ const LessonCalendar = () => {
 
   useEffect(() => {
     if (state.user && !form.maxBooked) {
-      fetch("http://localhost:5000/getUserEvents", {method: "POST",
+      const endpoint = getEndpointPrefix() + "/getUserEvents"
+      fetch(endpoint, {method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: state.user.uid, firstName: state.user.firstName, lastName: state.user.lastName })})
         .then((res) => res.json())

@@ -3,7 +3,7 @@ import useInterval from "../hooks/useInterval"
 
 import { Link } from "gatsby"
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
-import { isLoggedIn, signUpComplete } from "../utils/utils"
+import { isLoggedIn, signUpComplete, getEndpointPrefix } from "../utils/utils"
 import gear from "../assets/gear.svg"
 
 import Navbar from "../components/navbar"
@@ -27,8 +27,8 @@ const IndexPage = () => {
   
   useEffect(() => {
     if (state.user) {
-      console.log('in useEffect', form)
-      fetch("http://localhost:5000/getNextMeeting", {method: "POST",
+      const endpoint = getEndpointPrefix() + "/getNextMeeting"
+      fetch(endpoint, {method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
