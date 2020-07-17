@@ -32,21 +32,6 @@ module.exports = {
       },
     },
     {
-      resolve: "gatsby-plugin-firebase",
-      options: {
-        credentials: {
-          apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
-          authDomain: "treetop-learning-1589657684780.firebaseapp.com",
-          databaseURL: "https://treetop-learning-1589657684780.firebaseio.com",
-          projectId: "treetop-learning-1589657684780",
-          storageBucket: "treetop-learning-1589657684780.appspot.com",
-          messagingSenderId: "668994241265",
-          appId: "1:668994241265:web:259abdd888c1e60098df50",
-          measurementId: "G-4XM0YKCT81",
-        },
-      },
-    },
-    {
       resolve: `gatsby-plugin-manifest`,
       options: {
         name: `gatsby-starter-default`,
@@ -62,14 +47,14 @@ module.exports = {
       resolve: "gatsby-plugin-firebase",
       options: {
         credentials: {
-          apiKey: "AIzaSyAa6IFn725sIJVVVk-4-XJL84DNZcTTpjE",
-          authDomain: "treetop-learning-1589657684780.firebaseapp.com",
-          databaseURL: "https://treetop-learning-1589657684780.firebaseio.com",
-          projectId: "treetop-learning-1589657684780",
-          storageBucket: "treetop-learning-1589657684780.appspot.com",
-          messagingSenderId: "668994241265",
-          appId: "1:668994241265:web:259abdd888c1e60098df50",
-          measurementId: "G-4XM0YKCT81",
+          apiKey: "AIzaSyCdgCJtC4nsn3YlDOFHs2J_dZoL_0CFar0",
+          authDomain: "treetop-learning-develop.firebaseapp.com",
+          databaseURL: "https://treetop-learning-develop.firebaseio.com",
+          projectId: "treetop-learning-develop",
+          storageBucket: "treetop-learning-develop.appspot.com",
+          messagingSenderId: "662460141873",
+          appId: "1:662460141873:web:80cec971040d347a66a010",
+          measurementId: "G-NK63QPBYLL",
         },
       },
     },

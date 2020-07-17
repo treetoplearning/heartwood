@@ -29,3 +29,11 @@ export const getEndpointPrefix = () => {
   }
   return process.env.GATSBY_PHLOEM_ENDPOINT
 }
+
+export const getCurrentAddress = () => {
+  if (typeof process.env.GATSBY_MODE === 'undefined') {
+    return "http://localhost:8000"
+  }
+  return process.env.GATSBY_HEARTWOOD_URL
+}
+

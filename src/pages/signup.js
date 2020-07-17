@@ -220,7 +220,11 @@ const SignUp = () => {
               <button
                 type="submit"
                 className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => submitForm(event)}
+                onClick={(event) => {
+                  validateInputs()
+                    ? sendUserVerificationEmail(event)
+                    : console.log("Not creating user")
+                }}
               >
                 Sign up
               </button>

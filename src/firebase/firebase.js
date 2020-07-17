@@ -1,6 +1,6 @@
 import firebase from "gatsby-plugin-firebase"
 
-import { signUpComplete } from "../utils/utils"
+import { signUpComplete, getCurrentAddress} from "../utils/utils"
 
 let auth, firestore
 
@@ -38,16 +38,13 @@ export const generateUserDocument = async (user, additionalData) => {
 }
 
 export const getCurrentUser = () => {
-  console.log('the current user is', firebase.auth().currentUser)
+  console.log("the current user is", firebase.auth().currentUser)
   return firebase.auth().currentUser
-
-  
-  
 }
 
 export const verifyEmail = (email, page) => {
   // directions for how to send the email verification
-  const actionCodeSettings = {url: "https://10.0.1.26:8000/" + page,
+  const actionCodeSettings = {url: getCurrentAddress() + "/" + page,
     // This must be true.
     handleCodeInApp: true}
 
@@ -72,7 +69,7 @@ export const prepareUserInformation = async (user) => {
   if (signUpComplete(res)) {
     // update the user that will be stored in state
     const returningUser = {...user,
-      admin : res.admin,
+      admin: res.admin,
       firstName: res.firstName,
       lastName: res.lastName,
       userName: res.userName,

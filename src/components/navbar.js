@@ -73,7 +73,7 @@ const Navbar = () => {
             <button
               type="button"
               className="p-1 text-gray-400 transition duration-150 ease-in-out border-2 border-transparent rounded-full hover:text-white focus:outline-none focus:text-white focus:bg-gray-700"
-              onClick={() => console.log(state)}
+              
             >
               <svg className="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                 <path
