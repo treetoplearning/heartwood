@@ -2,11 +2,12 @@ import firebase from "gatsby-plugin-firebase"
 
 import { signUpComplete, getCurrentAddress} from "../utils/utils"
 
-let auth, firestore
+let auth, firestore, database
 
 if (typeof window !== `undefined`) {
   auth = firebase.auth()
   firestore = firebase.firestore()
+  database = firebase.database()
 }
 
 export { auth, firestore }

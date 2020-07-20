@@ -8,6 +8,7 @@ import gear from "../assets/gear.svg"
 
 import Navbar from "../components/navbar"
 import CollectInfo from "../components/collectinfo"
+import IDE from "../components/ide"
 
 import { format, differenceInMinutes } from "date-fns"
 
@@ -62,6 +63,7 @@ const IndexPage = () => {
 
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 font-mono bg-base">
+      
        {form.isLoading && (
         <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
           {" "}

@@ -15,9 +15,9 @@ const Learn = ({ location }) => {
 
   useEffect(() => {
     const gatsby = require("gatsby")
-    if (!showPage) {
-      gatsby.navigate("/")
-    }
+    // if (!showPage) {
+    //   gatsby.navigate("/")
+    // }
   }, [])
 
   return (
@@ -47,14 +47,6 @@ const Learn = ({ location }) => {
               </div>
             </div>
             <div className="h-full m-3 bg-blue-300 rounded-lg"></div>
-          </div>
-          <div className="flex flex-col w-3/4">
-            <div className="h-64 m-3 overflow-scroll rounded-lg bg-ideBase">
-              <IDE />
-            </div>
-            <div className="h-48 px-4 m-3 overflow-x-hidden bg-black rounded-lg">
-              <Term termId="term" />
-            </div>
           </div>
         </>
       )}
