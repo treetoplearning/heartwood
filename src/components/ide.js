@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useContext } from "react"
 import firebase from "gatsby-plugin-firebase"
-import CodeMirror from "codemirror"
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 import "../styles/ide.css"
 
@@ -15,13 +14,12 @@ const IDE = () => {
 
   // Helper to get hash from end of URL or generate a random one
   const getExampleRef = () => {
-    var ref = firebase.database().ref()
-    var hash = window.location.hash.replace(/#/g, "")
+    let ref = firebase.database().ref()
+    let hash = window.location.hash.replace(/#/g, "")
 
     if (hash) {
       ref = ref.child(hash)
     } else {
-
       // generate unique location based on the 
       const endpoint = getEndpointPrefix() + "/getIDEToken"
       fetch(endpoint, {method: "POST",
@@ -31,18 +29,17 @@ const IDE = () => {
           .then(res => {
             ref = res.IDEToken
             console.log('ref is', ref) // generate unique location.
-            window.location = window.location + "#" + ref 
           })
           .catch(err => {
             console.log("error in retrieving IDEToken", err)
           })
-       
     }
 
     return ref
   }
 
   useEffect(() => {
+    const CodeMirror = require("codemirror")
     require("codemirror/mode/python/python")
 
     // get Firepad reference for realtimeDB creation and session access
