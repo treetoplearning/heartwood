@@ -44,7 +44,6 @@ const Term = ({ termId }) => {
         }
       } else if (printable) {
         buffer += e.key
-        console.log(buffer)
         term.write(e.key)
       }
     })

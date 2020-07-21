@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import Navbar from "../components/navbar"
 import IDE from "../components/ide"
 import Term from "../components/term"
@@ -10,15 +10,16 @@ import "../styles/video.css"
 const Learn = ({ location }) => {
   const state = useContext(HeartwoodStateContext)
 
-  // Jacob, make sure to turn this back to || false when you are done testing
-  const { showPage } = location.state || false
+  const [showPage, setShowPage] = useState(false)
 
   useEffect(() => {
     const gatsby = require("gatsby")
     // if (!showPage) {
     //   gatsby.navigate("/")
     // }
-  }, [])
+    // Jacob, make sure to turn this back to || false when you are done testing
+    setShowPage(true)
+  }, [state.user])
 
   return (
     <div className="flex flex-col w-full h-screen bg-base">

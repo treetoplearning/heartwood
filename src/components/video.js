@@ -143,7 +143,7 @@ const Video = () => {
 
   useEffect(() => {
     if (state.user) {
-      call()
+      // call()
     }
   }, [state.user])
 

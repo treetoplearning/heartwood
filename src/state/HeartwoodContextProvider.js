@@ -26,15 +26,16 @@ const getCookie = (name) => {
   return null
 }
 
-const initialState = { ideBody: '# code here\nprint("Hello Jacob")', termBuff: "", user: null }
+const initialState = { ideBody: '# code here\nprint("Hello Jacob")', termBuff: "", user: null, update: null}
 
 function reducer(state, action) {
   switch (action.type) {
     case "COMPILE":
-      action.cb(state.ideBody)
-      return { ...state }
+      action.cb(state.update())
+      return { ...state}
     case "WRITE_IDE":
-      return { ...state, ideBody: action.body }
+      console.log(action.update)
+      return { ...state, update: action.update}
     case "WRITE_TERM":
       return { ...state, termBuff: action.body }
     case "LOGIN":
