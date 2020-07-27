@@ -8,7 +8,6 @@ import gear from "../assets/gear.svg"
 
 import Navbar from "../components/navbar"
 import CollectInfo from "../components/collectinfo"
-import IDE from "../components/ide"
 
 import { format, differenceInMinutes } from "date-fns"
 
@@ -20,9 +19,9 @@ const IndexPage = () => {
     const currentTime = new Date()
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
-      setForm({ ...form, showMeetingButton: true, isLoading: false })
+      setForm({ ...form, showMeetingButton: true, isLoading: false})
     } else {
-      setForm({ ...form, showMeetingButton: false, isLoading: false })
+      setForm({ ...form, showMeetingButton: false, isLoading: false})
     }
   }
   
@@ -88,7 +87,7 @@ const IndexPage = () => {
            
                 to="learn"
                 state={{showPage: true}}
-                className="self-center w-1/3 px-4 py-2 mt-10 text-2xl text-center text-black bg-white rounded-xl "
+                className="self-center w-full px-4 py-2 mt-10 text-2xl text-center text-black bg-white md:w-2/3 rounded-xl "
               >
                 {" "}
                 Head to your lesson{" "}

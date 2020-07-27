@@ -82,7 +82,6 @@ const Term = ({ termId }) => {
   }, [])
 
   useEffect(() => {
-    // console.log("da state changed to: ", state);
   }, [state])
 
   return <div id={id} />
