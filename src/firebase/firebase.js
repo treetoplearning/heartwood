@@ -39,7 +39,6 @@ export const generateUserDocument = async (user, additionalData) => {
 }
 
 export const getCurrentUser = () => {
-  console.log("the current user is", firebase.auth().currentUser)
   return firebase.auth().currentUser
 }
 
@@ -55,7 +54,6 @@ export const verifyEmail = (email, page) => {
     .then((res) => {
       // The link was successfully sent. Inform the user.
 
-      console.log("verification successfully sent")
       window.localStorage.setItem("emailForSignIn", email)
     })
     .catch((error) => {

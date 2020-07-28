@@ -98,9 +98,7 @@ const HeartwoodContextProvider = ({ children }) => {
           .catch((err) => {
             console.log(err)
           })
-      } else {
-        console.log("user is already logged in")
-      }
+      } 
     } else {
       if (!state.user) {
         // catch the case where the user is redirected back to signup from the email verification

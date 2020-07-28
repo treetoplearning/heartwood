@@ -72,8 +72,6 @@ const Settings = () => {
         lastName: state.user.lastName,
         userName: state.user.userName,
         dateOfBirth: state.user.dateOfBirth})
-    } else {
-      console.log("not logged in")
     }
   }, [state.user])
 

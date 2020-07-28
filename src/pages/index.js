@@ -33,13 +33,11 @@ const IndexPage = () => {
         body: JSON.stringify({ uid: state.user.uid })})
         .then((res) => res.json())
         .then((res) => {
-          console.log("response has arrived", res)
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
             setForm({...form, 
               lessonDescription: "You do not have any upcoming lessons scheduled", showMeetingButton: false})
           } else {
-            console.log("its a meeting")
             // otherwise handle the case where a next meeting exists
             const formattedStartTime = new Date(res.startTime.dateTime)
             const formattedStopTime = new Date(res.stopTime.dateTime)
