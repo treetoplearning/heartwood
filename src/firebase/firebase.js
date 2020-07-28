@@ -2,11 +2,12 @@ import firebase from "gatsby-plugin-firebase"
 
 import { signUpComplete, getCurrentAddress} from "../utils/utils"
 
-let auth, firestore
+let auth, firestore, database
 
 if (typeof window !== `undefined`) {
   auth = firebase.auth()
   firestore = firebase.firestore()
+  database = firebase.database()
 }
 
 export { auth, firestore }
@@ -73,6 +74,7 @@ export const prepareUserInformation = async (user) => {
       firstName: res.firstName,
       lastName: res.lastName,
       userName: res.userName,
+      nextLessonInfo: res.nextLessonInfo,
       dateOfBirth: res.dateOfBirth,
       email: res.email,
       photoURL: res.photoURL}
@@ -97,6 +99,7 @@ export const prepareUserInformation = async (user) => {
       lastName: lastName,
       dateOfBirth: "",
       email: user.email,
+      nextLessonInfo: "You do not have any meeting notes.",
       photoURL:
         "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60"})
 
@@ -105,6 +108,7 @@ export const prepareUserInformation = async (user) => {
       lastName: lastName,
       userName: "",
       dateOfBirth: "",
+      nextLessonInfo: "You do not have any meeting notes.",
       email: user.email,
       photoURL:
         "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60"}

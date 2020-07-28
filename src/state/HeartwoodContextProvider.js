@@ -26,15 +26,39 @@ const getCookie = (name) => {
   return null
 }
 
-const initialState = { ideBody: '# code here\nprint("Hello Jacob")', termBuff: "", user: null }
+const deleteSpaces = (input) => {
+  
+  let a = input.replace(/[\u200B-\u200D\uFEFF]/g, 'invisiblecharacter')
+  
+  let b = a.split('invisiblecharacter')
+
+  let c = b.join("")
+
+  let d = c.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, 'invisiblespace')
+
+  let e = d.split('invisiblespace')
+
+  let f = e.filter(Boolean)
+
+  let g = f.join("")
+
+  let h = g.replace(/\n+/g, '\n')
+  
+  return h
+  
+  }
+
+const initialState = { ideBody: '# code here\nprint("Welcome to Treetop Learning")', termBuff: "", user: null, update: null }
 
 function reducer(state, action) {
   switch (action.type) {
     case "COMPILE":
-      action.cb(state.ideBody)
+      const formattedIDEInput = deleteSpaces(state.update())
+      action.cb(formattedIDEInput)
       return { ...state }
     case "WRITE_IDE":
-      return { ...state, ideBody: action.body }
+      console.log(action.update)
+      return { ...state, update: action.update }
     case "WRITE_TERM":
       return { ...state, termBuff: action.body }
     case "LOGIN":

@@ -24,6 +24,9 @@ module.exports = {
       },
       borderColor: {
         base: "#38A169",
+      },
+      margin: {
+      200: '200rem',
       }
     },
   },

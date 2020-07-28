@@ -20,6 +20,12 @@ import {getEndpointPrefix} from "../utils/utils"
 const LessonCalendar = () => {
   const state = useContext(HeartwoodStateContext)
 
+  const scrollUp = () => {
+     // then scroll up to the message
+     let target = document.getElementById("navbar")
+     target.scrollIntoView({behavior: "smooth", alignToTop: true})
+  }
+
   const [form, setForm] = useState({message: { text: "", type: "" },
     isLoading: true,
     maxBooked: false,
@@ -44,6 +50,8 @@ const LessonCalendar = () => {
             message: {text:
                 "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
               type: "success"}})
+            
+              scrollUp()
         } else {
           setForm({...form,
             isLoading: false,
@@ -91,7 +99,7 @@ const LessonCalendar = () => {
                 setForm({...form,
                   isLoading: false,
                   message: { text: "Error in booking lesson - you cannot book a lesson in the past", type: "error" }})
-
+                  scrollUp()
                 return
               }
 
@@ -99,7 +107,7 @@ const LessonCalendar = () => {
                 setForm({...form,
                   isLoading: false,
                   message: { text: "Error in booking lesson - this lesson has already been booked", type: "error" }})
-
+                  scrollUp()
                 return
               }
 
@@ -111,6 +119,12 @@ const LessonCalendar = () => {
                   isLoading: false,
                   targetLessonId: info.event.id,
                   message: { text: "Are you sure you want to book this time: " + formattedLessonTime, type: "confirm" }})
+
+                  scrollUp()
+
+                  return
+
+               
               } else {
                 setForm({...form,
                   isLoading: false,
@@ -118,6 +132,9 @@ const LessonCalendar = () => {
                   message: {text:
                       "You have already booked a lesson, if you would like to change your lesson please email treetoplearningorg@gmail.com",
                     type: "success"}})
+
+                    scrollUp()
+
               }
             },
             weekends: false,
@@ -142,7 +159,7 @@ const LessonCalendar = () => {
         <div className="py-8 font-mono">
           <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded rounded-xl lg:w-11/12 md:w-3/4 md:px-12">
             <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Schedule</h1>
-            <Message
+            <Message 
               type={form.message.type}
               text={form.message.text}
               onConfirm={confirmLesson}

@@ -13,15 +13,15 @@ import { format, differenceInMinutes } from "date-fns"
 
 const IndexPage = () => {
   const state = useContext(HeartwoodStateContext)
-  const [form, setForm] = useState({ startTime: "", stopTime: "", showMeetingButton: false, lessonDescription: "", isLoading: true})
+  const [form, setForm] = useState({ startTime: "", stopTime: "", showMeetingButton: null, lessonDescription: "", isLoading: true})
 
   const setMeetingButton = () => {
     const currentTime = new Date()
     // Check if the current time is within five minutes either way of the next lesson's time
     if (differenceInMinutes(form.startTime, currentTime) <= 5 && differenceInMinutes(currentTime, form.stopTime) <= 5) {
-      setForm({ ...form, showMeetingButton: true, isLoading: false })
+      setForm({ ...form, showMeetingButton: true})
     } else {
-      setForm({ ...form, showMeetingButton: false, isLoading: false })
+      setForm({ ...form, showMeetingButton: false})
     }
   }
   
@@ -37,7 +37,7 @@ const IndexPage = () => {
           if (res.startTime === -1 && res.stopTime === -1) {
             // catch case where there is not a next meeting
             setForm({...form, 
-              lessonDescription: "You do not have any upcoming lessons scheduled"})
+              lessonDescription: "You do not have any upcoming lessons scheduled", showMeetingButton: false})
           } else {
             console.log("its a meeting")
             // otherwise handle the case where a next meeting exists
@@ -55,13 +55,22 @@ const IndexPage = () => {
   }, [state.user])
 
   useEffect(() => {
-    if (form.lessonDescription !== 'DEFAULT') {
+    if (form.lessonDescription !== 'DEFAULT' && signUpComplete(state.user)) {
       setMeetingButton()
     }
   }, [form.lessonDescription])
 
+  useEffect(() => {
+    if (signUpComplete(state.user)) {
+      setForm({...form, isLoading: false})
+    }
+   
+  }, [form.showMeetingButton])
+
   return (
     <div className="flex flex-col w-full h-auto h-screen pb-40 font-mono bg-base">
+        <Navbar />
+      
        {form.isLoading && (
         <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
           {" "}
@@ -74,7 +83,7 @@ const IndexPage = () => {
       {(!form.isLoading && signUpComplete(state.user)) ? (
        
         <>
-          <Navbar />
+        
           
 
           <div className="flex flex-col">
@@ -86,7 +95,7 @@ const IndexPage = () => {
            
                 to="learn"
                 state={{showPage: true}}
-                className="self-center w-1/3 px-4 py-2 mt-10 text-2xl text-center text-black bg-white rounded-xl "
+                className="self-center w-3/4 px-4 py-2 mt-10 text-2xl text-center text-black bg-white md:w-2/3 rounded-xl "
               >
                 {" "}
                 Head to your lesson{" "}
