@@ -1,0 +1,24 @@
+[[plugins]]
+  package = "netlify-plugin-gatsby-cache"
+
+[context.production]
+ 
+  publish = "public/"
+  command = "gatsby build"
+  environment = { GATSBY_MODE = "production", GATSBY_PHLOEM_ENDPOINT = "https://api.treetoplearning.org", GATSBY_HEARTWOOD_URL = "https://app.treetoplearning.org"}
+
+[context.branch-deploy]
+  
+  publish = "public/"
+  command = "gatsby build"
+  environment = { GATSBY_MODE = "develop", GATSBY_PHLOEM_ENDPOINT = "https://develop.api.treetoplearning.org", GATSBY_HEARTWOOD_URL = "https://develop.app.treetoplearning.org"}
+
+[context.deploy-preview]
+  
+  publish = "public/"
+  command = "gatsby build"
+  environment = { GATSBY_MODE = "preview", GATSBY_PHLOEM_ENDPOINT = "https://develop.api.treetoplearning.org", GATSBY_HEARTWOOD_URL = "https://develop.app.treetoplearning.org"}
+
+[dev]
+  command = "gatsby develop"
+  environment = { GATSBY_PHLOEM_ENDPOINT = "https://localhost:5000", GATSBY_HEARTWOOD_URL = "https://localhost:8000"}

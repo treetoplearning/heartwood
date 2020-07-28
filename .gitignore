@@ -78,3 +78,6 @@ yarn-error.log
 # Twillio
 env.template
 
+
+# Local Netlify folder
+.netlify

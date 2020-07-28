@@ -1,39 +1,36 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useContext } from "react"
 import axios from "axios"
 
-import VideoIcon from "../components/videoicon.js"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 
 import { library } from "@fortawesome/fontawesome-svg-core"
-import {
-  faTv,
-  faMicrophone,
-  faMicrophoneSlash,
-  faPhoneAlt,
-  faPhoneSlash,
-} from "@fortawesome/free-solid-svg-icons"
+import { faTv, faMicrophone, faMicrophoneSlash, faPhoneAlt, faPhoneSlash } from "@fortawesome/free-solid-svg-icons"
+
+import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
+
+import {getEndpointPrefix} from "../utils/utils"
+
 library.add(faMicrophone, faPhoneAlt, faTv, faPhoneSlash, faMicrophoneSlash)
 
 const Video = () => {
-  const { connect, createLocalVideoTrack } = require("twilio-video")
+  const state = useContext(HeartwoodStateContext)
 
-  useEffect(() => {}, [])
-  const [local, setLocal] = useState(true)
-  const [remote, setRemote] = useState(true)
+  const { connect } = require("twilio-video")
+
   const [room, setRoom] = useState()
   const [onCall, setOnCall] = useState(false)
   const [mute, setMute] = useState(false)
 
-  function startCall() {
-    setOnCall(true)
-    call()
-  }
-
-  function endCall() {
+  const endCall = () => {
     setOnCall(false)
     room.disconnect()
   }
 
-  function toggleMute() {
+  const startCall = () => {
+    call()
+  }
+
+  const toggleMute = () => {
     if (room) {
       if (mute === false) {
         muteAudio()
@@ -45,178 +42,155 @@ const Video = () => {
   }
 
   // Mute all of the local user's tracks.
-  function muteAudio() {
-    room.localParticipant.audioTracks.forEach(publication => {
+  const muteAudio = () => {
+    room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.disable()
     })
   }
 
   // Unmute all of the local user's tracks.
-  function unmuteAudio() {
-    room.localParticipant.audioTracks.forEach(publication => {
+  const unmuteAudio = () => {
+    room.localParticipant.audioTracks.forEach((publication) => {
       publication.track.enable()
     })
   }
 
-  function call() {
-    const getParticipantToken = async ({ identity, room, participants }) => {
-      // const params = new URLSearchParams();
-      const result = await axios({
-        method: "POST",
-        url: "https://10.0.1.26:8080/token",
-        data: { identity, room, participants },
-      })
-      return result
-    }
+  const getParticipantToken = async ({ identity, room, participants }) => {
+    // const params = new URLSearchParams();
+    const endpoint = getEndpointPrefix() + "/token"
+    const result = await axios({method: "POST",
+      url: endpoint,
+      data: { identity, room, participants }})
+    return result
+  }
 
-    getParticipantToken({ identity: "Jacob", room: "Treetop-Testing" })
-      .then(res => res.data)
-      .then(data =>
-        connect(data, { name: "Treetop-Testing" }).then(
-          room => {
+  const call = () => {
+    setOnCall(true)
+    getParticipantToken({ identity: state.user.uid, room: state.user.uid })
+      .then((res) =>
+        connect(res.data.accessToken, { name: res.data.roomName, audio: true, video: { width: 640 } }).then((room) => {
             // Store the room for future reference.
             setRoom(room)
 
             console.log(`Successfully joined a Room: ${room}`)
 
-            // Set up local media
-            createLocalVideoTrack().then(track => {
-              setLocal(true)
-              setRemote(false)
-              const localMediaContainer = document.getElementById("local-media")
-              localMediaContainer.appendChild(track.attach())
-              console.log("People left in the room are:", room.participants)
-            })
-
             // Log new participants
-            room.participants.forEach(participant => {
-              console.log(
-                `Participant "${participant.identity}" has connected to the Room`
-              )
+            room.participants.forEach((participant) => {
+              console.log(`Participant "${participant.identity}" has connected to the Room`)
             })
 
             // Share all participants media with each other
-            room.on("participantConnected", participant => {
+            room.on("participantConnected", (participant) => {
               console.log(`Participant "${participant.identity}" connected`)
 
-              participant.tracks.forEach(publication => {
+              participant.tracks.forEach((publication) => {
                 if (publication.isSubscribed) {
                   const track = publication.track
-                  setLocal(false)
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
-              participant.on("trackSubscribed", track => {
-                setLocal(false)
-                setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+              participant.on("trackSubscribed", (track) => {
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
+            })
+
+            room.on("trackUnsubscribed", (track) => {
+              track.detach().forEach((element) => element.remove())
+            })
+
+            room.on("participantDisconnected", (room) => {
+              setOnCall(false)
+              document.getElementById("remote-media-div").innerHTML = ""
             })
 
             // Disconnect user and show local input
-            room.on("disconnected", room => {
+            room.on("disconnected", (room) => {
               console.log(`Participant has disconnected.`)
 
-              console.log("People left in the room are:", room.participants)
-
-              room.participants.forEach(participant => {
-                participant.tracks.forEach(publication => {
-                  const track = publication.track
-                  if (
-                    publication.track &&
-                    participant !== room.localParticipant
-                  ) {
-                    console.log("hello")
-                    document.getElementById("local-media").removeChild(track)
-                    document
-                      .getElementById("remote-media-div")
-                      .removeChild(track)
-                  }
-                })
+              room.localParticipant.tracks.forEach((publication) => {
+                publication.track.disable()
+                publication.track.stop()
+                publication.track.detach().forEach((element) => element.remove())
+                room.localParticipant.unpublishTrack(publication.track)
               })
 
-              // Detach the local media elements
-              room.localParticipant.tracks.forEach(publication => {
-                const attachedElements = publication.track.detach()
-                attachedElements.forEach(element => element.remove())
-              })
+              document.getElementById("remote-media-div").innerHTML = ""
 
               console.log("People left in the room are:", room.participants)
-              if (room.participants.size === 0) {
-                setLocal(false)
-              } else {
-                setLocal(true)
-              }
-              setRemote(false)
             })
 
-            room.participants.forEach(participant => {
-              participant.tracks.forEach(publication => {
+            room.participants.forEach((participant) => {
+              participant.tracks.forEach((publication) => {
                 const track = publication.track
                 if (publication.track) {
-                  document
-                    .getElementById("remote-media-div")
-                    .appendChild(track.attach())
+                  document.getElementById("remote-media-div").appendChild(track.attach())
                 }
               })
 
-              participant.on("trackSubscribed", track => {
-                setLocal(false)
-                setRemote(true)
-                document
-                  .getElementById("remote-media-div")
-                  .appendChild(track.attach())
+              participant.on("trackSubscribed", (track) => {
+                document.getElementById("remote-media-div").appendChild(track.attach())
               })
             })
           },
-          error => {
+          (error) => {
             console.error(`Unable to connect to Room: ${error.message}`)
-          }
-        )
-      )
+          }))
+      .catch((err) => {
+        console.log("There was an error", err)
+      })
   }
+
+  useEffect(() => {
+    if (state.user) {
+      // call()
+    }
+  }, [state.user])
 
   return (
     <div className="relative flex flex-col w-full h-full text-md">
       <div className="">
-        {remote && <div id="remote-media-div" className="z-0"></div>}
-
-        {local && <div id="local-media" className="z-0"></div>}
+        <div id="remote-media-div" className="z-0"></div>
       </div>
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
         {!mute && (
-          <VideoIcon icon={faMicrophone} action={toggleMute}></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
+          </button>
         )}
         {mute && (
-          <VideoIcon icon={faMicrophoneSlash} action={toggleMute}></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => toggleMute()}
+          >
+            <FontAwesomeIcon icon={faMicrophoneSlash}></FontAwesomeIcon>
+          </button>
         )}
 
         {!onCall && (
-          <VideoIcon
-            icon={faPhoneAlt}
-            alert={true}
-            onCall={onCall}
-            action={startCall}
-          ></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-green-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => startCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon>
+          </button>
         )}
         {onCall && (
-          <VideoIcon
-            icon={faPhoneSlash}
-            alert={true}
-            onCall={onCall}
-            action={endCall}
-          ></VideoIcon>
+          <button
+            className="invisible w-8 p-1 mx-2 text-white transition bg-red-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            onClick={() => endCall()}
+          >
+            <FontAwesomeIcon icon={faPhoneSlash}></FontAwesomeIcon>
+          </button>
         )}
-        <VideoIcon
-          icon={faTv}
-          action={() => console.log("share screen")}
-        ></VideoIcon>
+
+        <button className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible">
+          <FontAwesomeIcon icon={faTv}></FontAwesomeIcon>
+        </button>
       </div>
     </div>
   )
