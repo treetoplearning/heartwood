@@ -56,7 +56,6 @@ const Term = ({ termId }) => {
       if (text.trim().length > 0) {
         term.write("\r\n")
         term.write(text)
-        term.write("\r\n$ ")
       }
     }
     function builtinRead(x) {
@@ -72,6 +71,7 @@ const Term = ({ termId }) => {
       const myPromise = skulpt.misceval.asyncToPromise(function () {
         return skulpt.importMainWithBody("<stdin>", false, body, true)
       })
+      term.write("\r\n$ ")
       myPromise.then(function (mod) {
           console.log("success")
         },

@@ -5,6 +5,8 @@ import Term from "../components/term"
 import Video from "../components/video"
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
 
+import {signUpComplete} from "../utils/utils"
+
 import "../styles/video.css"
 
 const Learn = ({ location }) => {
@@ -13,13 +15,21 @@ const Learn = ({ location }) => {
   const [showPage, setShowPage] = useState(false)
 
   useEffect(() => {
+    if (state.user) {
     const gatsby = require("gatsby")
-    setShowPage(true)
+    console.log("location is", location.state)
+    if (true) {
+      setShowPage(true)
+    } else {
+      gatsby.navigate("/")
+    }
+    
+    }
   }, [state.user])
 
   return (
     <div className="flex flex-col w-full h-screen bg-base">
-      {showPage && (
+      {(showPage && signUpComplete(state.user)) && (
         <>
           <Navbar />
           <div className="flex flex-row items-center justify-center w-full h-full ">
@@ -33,7 +43,7 @@ const Learn = ({ location }) => {
                   </div>
                 </div>
                 <div className="flex-grow h-48 m-3 overflow-y-scroll bg-orange-200 rounded-lg -mb-200 ">
-                <p className="m-5 "> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum. </p>
+                <p className="m-5 "> {state.user.nextLessonInfo} </p>
                 </div>
               </div>
               <div className="flex flex-col w-3/4">
