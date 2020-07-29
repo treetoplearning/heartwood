@@ -130,7 +130,8 @@ const SignUp = () => {
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
-          console.log("error signing in with emailLink", error)
+          setForm({ ...form, message: { text: "There was an error signing up with email link, please try again", type: "error" } })
+
         })
     } else {
       auth
