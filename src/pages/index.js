@@ -27,6 +27,13 @@ const IndexPage = () => {
   
   useEffect(() => {
     if (state.user) {
+
+      // catch the case of a first time user login
+      if (!signUpComplete(state.user)) {
+        setForm({...form, isLoading: false})
+        return
+      }
+      
       const endpoint = getEndpointPrefix() + "/getNextMeeting"
       fetch(endpoint, {method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -66,8 +73,9 @@ const IndexPage = () => {
   }, [form.showMeetingButton])
 
   return (
-    <div className="flex flex-col w-full h-auto h-screen pb-40 font-mono bg-base">
-        <Navbar />
+    <div className="flex flex-col w-full h-auto min-h-screen pb-20 font-mono bg-base">
+      {signUpComplete(state.user) && <Navbar />}
+   
       
        {form.isLoading && (
         <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
@@ -102,7 +110,7 @@ const IndexPage = () => {
           </div>
         </>
       ) : (
-        isLoggedIn(state.user) && <CollectInfo />
+        isLoggedIn(state.user) && <div className="pb-10"> <CollectInfo/></div> 
       )}
       
     </div>
