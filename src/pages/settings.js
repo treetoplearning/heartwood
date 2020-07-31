@@ -1,15 +1,20 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useRef } from "react"
 
 import Navbar from "../components/navbar"
 import Message from "../components/message"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
-import { isLoggedIn } from "../utils/utils"
+import { isLoggedIn, setBorderRed, removeBorderColor } from "../utils/utils"
 import { firestore } from "../firebase/firebase"
 
 const Settings = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
+
+  const firstNameInputRef = useRef(null)
+  const lastNameInputRef = useRef(null)
+  const userNameInputRef = useRef(null)
+  const dateOfBirthInputRef = useRef(null)
 
   const [form, setForm] = useState({firstName: "",
     lastName: "",
@@ -64,6 +69,51 @@ const Settings = () => {
     }, 3000)
   }
 
+  const validateInputs = () => {
+    // check for empty inputs
+    if (form.firstName === "" || form.lastName === "" || form.userName === "" || form.dateOfBirth === "") {
+      setForm({ ...form, message: { text: "Please fill out all required fields", type: "error" } })
+
+      // if any of the inputs are non-empty make sure to change their color
+      if (form.firstName === "") {
+        setBorderRed([firstNameInputRef])
+      } else {
+        removeBorderColor([firstNameInputRef])
+      }
+
+      if (form.lastName === "") {
+        setBorderRed([lastNameInputRef])
+      } else {
+        removeBorderColor([lastNameInputRef])
+      }
+
+      if (form.userName === "") {
+        setBorderRed([userNameInputRef])
+      } else {
+        removeBorderColor([userNameInputRef])
+      }
+
+      if (form.dateOfBirth === "") {
+        setBorderRed([dateOfBirthInputRef])
+      } else {
+        removeBorderColor([dateOfBirthInputRef])
+      }
+
+      return false
+    }
+
+    // if all inputs are non null remove all border colors
+    removeBorderColor([firstNameInputRef, lastNameInputRef, userNameInputRef, dateOfBirthInputRef])
+    return true
+  }
+
+  const submitForm = (event) => {
+    event.preventDefault()
+    if (validateInputs()) {
+      updateProfile()
+    }
+  }
+
   useEffect(() => {
     if (isLoggedIn(state.user)) {
       // On load, set all the inputs to the user's current preferences
@@ -81,10 +131,7 @@ const Settings = () => {
       <div className="pt-8 font-mono">
         <div className="w-11/12 px-6 py-8 mx-auto bg-white rounded-xl md:w-3/4 lg:w-1/2 md:px-12">
           <h1 className="pt-4 mb-2 text-3xl font-bold text-center">Settings</h1>
-          <Message
-              type={form.message.type}
-              text={form.message.text}
-            />
+          <Message type={form.message.type} text={form.message.text} />
 
           <form className="">
             <div className="mb-4">
@@ -93,6 +140,7 @@ const Settings = () => {
               </label>
               <input
                 type="text"
+                ref={firstNameInputRef}
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userFirstName"
                 id="userFirstName"
@@ -108,6 +156,7 @@ const Settings = () => {
 
               <input
                 type="text"
+                ref={lastNameInputRef}
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userLastName"
                 id="userLastName"
@@ -123,6 +172,7 @@ const Settings = () => {
 
               <input
                 type="text"
+                ref={userNameInputRef}
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userName"
                 id="userName"
@@ -139,6 +189,7 @@ const Settings = () => {
               <input
                 required
                 type="date"
+                ref={dateOfBirthInputRef}
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="dateOfBirth"
                 id="dateOfBirth"
@@ -150,7 +201,7 @@ const Settings = () => {
             <button
               type="button"
               className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-              onClick={() => updateProfile()}
+              onClick={(event) => submitForm(event)}
             >
               Update Settings
             </button>

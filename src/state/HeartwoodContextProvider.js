@@ -27,28 +27,31 @@ const getCookie = (name) => {
 }
 
 const deleteSpaces = (input) => {
-  
-  let a = input.replace(/[\u200B-\u200D\uFEFF]/g, 'invisiblecharacter')
-  
-  let b = a.split('invisiblecharacter')
+  let a = input.replace(/[\u200B-\u200D\uFEFF]/g, "invisiblecharacter")
+
+  let b = a.split("invisiblecharacter")
 
   let c = b.join("")
 
-  let d = c.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, 'invisiblespace')
+  let d = c.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "invisiblespace")
 
-  let e = d.split('invisiblespace')
+  let e = d.split("invisiblespace")
 
   let f = e.filter(Boolean)
 
   let g = f.join("")
 
-  let h = g.replace(/\n+/g, '\n')
-  
-  return h
-  
-  }
+  let h = g.replace(/\n+/g, "\n")
 
-const initialState = { ideBody: '# code here\nprint("Welcome to Treetop Learning")', termBuff: "", user: null, update: null }
+  return h
+}
+
+const initialState = {
+  ideBody: '# code here\nprint("Welcome to Treetop Learning")',
+  termBuff: "",
+  user: null,
+  update: null,
+}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -84,9 +87,11 @@ const HeartwoodContextProvider = ({ children }) => {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
         const endpoint = getEndpointPrefix() + "/verify"
-        fetch(endpoint, {method: "POST",
+        fetch(endpoint, {
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idt: getCookie("idt") })})
+          body: JSON.stringify({ idt: getCookie("idt") }),
+        })
           .then((res) => res.json())
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
@@ -98,7 +103,7 @@ const HeartwoodContextProvider = ({ children }) => {
           .catch((err) => {
             console.log(err)
           })
-      } 
+      }
     } else {
       if (!state.user) {
         // catch the case where the user is redirected back to signup from the email verification

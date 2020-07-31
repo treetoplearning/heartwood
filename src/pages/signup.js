@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react"
+import React, { useState, useEffect, useContext, useRef } from "react"
 import { navigate } from "gatsby"
 import { Link } from "@reach/router"
 
@@ -20,12 +20,17 @@ import {auth,
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
+import { validateEmail, setBorderRed, removeBorderColor } from "../utils/utils"
+
 library.add(faGoogle, faGithub)
 config.autoAddCss = false
 
 const SignUp = () => {
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
+
+  const emailInputRef = useRef(null)
+  const passwordInputRef = useRef(null)
 
   const [form, setForm] = useState({email: "",
     password: "",
@@ -37,23 +42,27 @@ const SignUp = () => {
   // Generate a new document for a new user
   const sendUserVerificationEmail = (event) => {
     setForm({ ...form, isLoading: true })
-    event.preventDefault()
     try {
       // Send the verification email and tell the user to check their inbox
-      verifyEmail(form.email, "signup")
+      verifyEmail(form.email, form.password, "signup")
       setForm({ ...form, message: { text: "Please check your email to complete your signup", type: "success" } })
+      removeBorderColor([emailInputRef, passwordInputRef])
     } catch (error) {
       setForm({ ...form, isLoading: false })
 
       // handle and display the various errors to the user
       if (error.code === "auth/account-exists-with-different-credential") {
         setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
+        setBorderRed([emailInputRef])
       } else if (error.code === "auth/email-already-in-use") {
         setForm({ ...form, message: { text: "Email address is already in use by another account", type: "error" } })
+        setBorderRed([emailInputRef])
       } else if (error.code === "auth/invalid-email") {
         setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
+        setBorderRed([emailInputRef])
       } else {
         setForm({ ...form, message: { text: "Error signing up with email and password", type: "error" } })
+        setBorderRed([emailInputRef, passwordInputRef])
       }
     }
   }
@@ -75,16 +84,36 @@ const SignUp = () => {
     setForm({ ...form, passwordStrong: false })
   }
 
-  // checks that all user inputs are not empty
   const validateInputs = () => {
+    // check for any empty inputs
+    if (form.email === "" || form.password === "") {
+      setForm({ ...form, message: { text: "Please fill out all required inputs", type: "error" } })
+
+      if (form.email === "" && form.password === "") {
+        setBorderRed([emailInputRef, passwordInputRef])
+      } else if (form.email === "") {
+        setBorderRed([emailInputRef])
+      } else {
+        setBorderRed([passwordInputRef])
+      }
+
+      return false
+    }
+
     if (!form.passwordStrong) {
       setForm({ ...form, message: { text: "Please select a more complex password", type: "error" } })
+      setBorderRed([passwordInputRef])
       return false
     }
-    if (form.email === "" || form.password === "") {
-      setForm({ ...form, message: { text: "Error signing up with email and password", type: "error" } })
+
+    // check for issues with email validation or password
+    if (!validateEmail(form.email)) {
+      setForm({ ...form, message: { text: "Email address is badly formatted", type: "error" } })
+      setBorderRed([emailInputRef])
+
       return false
     }
+
     return true
   }
 
@@ -105,18 +134,22 @@ const SignUp = () => {
 
       // Get the email if available. This should be available if the user completes
       // the flow on the same device where they started it.
-      let email = window.localStorage.getItem("emailForSignIn")
+      let email = String(window.localStorage.getItem("emailForSignIn")).trim()
+      let password = String(window.localStorage.getItem("passwordForSignIn")).trim()
+      console.log(email, password)
       if (!email) {
         // User opened the link on a different device. To prevent session fixation
         // attacks, ask the user to provide the associated email again. For example:
         email = window.prompt("Please provide your email for confirmation")
       }
+
       // The client SDK will parse the code from the link for you.
       auth
-        .signInWithEmailLink(email, window.location.href)
+        .createUserWithEmailAndPassword(email, password)
         .then((result) => {
           // Clear email from storage.
           window.localStorage.removeItem("emailForSignIn")
+          window.localStorage.removeItem("passwordForSignIn")
 
           prepareUserInformation(result.user).then((res) => {
             getCurrentUser()
@@ -130,8 +163,8 @@ const SignUp = () => {
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
-          setForm({ ...form, message: { text: "There was an error signing up with email link, please try again", type: "error" } })
-
+          setForm({...form,
+            message: { text: "There was an error signing up with email link, please try again", type: "error" }})
         })
     } else {
       auth
@@ -157,6 +190,7 @@ const SignUp = () => {
           setForm({ ...form, isLoading: false })
           if (error.code === "auth/account-exists-with-different-credential") {
             setForm({ ...form, message: { text: "An account already exists under that email address", type: "error" } })
+            setBorderRed([emailInputRef])
           }
         })
     }
@@ -193,6 +227,7 @@ const SignUp = () => {
                 </label>
                 <input
                   required
+                  ref={emailInputRef}
                   type="email"
                   className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                   name="userEmail"
@@ -208,6 +243,7 @@ const SignUp = () => {
                 </label>
                 <input
                   required
+                  ref={passwordInputRef}
                   type="password"
                   className="w-full px-3 py-2 mb-3 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                   name="userPassword"
@@ -220,14 +256,10 @@ const SignUp = () => {
               </div>
               <button
                 type="submit"
-                className="w-full py-2 text-white duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
-                onClick={(event) => {
-                  validateInputs()
-                    ? sendUserVerificationEmail(event)
-                    : console.log("Not creating user")
-                }}
+                className="w-full py-2 text-white transition duration-100 ease-in-out rounded-md bg-base hover:bg-green-700 focus:shadow-outline-indigo"
+                onClick={(event) => submitForm(event)}
               >
-                Sign up
+                Sign Up
               </button>
             </form>
             <p className="my-3 text-center">or</p>

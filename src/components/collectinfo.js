@@ -1,12 +1,17 @@
-import React, { useState, useContext, useEffect } from "react"
+import React, { useState, useContext, useEffect, useRef } from "react"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
-import { isLoggedIn } from "../utils/utils"
+import { isLoggedIn, setBorderRed, removeBorderColor } from "../utils/utils"
 import { firestore } from "../firebase/firebase"
 
 const CollectInfo = () => {
   const dispatch = useContext(HeartwoodDispatchContext)
   const state = useContext(HeartwoodStateContext)
+
+  const firstNameInputRef = useRef(null)
+  const lastNameInputRef = useRef(null)
+  const userNameInputRef = useRef(null)
+  const dateOfBirthInputRef = useRef(null)
 
   const [form, setForm] = useState({firstName: "",
     lastName: "",
@@ -60,14 +65,42 @@ const CollectInfo = () => {
   }
 
   const validateInputs = () => {
+    // check for empty inputs
     if (form.firstName === "" || form.lastName === "" || form.userName === "" || form.dateOfBirth === "") {
       setForm({ ...form, message: { text: "Please fill out all required fields", type: "error" } })
+
+      // if any of the inputs are non-empty make sure to change their color
+      if (form.firstName === "") {
+        setBorderRed([firstNameInputRef])
+      } else {
+        removeBorderColor([firstNameInputRef])
+      }
+
+      if (form.lastName === "") {
+        setBorderRed([lastNameInputRef])
+      } else {
+        removeBorderColor([lastNameInputRef])
+      }
+
+      if (form.userName === "") {
+        setBorderRed([userNameInputRef])
+      } else {
+        removeBorderColor([userNameInputRef])
+      }
+
+      if (form.dateOfBirth === "") {
+        setBorderRed([dateOfBirthInputRef])
+      } else {
+        removeBorderColor([dateOfBirthInputRef])
+      }
+
       return false
     }
     return true
   }
 
   const submitForm = (event) => {
+    event.preventDefault()
     if (validateInputs()) {
       updateProfile()
     }
@@ -110,6 +143,7 @@ const CollectInfo = () => {
               </label>
               <input
                 required
+                ref={firstNameInputRef}
                 type="text"
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userFirstName"
@@ -126,6 +160,7 @@ const CollectInfo = () => {
 
               <input
                 required
+                ref={lastNameInputRef}
                 type="text"
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userLastName"
@@ -142,6 +177,7 @@ const CollectInfo = () => {
 
               <input
                 required
+                ref={userNameInputRef}
                 type="text"
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="userName"
@@ -158,6 +194,7 @@ const CollectInfo = () => {
 
               <input
                 required
+                ref={dateOfBirthInputRef}
                 type="date"
                 className="w-full px-3 py-2 leading-tight border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
                 name="dateOfBirth"
