@@ -1,6 +1,6 @@
 import firebase from "gatsby-plugin-firebase"
 
-import { signUpComplete, getCurrentAddress} from "../utils/utils"
+import { signUpComplete, getCurrentAddress } from "../utils/utils"
 
 let auth, firestore, database
 
@@ -42,7 +42,7 @@ export const getCurrentUser = () => {
   return firebase.auth().currentUser
 }
 
-export const verifyEmail = (email, page) => {
+export const verifyEmail = (email, password, page) => {
   // directions for how to send the email verification
   const actionCodeSettings = {url: getCurrentAddress() + "/" + page,
     // This must be true.
@@ -55,6 +55,7 @@ export const verifyEmail = (email, page) => {
       // The link was successfully sent. Inform the user.
 
       window.localStorage.setItem("emailForSignIn", email)
+      window.localStorage.setItem("passwordForSignIn", password)
     })
     .catch((error) => {
       console.log("error in sending email verification", error)
@@ -127,6 +128,10 @@ const getUserDocument = async (uid) => {
 }
 
 export const signOut = () => {
+  // catch the case where the user sets a cookie for email verification but doesn't follow link
+  window.localStorage.removeItem("emailForSignIn")
+  window.localStorage.removeItem("passwordForSignIn")
+
   auth.signOut().then(function () {
       console.log("Signed Out")
     },

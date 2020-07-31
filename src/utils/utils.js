@@ -24,16 +24,36 @@ export const doneLoading = (loading) => {
 }
 
 export const getEndpointPrefix = () => {
-  if (typeof process.env.GATSBY_MODE === 'undefined') {
+  if (typeof process.env.GATSBY_MODE === "undefined") {
     return "http://localhost:5000"
   }
   return process.env.GATSBY_PHLOEM_ENDPOINT
 }
 
 export const getCurrentAddress = () => {
-  if (typeof process.env.GATSBY_MODE === 'undefined') {
+  if (typeof process.env.GATSBY_MODE === "undefined") {
     return "http://localhost:8000"
   }
   return process.env.GATSBY_HEARTWOOD_URL
 }
 
+export const validateEmail = (email) => {
+  if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)) {
+    return true
+  }
+  return false
+}
+
+// take in a list of element refs and set each's border-color style to red
+export const setBorderRed = (elementRefs) => {
+  for (let x = 0; x < elementRefs.length; x++) {
+    elementRefs[x].current.style.borderColor = "#F56565"
+  }
+}
+
+// take in a list of element refs and remove each's border-color style
+export const removeBorderColor = (elementRefs) => {
+  for (let x = 0; x < elementRefs.length; x++) {
+    elementRefs[x].current.style.borderColor = "#e2e8f0"
+  }
+}
