@@ -1,0 +1,6 @@
+- name: Action For Semantic Release
+  uses: cycjimmy/semantic-release-action@v2.5.0
+  with:
+    # The branches on which releases should happen. It will override the branches attribute in your configuration file. Support for semantic-release above v16. See https://semantic-release.gitbook.io/semantic-release/usage/configuration#branches for more information.
+    branches: ['master', 'develop']
+ 
