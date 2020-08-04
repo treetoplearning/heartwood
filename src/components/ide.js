@@ -10,30 +10,30 @@ const IDE = () => {
 
   const state = useContext(HeartwoodStateContext)
   const dispatch = useContext(HeartwoodDispatchContext)
-  const [ref, setRef] = useState("")
-  const [input, setInput] = useState("blank")
 
-  // Helper to get hash from end of URL or generate a random one
-  const getLessonRef = () => {
-    let ref = firebase.database().ref()
-
-    // generate unique location based on the
+  const getLessonID = async () => {
     const endpoint = getEndpointPrefix() + "/getIDEToken"
-    fetch(endpoint, {method: "POST",
+    return fetch(endpoint, {method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ uid: state.user.uid })})
       .then((res) => res.json())
       .then((res) => {
-        ref = res.IDEToken
-        setRef(ref)
-
-        console.log("ref is", ref) // generate unique location.
+        let id = res.IDEToken
+        return id
       })
       .catch((err) => {
         console.log("error in retrieving IDEToken", err)
-      })
+      })  
+  }
 
-    return ref
+  // Create the lesson reference by searching the databse for the lessonID
+  const getLessonRef = () => {
+    let ref = firebase.database().ref()
+
+    // Need to get the results of getLessonID here and store then in a variable
+    return getLessonID().then(res => ref.child(res))
+
+    //return ref.child("lessonID")
   }
 
    // when ready to compile, get the contents of the IDE
@@ -49,6 +49,9 @@ const IDE = () => {
 
       // get Firepad reference for realtimeDB creation and session access
       const firepadRef = getLessonRef()
+      console.log(firepadRef)
+
+      firepadRef.then(res => {
 
       // initialize codeMirror instance to pass into Firepad
       const codeMirror = CodeMirror(editorRef.current, { lineWrapping: true, theme: "material", mode: "python" })
@@ -57,13 +60,16 @@ const IDE = () => {
       const Firepad = require("firepad")
 
       // initialize Firepad instance under the firepadRef realtimeDB address, and navigate to that address
-      const firepad = Firepad.fromCodeMirror(firepadRef, codeMirror, {richTextToolbar: false,
+      const firepad = Firepad.fromCodeMirror(res, codeMirror, {richTextToolbar: false,
         richTextShortcuts: false,
         defaultText:
           '# Welcome to your lesson, write some code below then enter "python3 file.py" in the terminal to compile'})
         
       dispatch({ type: "WRITE_IDE", update: getIDEInput})
       console.log(state)
+      })
+
+     
    
     }
   }, [state.user])
