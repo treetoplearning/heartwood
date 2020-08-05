@@ -116,7 +116,7 @@ export const prepareUserInformation = async (user) => {
       nextLessonInfo: "You do not have any meeting notes.",
       email: user.email,
       photoURL:
-        "https://images.unsplash.com/photo-1588057078850-c7853b9188f8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=900&q=60"}
+        photoURL}
 
     return editedUser
   }
