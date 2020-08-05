@@ -46,12 +46,10 @@ const deleteSpaces = (input) => {
   return h
 }
 
-const initialState = {
-  ideBody: '# code here\nprint("Welcome to Treetop Learning")',
+const initialState = {ideBody: '# code here\nprint("Welcome to Treetop Learning")',
   termBuff: "",
   user: null,
-  update: null,
-}
+  update: null}
 
 function reducer(state, action) {
   switch (action.type) {
@@ -87,11 +85,9 @@ const HeartwoodContextProvider = ({ children }) => {
       // if the user is not currently logged in during a state change, check if they have a cookie
       if (!isLoggedIn(state.user)) {
         const endpoint = getEndpointPrefix() + "/verify"
-        fetch(endpoint, {
-          method: "POST",
+        fetch(endpoint, {method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ idt: getCookie("idt") }),
-        })
+          body: JSON.stringify({ idt: getCookie("idt") })})
           .then((res) => res.json())
           .then((res) => {
             fb.prepareUserInformation({ uid: res.uid }).then((res) => {
@@ -110,6 +106,10 @@ const HeartwoodContextProvider = ({ children }) => {
         let email = window.localStorage.getItem("emailForSignIn")
         if (!email) {
           navigate("/signin")
+        } else {
+          // catch the case where the user sets a cookie for email verification but doesn't follow link
+          window.localStorage.removeItem("emailForSignIn")
+          window.localStorage.removeItem("passwordForSignIn")
         }
       }
     }
