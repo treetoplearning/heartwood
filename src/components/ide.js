@@ -49,7 +49,6 @@ const IDE = () => {
 
       // get Firepad reference for realtimeDB creation and session access
       const firepadRef = getLessonRef()
-      console.log(firepadRef)
 
       firepadRef.then(res => {
 
@@ -66,7 +65,6 @@ const IDE = () => {
           '# Welcome to your lesson, write some code below then enter "python3 file.py" in the terminal to compile'})
         
       dispatch({ type: "WRITE_IDE", update: getIDEInput})
-      console.log(state)
       })
 
         
