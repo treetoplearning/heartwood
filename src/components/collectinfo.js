@@ -72,27 +72,19 @@ const CollectInfo = () => {
       // if any of the inputs are non-empty make sure to change their color
       if (form.firstName === "") {
         setBorderRed([firstNameInputRef])
-      } else {
-        removeBorderColor([firstNameInputRef])
       }
 
       if (form.lastName === "") {
         setBorderRed([lastNameInputRef])
-      } else {
-        removeBorderColor([lastNameInputRef])
-      }
+      } 
 
       if (form.userName === "") {
         setBorderRed([userNameInputRef])
-      } else {
-        removeBorderColor([userNameInputRef])
-      }
+      } 
 
       if (form.dateOfBirth === "") {
         setBorderRed([dateOfBirthInputRef])
-      } else {
-        removeBorderColor([dateOfBirthInputRef])
-      }
+      } 
 
       return false
     }
@@ -101,6 +93,7 @@ const CollectInfo = () => {
 
   const submitForm = (event) => {
     event.preventDefault()
+    removeBorderColor([firstNameInputRef, lastNameInputRef, userNameInputRef, dateOfBirthInputRef])
     if (validateInputs()) {
       updateProfile()
     }

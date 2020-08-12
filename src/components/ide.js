@@ -32,8 +32,6 @@ const IDE = () => {
 
     // Need to get the results of getLessonID here and store then in a variable
     return getLessonID().then(res => ref.child(res))
-
-    //return ref.child("lessonID")
   }
 
    // when ready to compile, get the contents of the IDE
@@ -66,7 +64,6 @@ const IDE = () => {
         
       dispatch({ type: "WRITE_IDE", update: getIDEInput})
       })
-
         
     }
   }, [state.user])
