@@ -16,7 +16,7 @@ import { library } from "@fortawesome/fontawesome-svg-core"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
 
-import { validateEmail, setBorderRed } from "../utils/utils"
+import { validateEmail, setBorderRed, removeBorderColor} from "../utils/utils"
 
 library.add(faGoogle, faGithub)
 
@@ -94,6 +94,7 @@ const SignIn = () => {
 
   const submitForm = (event) => {
     event.preventDefault()
+    removeBorderColor([passwordInputRef, emailInputRef])
     if (validateInputs()) {
       signInWithEmailAndPasswordHandler(event, form.email, form.password)
     }

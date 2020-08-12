@@ -27,23 +27,17 @@ const getCookie = (name) => {
 }
 
 const deleteSpaces = (input) => {
-  let a = input.replace(/[\u200B-\u200D\uFEFF]/g, "invisiblecharacter")
 
-  let b = a.split("invisiblecharacter")
+  // first remove invisible characters
+  let inputNoInvisCharacters = input.replace(/[\u200B-\u200D\uFEFF]/g, "invisiblecharacter").split("invisiblecharacter").join("")
 
-  let c = b.join("")
+  // then remove invisble spaces
+  let inputNoInvisSpaces = inputNoInvisCharacters.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "invisiblespace").split("invisiblespace").filter(Boolean).join("")
 
-  let d = c.replace(/(^[\s\u200b]*|[\s\u200b]*$)/g, "invisiblespace")
+  // then remove full lines spaces so buffer cna be read
+  let updatedInput = inputNoInvisSpaces.replace(/\n+/g, "\n")
 
-  let e = d.split("invisiblespace")
-
-  let f = e.filter(Boolean)
-
-  let g = f.join("")
-
-  let h = g.replace(/\n+/g, "\n")
-
-  return h
+  return updatedInput
 }
 
 const initialState = {ideBody: '# code here\nprint("Welcome to Treetop Learning")',
