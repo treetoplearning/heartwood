@@ -42,15 +42,15 @@ const Learn = ({ location }) => {
                     </div>
                   </div>
                 </div>
-                <div className="flex-grow h-48 m-3 overflow-y-scroll bg-orange-200 rounded-lg -mb-200 ">
+                <div className="flex-grow h-48 m-3 overflow-y-hidden bg-orange-200 rounded-lg -mb-200 ">
                 <p className="m-5 "> {state.user.nextLessonInfo} </p>
                 </div>
               </div>
               <div className="flex flex-col w-3/4">
-                <div className="h-64 m-3 overflow-scroll rounded-lg bg-ideBase">
+                <div className="h-64 m-3 overflow-x-hidden overflow-y-hidden rounded-lg bg-ideBase">
                   <IDE />
                 </div>
-                <div className="h-48 px-4 m-3 overflow-x-hidden bg-black rounded-lg">
+                <div className="h-48 px-4 m-3 overflow-x-hidden overflow-y-hidden bg-black rounded-lg">
                   <Term termId="term" />
                 </div>
               </div>

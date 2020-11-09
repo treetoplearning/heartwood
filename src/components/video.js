@@ -150,7 +150,7 @@ const Video = () => {
   return (
     <div className="relative flex flex-col w-full h-full text-md">
       <div className="">
-        <div id="remote-media-div" className="z-0"></div>
+        <div id="remote-media-div" className="z-0 max-w-md "></div>
       </div>
 
       <div className="absolute bottom-0 flex-row self-center mb-4 ">

@@ -51,7 +51,7 @@ const IDE = () => {
       firepadRef.then(res => {
 
       // initialize codeMirror instance to pass into Firepad
-      const codeMirror = CodeMirror(editorRef.current, { lineWrapping: true, theme: "material", mode: "python" })
+      const codeMirror = CodeMirror(editorRef.current, {scrollbarStyle: "null", lineNumbers: true, lineWrapping: true, theme: "material", mode: "python" })
 
       window.CodeMirror = CodeMirror
       const Firepad = require("firepad")
@@ -67,12 +67,9 @@ const IDE = () => {
         
     }
   }, [state.user])
-
- 
-
   return (
     <>
-      <div id="firepad-container" ref={editorRef}></div>
+      <div className="mt-2" id="firepad-container" ref={editorRef}></div>
     </>
   )
 }
