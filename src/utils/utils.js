@@ -25,7 +25,7 @@ export const doneLoading = (loading) => {
 
 export const getEndpointPrefix = () => {
   if (typeof process.env.GATSBY_MODE === "undefined") {
-    return "http://localhost:5000"
+    return "https://develop.api.treetoplearning.org"
   }
   return process.env.GATSBY_PHLOEM_ENDPOINT
 }

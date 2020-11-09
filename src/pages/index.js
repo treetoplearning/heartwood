@@ -8,6 +8,7 @@ import gear from "../assets/gear.svg"
 
 import Navbar from "../components/navbar"
 import CollectInfo from "../components/collectinfo"
+import LoadingAnimation from "../components/loadinganimation"
 
 import { format, differenceInMinutes } from "date-fns"
 
@@ -83,11 +84,9 @@ const IndexPage = () => {
       {signUpComplete(state.user) && <Navbar />}
 
       {form.isLoading && (
-        <div className="flex self-center justify-center w-screen h-auto min-h-screen ">
+        <div className="flex self-center justify-center w-screen h-screen ">
           {" "}
-          <object color="white" type="image/svg+xml" data={gear}>
-            svg-animation
-          </object>{" "}
+          <LoadingAnimation data={gear} />
         </div>
       )}
 

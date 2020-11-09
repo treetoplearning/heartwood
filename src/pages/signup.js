@@ -11,14 +11,12 @@ import gear from "../assets/gear.svg"
 import PasswordStrengthMeter from "../components/passwordstrengthmeter"
 
 import { faGoogle, faGithub } from "@fortawesome/free-brands-svg-icons"
-import {
-  auth,
+import {auth,
   signInWithGoogle,
   signInWithGitHub,
   prepareUserInformation,
   getCurrentUser,
-  verifyEmail,
-} from "../firebase/firebase"
+  verifyEmail} from "../firebase/firebase"
 
 import { HeartwoodStateContext, HeartwoodDispatchContext } from "../state/HeartwoodContextProvider"
 
@@ -34,14 +32,12 @@ const SignUp = () => {
   const emailInputRef = useRef(null)
   const passwordInputRef = useRef(null)
 
-  const [form, setForm] = useState({
-    email: "",
+  const [form, setForm] = useState({email: "",
     password: "",
     message: { text: "", type: "" },
     passwordStrong: false,
     isLoading: true,
-    onVerifyLink: false,
-  })
+    onVerifyLink: false})
 
   // Generate a new document for a new user
   const sendUserVerificationEmail = (event) => {
@@ -168,10 +164,8 @@ const SignUp = () => {
         .catch((error) => {
           // Some error occurred, you can inspect the code: error.code
           // Common errors could be invalid email and invalid or expired OTPs.
-          setForm({
-            ...form,
-            message: { text: "There was an error signing up with email link, please try again", type: "error" },
-          })
+          setForm({...form,
+            message: { text: "There was an error signing up with email link, please try again", type: "error" }})
         })
     } else {
       auth

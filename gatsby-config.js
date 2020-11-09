@@ -48,13 +48,14 @@ module.exports = {
       options: {
         credentials: {
           apiKey: "AIzaSyCdgCJtC4nsn3YlDOFHs2J_dZoL_0CFar0",
-          authDomain: "treetop-learning-develop.firebaseapp.com",
-          databaseURL: "https://treetop-learning-develop.firebaseio.com",
-          projectId: "treetop-learning-develop",
-          storageBucket: "treetop-learning-develop.appspot.com",
-          messagingSenderId: "662460141873",
-          appId: "1:662460141873:web:80cec971040d347a66a010",
-          measurementId: "G-NK63QPBYLL",
+    authDomain: "treetop-learning-develop.firebaseapp.com",
+    databaseURL: "https://treetop-learning-develop.firebaseio.com",
+    projectId: "treetop-learning-develop",
+    storageBucket: "treetop-learning-develop.appspot.com",
+    messagingSenderId: "662460141873",
+    appId: "1:662460141873:web:d73848fe6172404266a010",
+    measurementId: "G-S8TEXDM61K"
+
         },
       },
     },
