@@ -34,8 +34,8 @@ const Learn = ({ location }) => {
           <Navbar />
           <div className="flex flex-row items-center justify-center w-full h-full ">
             <div className="flex flex-row w-full px-10">
-              <div className="flex flex-col w-1/4 ">
-                <div className="m-3 bg-black rounded-lg">
+              <div className="flex flex-col w-1/4 min-w-xs">
+                <div className="m-3 bg-black rounded-lg ">
                   <div className="relative rounded-lg pb-3/4">
                     <div className="absolute object-cover w-full h-full">
                       <Video className="rounded-lg" />

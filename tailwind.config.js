@@ -26,7 +26,10 @@ module.exports = {
         base: "#38A169",
       },
       margin: {
-      200: '200rem',
+      200: "200rem",
+      },
+      minWidth: {
+        xs: '15rem',
       }
     },
   },

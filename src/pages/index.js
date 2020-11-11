@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react"
-import useInterval from "../hooks/useInterval"
 
 import { Link } from "gatsby"
 import { HeartwoodStateContext } from "../state/HeartwoodContextProvider"
