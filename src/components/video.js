@@ -156,7 +156,7 @@ const Video = () => {
       <div className="absolute bottom-0 flex-row self-center mb-4 ">
         {!mute && (
           <button
-            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            className="w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75  duration-400 hover:opacity-100 md:visible"
             onClick={() => toggleMute()}
           >
             <FontAwesomeIcon icon={faMicrophone}></FontAwesomeIcon>
@@ -164,7 +164,7 @@ const Video = () => {
         )}
         {mute && (
           <button
-            className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            className="w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75  duration-400 hover:opacity-100 md:visible"
             onClick={() => toggleMute()}
           >
             <FontAwesomeIcon icon={faMicrophoneSlash}></FontAwesomeIcon>
@@ -173,7 +173,7 @@ const Video = () => {
 
         {!onCall && (
           <button
-            className="invisible w-8 p-1 mx-2 text-white transition bg-green-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            className="w-8 p-1 mx-2 text-white transition bg-green-600 rounded-full opacity-75  duration-400 hover:opacity-100 md:visible"
             onClick={() => startCall()}
           >
             <FontAwesomeIcon icon={faPhoneAlt}></FontAwesomeIcon>
@@ -181,14 +181,14 @@ const Video = () => {
         )}
         {onCall && (
           <button
-            className="invisible w-8 p-1 mx-2 text-white transition bg-red-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible"
+            className="w-8 p-1 mx-2 text-white transition bg-red-600 rounded-full opacity-75  duration-400 hover:opacity-100 md:visible"
             onClick={() => endCall()}
           >
             <FontAwesomeIcon icon={faPhoneSlash}></FontAwesomeIcon>
           </button>
         )}
 
-        <button className="invisible w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75 duration-400 hover:opacity-100 md:visible">
+        <button className="w-8 p-1 mx-2 text-white transition bg-gray-600 rounded-full opacity-75  duration-400 hover:opacity-100 md:visible">
           <FontAwesomeIcon icon={faTv}></FontAwesomeIcon>
         </button>
       </div>
