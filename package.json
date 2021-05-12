@@ -19,7 +19,7 @@
     "axios": "^0.19.2",
     "babel-plugin-styled-components": "^1.10.7",
     "canvas": "^2.6.1",
-    "codemirror": "^5.55.0",
+    "codemirror": "^5.58.2",
     "date-fns": "^2.14.0",
     "firebase": "^7.14.5",
     "firebase-functions": "^3.8.0",
